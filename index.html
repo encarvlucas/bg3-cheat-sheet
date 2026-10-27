@@ -200,10 +200,10 @@
         color: #7fc27a;
       }
       .missable {
-        color: #e4af60;
+        color: #e460e2;
       }
       .prereq {
-        color: #cb6df0;
+        color: #b76df0;
       }
       .opt {
         color: #eef06d;
@@ -251,7 +251,7 @@
         loot: 'Loot',
         missable: 'Missable',
         prereq: 'Prerequisite',
-        opt: 'Optional', 
+        opt: 'Optional',
       }
 
       const DATA = [
@@ -279,29 +279,26 @@
                 ['Rescue Miron from Harpies, then talk to Mol', 'missable'],
                 ['Steal Idol of Silvanus and get Ring of Protection', 'quest loot missable optional'],
                 ['Steal Idol back from Mol', 'loot optional'],
-                [
-                  'Talk to Dammon the blacksmith about Karlach engine',
-                  'npc loot',
-                ],
+                ['Talk to Dammon the blacksmith about Karlach engine', 'npc loot'],
                 ['Handle Kagha situation', 'boss quest'],
               ],
             },
             {
               id: 'wild',
-              name: 'Wilderness Side Quests',
+              name: 'Wilderness (South) Side Quests',
               items: [
-                [
-                  "Visit the Hag's Hut and deal with Auntie Ethel",
-                  'boss quest missable',
-                ],
+                ['Fight Owlbear', 'boss npc missable prereq'],
                 ['Rescue Scratch', 'npc missable'],
                 ['Recruit Karlach', 'npc missable'],
+                ["Visit the Hag's Hut and deal with Auntie Ethel", 'boss quest missable'],
               ],
             },
             {
               id: 'goblins',
               name: 'Goblin Camp',
               items: [
+                ['Free Volo', 'npc'],
+                ['Free Owlbear cub', 'npc missable'],
                 ['Free Halsin from the Goblin Camp', 'quest npc'],
                 ['Defeat Dror Ragzlin', 'boss'],
                 ['Defeat Priestess Gut', 'boss'],
@@ -309,10 +306,26 @@
               ],
             },
             {
+              id: 'risen',
+              name: 'Risen Road Side Quests',
+              items: [
+                ['Fight Paladins of Tyr', 'boss loot'],
+                ['Fight Gnolls near bridge'],
+                ['Fight Gnolls near cave', 'boss loot missable'],
+                ['Steal Iron Flask from Zhentarim', 'optional'],
+                ['Rescue Commander Florrick', 'quest npc missable'],
+                ['Check out Zhentarim hideout', 'loot missable'],
+                ['Handle Gith and go to mountain pass', 'boss npc'],
+              ],
+            },
+            {
               id: 'underdark',
               name: 'Underdark',
               items: [
                 ['Meet Sovereign Spaw in the Myconid Colony', 'npc'],
+                ['Get gnome boots', 'quest loot'],
+                ["Omelum's quest", 'quest loot'],
+                ["Do Baelen and Derryth's quest and check out her stock", 'quest loot'],
                 ['Defeat Grym in Grymforge', 'boss'],
               ],
             },
@@ -359,16 +372,8 @@
 
       const KEY = 'bg3_checklist_v1'
       const $ = (id) => document.getElementById(id)
-      const esc = (s) =>
-        String(s).replace(
-          /[&<>"]/g,
-          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c],
-        )
-      const fmt = (s) =>
-        esc(s).replace(
-          /\[([^\]]+)\]\((https?:[^)\s]+)\)/g,
-          '<a href="$2" target="_blank" rel="noopener">$1</a>',
-        )
+      const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
+      const fmt = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
       const seen = {}
       const uniq = (k) => {
         while (seen[k]) k += '_'
@@ -409,8 +414,7 @@
         off: {},
         tab: 0,
       })
-      const P = () =>
-        (S.profiles[S.cur] = Object.assign(blank(), S.profiles[S.cur]))
+      const P = () => (S.profiles[S.cur] = Object.assign(blank(), S.profiles[S.cur]))
       const save = () => {
         try {
           localStorage.setItem(KEY, JSON.stringify(S))
@@ -419,12 +423,8 @@
       const vis = (p, it) => !it.g.length || it.g.some((t) => !p.off[t])
 
       function opts() {
-        return `<section class="area pad"><h3>Profiles</h3><p><select id="prof">${Object.keys(
-          S.profiles,
-        )
-          .map(
-            (n) => `<option ${n == S.cur ? 'selected' : ''}>${esc(n)}</option>`,
-          )
+        return `<section class="area pad"><h3>Profiles</h3><p><select id="prof">${Object.keys(S.profiles)
+          .map((n) => `<option ${n == S.cur ? 'selected' : ''}>${esc(n)}</option>`)
           .join('')}</select>
     <button data-act="add">Add</button> <button data-act="ren">Rename</button> <button data-act="del">Delete</button></p>
     <h3>Data</h3><p><button data-act="exp">Export JSON</button> <button data-act="imp">Import JSON</button>
@@ -452,11 +452,7 @@
             n += v.length
             d += c
             if (i != p.tab) return
-            const s = v.filter(
-              (it) =>
-                (!p.hideDone || !p.done[it.k]) &&
-                (!q || (it.t + ' ' + ar.name).toLowerCase().includes(q)),
-            )
+            const s = v.filter((it) => (!p.hideDone || !p.done[it.k]) && (!q || (it.t + ' ' + ar.name).toLowerCase().includes(q)))
             if (!s.length) return
             const open = q || !p.col[ar.id],
               id = esc(ar.id)
@@ -479,19 +475,12 @@
           all += n
           alld += d
           tabs += `<button data-tab="${i}" class="${i == p.tab ? 'on' : ''}">${esc(a.name)} <small>${d}/${n}</small></button>`
-          if (i == p.tab)
-            body =
-              h || '<p class="mu">Nothing to show with the current filters.</p>'
+          if (i == p.tab) body = h || '<p class="mu">Nothing to show with the current filters.</p>'
         })
-        $('tabs').innerHTML =
-          tabs +
-          `<button data-tab="${ACTS.length}" class="${onOpts ? 'on' : ''}">Options</button>`
+        $('tabs').innerHTML = tabs + `<button data-tab="${ACTS.length}" class="${onOpts ? 'on' : ''}">Options</button>`
         $('tools').hidden = onOpts
         $('tags').innerHTML = Object.keys(TAGS)
-          .map(
-            (t) =>
-              `<button class="chip ${p.off[t] ? 'off' : 'on'}" data-tag="${esc(t)}">${esc(TAGS[t])}</button>`,
-          )
+          .map((t) => `<button class="chip ${p.off[t] ? 'off' : 'on'}" data-tag="${esc(t)}">${esc(TAGS[t])}</button>`)
           .join('')
         $('hd').checked = p.hideDone
         $('app').innerHTML = onOpts ? opts() : body
@@ -513,23 +502,15 @@
             S.cur = n
           }
         }
-        if (
-          a == 'del' &&
-          names.length > 1 &&
-          confirm('Delete profile “' + S.cur + '”?')
-        ) {
+        if (a == 'del' && names.length > 1 && confirm('Delete profile “' + S.cur + '”?')) {
           delete S.profiles[S.cur]
           S.cur = Object.keys(S.profiles)[0]
         }
-        if (a == 'reset' && confirm('Reset all progress in this profile?'))
-          P().done = {}
+        if (a == 'reset' && confirm('Reset all progress in this profile?')) P().done = {}
         if (a == 'exp') {
           const el = document.createElement('a')
-          el.href = URL.createObjectURL(
-            new Blob([JSON.stringify(S)], { type: 'application/json' }),
-          )
-          el.download =
-            'bg3-checklist-' + new Date().toISOString().slice(0, 10) + '.json'
+          el.href = URL.createObjectURL(new Blob([JSON.stringify(S)], { type: 'application/json' }))
+          el.download = 'bg3-checklist-' + new Date().toISOString().slice(0, 10) + '.json'
           el.click()
           URL.revokeObjectURL(el.href)
           return
@@ -544,19 +525,11 @@
           p = P()
         let el
         if ((el = d('data-tab'))) p.tab = +el.dataset.tab
-        else if ((el = d('data-tag')))
-          p.off[el.dataset.tag] = !p.off[el.dataset.tag]
+        else if ((el = d('data-tag'))) p.off[el.dataset.tag] = !p.off[el.dataset.tag]
         else if ((el = d('data-all') || d('data-none'))) {
-          const ar = AREAS.find(
-            (x) => x.id == (el.dataset.all || el.dataset.none),
-          )
-          ar.list
-            .filter((it) => vis(p, it))
-            .forEach((it) =>
-              el.dataset.all ? (p.done[it.k] = 1) : delete p.done[it.k],
-            )
-        } else if ((el = d('data-col')))
-          p.col[el.dataset.col] = !p.col[el.dataset.col]
+          const ar = AREAS.find((x) => x.id == (el.dataset.all || el.dataset.none))
+          ar.list.filter((it) => vis(p, it)).forEach((it) => (el.dataset.all ? (p.done[it.k] = 1) : delete p.done[it.k]))
+        } else if ((el = d('data-col'))) p.col[el.dataset.col] = !p.col[el.dataset.col]
         else if ((el = d('data-act'))) return act(el.dataset.act)
         else return
         save()
@@ -576,11 +549,7 @@
           fr.onload = () => {
             try {
               const d = JSON.parse(fr.result)
-              if (
-                !d.profiles ||
-                !confirm('Replace all current profiles with the imported file?')
-              )
-                return
+              if (!d.profiles || !confirm('Replace all current profiles with the imported file?')) return
               S = d
               S.cur = S.profiles[S.cur] ? S.cur : Object.keys(S.profiles)[0]
               save()
