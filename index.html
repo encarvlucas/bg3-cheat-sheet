@@ -291,7 +291,7 @@
       .loot {
         --c: var(--loot);
       }
-      .missable {
+      .buff {
         --c: var(--missable);
       }
       .prereq {
@@ -324,33 +324,33 @@
 
     <script>
       /* ============================================================
-        EDIT ME: points of interest
-        ------------------------------------------------------------
-        TAGS     : tag id -> label shown on chips/filters. Add your own,
-                   e.g.  camp:"Camp"  and give it a colour in the CSS:
-                   .camp { --c: #0a7; }
-        SUBACTS : subact id -> label shown in the selector under the Act tabs.
-                   Optional: an id with no label is shown as its id.
-        DATA     : acts -> areas -> items.
-        area     : { id, subact, name, items }
-                   - id must be unique; subact groups areas inside an act.
-        item     : { id, title, tags, requires, subtasks }
-                   - id       : unique and fixed. Progress is stored under it, so
-                                keep it if you reword the title.
-                   - title    : text. Accepts links: [label](https://example.com)
-                   - tags     : space-separated tag ids, optional ('')
-                   - requires : ids of tasks to do first, optional. Shown as links
-                                under the item; clicking one jumps to it.
-                   - subtasks : optional nested entries, same fields.
-                                Shown indented, checkboxes are independent of the parent.
-        Trailing commas are fine.
-      ============================================================ */
+          EDIT ME: points of interest
+          ------------------------------------------------------------
+          TAGS     : tag id -> label shown on chips/filters. Add your own,
+                     e.g.  camp:"Camp"  and give it a colour in the CSS:
+                     .camp { --c: #0a7; }
+          SUBACTS : subact id -> label shown in the selector under the Act tabs.
+                     Optional: an id with no label is shown as its id.
+          DATA     : acts -> areas -> items.
+          area     : { id, subact, name, items }
+                     - id must be unique; subact groups areas inside an act.
+          item     : { id, title, tags, requires, subtasks }
+                     - id       : unique and fixed. Progress is stored under it, so
+                                  keep it if you reword the title.
+                     - title    : text. Accepts links: [label](https://example.com)
+                     - tags     : space-separated tag ids, optional ('')
+                     - requires : ids of tasks to do first, optional. Shown as links
+                                  under the item; clicking one jumps to it.
+                     - subtasks : optional nested entries, same fields.
+                                  Shown indented, checkboxes are independent of the parent.
+          Trailing commas are fine.
+        ============================================================ */
       const TAGS = {
         boss: 'Boss',
         npc: 'Companion/Ally',
         quest: 'Quest',
         loot: 'Loot',
-        missable: 'Missable',
+        buff: 'Perm. Buff',
         prereq: 'Prerequisite',
         opt: 'Optional',
       }
@@ -361,6 +361,7 @@
         goblins: 'Goblin Camp',
         risen: 'Risen Road',
         underdark: 'Underdark',
+        creche: 'Mountain Pass',
         shadow: 'Shadow-Cursed Lands',
         'lower-city': 'Lower City',
         'upper-city': 'Upper City',
@@ -375,11 +376,13 @@
               subact: 'wilderness',
               name: 'Ravaged Beach & Wilderness',
               items: [
-                { id: 'shart-laezel-astarion', title: "Recruit Shadowheart, Lae'zel and Astarion", tags: 'npc' },
-                { id: 'gale', title: 'Recruit Gale in the Wilderness', tags: 'npc' },
-                { id: 'ealry-mindflayer', title: 'Kill mindflayer in crashed out ship', tags: 'opt' },
-                { id: 'withers', title: 'Explore abandoned church and free Withers', tags: 'npc' },
-                { id: 'guidance', title: 'Explore around and find guidance amulet', tags: 'loot' },
+                { id: 'shart', title: 'Recruit Shadowheart', tags: 'npc' },
+                { id: 'laezel', title: "Recruit Lae'zel", tags: 'npc' },
+                { id: 'astarion', title: 'Recruit Astarion', tags: 'npc' },
+                { id: 'gale', title: 'Recruit Gale', tags: 'npc' },
+                { id: 'early-mindflayer', title: 'Kill mindflayer in crashed out ship', tags: 'opt' },
+                { id: 'withers', title: 'Explore abandoned church and free Withers', tags: 'npc opt' },
+                { id: 'guidance', title: 'Explore around and find guidance amulet', tags: 'loot opt' },
               ],
             },
             {
@@ -388,17 +391,31 @@
               name: 'Emerald Grove & Druid Grove',
               items: [
                 { id: 'grove', title: 'Meet Zevlor, fight goblins and begin the Save the Grove quest', tags: 'quest npc' },
+                { id: 'tief-assassin', title: 'Save tiefling from assassination, get her Soulcoin', tags: 'loot' },
                 { id: 'wyll', title: 'Recruit Wyll', tags: 'npc' },
                 { id: 'arabella', title: 'Save Arabella', tags: 'npc' },
-                { id: 'harpies', title: 'Rescue Mirkon from Harpies, then talk to Mol', tags: 'missable' },
+                { id: 'harpies', title: 'Rescue Mirkon from Harpies, then talk to Mol', tags: 'opt prereq' },
                 {
                   id: 'silvanus-idol-mol',
                   title: 'Steal Idol of Silvanus and get Ring of Protection',
-                  tags: 'quest loot missable opt',
-                  subtasks: [{ id: 'silvanus-idol-permanent', title: 'Steal Idol back from Mol', tags: 'loot opt' }],
+                  tags: 'quest loot opt',
+                  subtasks: [{ id: 'silvanus-idol-permanent', title: 'Steal Idol back from Mol', tags: 'loot opt buff' }],
                 },
-                { id: 'karlach-engine-1', title: 'Talk to Dammon the blacksmith about Karlach engine', tags: 'npc loot' },
-                { id: 'kagha', title: 'Handle Kagha situation', tags: 'boss quest' },
+                { id: 'karlach-engine-1', title: 'Talk to Dammon the blacksmith about Karlach engine', tags: 'npc loot buff', requires: 'karlach' },
+                { id: 'kagha', title: 'Handle Kagha situation (shadow Druids)', tags: 'boss quest', requires: 'melphit' },
+              ],
+            },
+            {
+              id: 'blighted',
+              subact: 'wilderness',
+              name: 'Blighted Village',
+              items: [
+                { id: 'blighted-entryway', title: 'Handle goblins in Blighted Village entryway', tags: '' },
+                { id: 'windmill', title: 'Fight/handle goblins in windmill and free/kill gnome', tags: 'npc loot opt' },
+                { id: 'ogres', title: 'Talk to Ogres and fight them or get their support', tags: 'boss opt' },
+                { id: 'thay', title: 'Explore cellar, fight skeletons, pass mirror and find Necromancy of Thay', tags: 'opt buff' },
+                { id: 'spiders', title: 'Fight phase spiders and grab Amethyst', tags: 'boss loot opt' },
+                { id: 'barn-couple', title: "Fight 'couple' copulating in barn", tags: 'opt' },
               ],
             },
             {
@@ -406,37 +423,70 @@
               subact: 'wilderness',
               name: 'Wilderness (South) Side Quests',
               items: [
-                { id: 'owlbear', title: 'Fight Owlbear', tags: 'boss npc missable prereq' },
-                { id: 'scratch', title: 'Rescue Scratch', tags: 'npc missable' },
-                { id: 'karlach', title: 'Recruit Karlach', tags: 'npc missable' },
-                { id: 'ethel', title: "Visit the Hag's Hut and deal with Auntie Ethel", tags: 'boss quest missable' },
+                { id: 'owlbear', title: 'Fight Owlbear', tags: 'boss npc opt prereq' },
+                { id: 'scratch', title: 'Rescue Scratch', tags: 'npc' },
+                { id: 'karlach', title: 'Recruit Karlach', tags: 'npc' },
+                { id: 'melphit', title: 'Fight melphits and Woads to find secret Kahga letter', tags: 'loot prereq opt' },
+                { id: 'hag-redcaps', title: 'Fight Sheep (Redcaps) outside of hag lair', tags: 'opt' },
+                {
+                  id: 'ethel',
+                  title: "Visit the Hag's Hut and deal with Auntie Ethel",
+                  tags: 'boss quest loot opt',
+                  subtasks: [
+                    { id: 'hag-minions', title: 'Fight mask wearing hag minions' },
+                    { id: 'hag-final', title: 'Fight Ethel', tags: 'boss loot' },
+                    { id: 'hag-hair', title: 'Obtain hag hair', tags: 'buff opt' },
+                  ],
+                },
               ],
             },
             {
               id: 'goblins',
-              subact: 'goblins',
+              subact: 'wilderness',
               name: 'Goblin Camp',
               items: [
-                { id: 'volo1', title: 'Free Volo', tags: 'npc' },
-                { id: 'owlbear-cub', title: 'Free Owlbear cub', tags: 'npc missable', requires: ['owlbear'] },
-                { id: 'halsin', title: 'Free Halsin from the Goblin Camp', tags: 'quest npc' },
-                { id: 'branded', title: 'Get branded by Absolute', tags: 'missable opt' },
-                { id: 'gut', title: 'Defeat Priestess Gut', tags: 'boss' },
-                { id: 'dror-ragzlin', title: 'Defeat Dror Ragzlin', tags: 'boss' },
-                { id: 'minty', title: 'Defeat or ally with Minthara', tags: 'boss npc missable' },
+                { id: 'goblin-entrance', title: 'Fight/talk your way out of goblins in entrance to camp', tags: 'loot' },
+                { id: 'crusher', title: 'Talk to Crusher and fight/get his ring', tags: 'loot' },
+                { id: 'volo1', title: 'Free Volo', tags: 'npc', subtasks: [{ id: 'volo-eye', title: 'Talk to Volo in camp and get the magic eye', tags: 'buff' }] },
+                { id: 'owlbear-cub', title: 'Free Owlbear cub', tags: 'npc', requires: ['owlbear'] },
+                { id: 'branded', title: 'Get branded by Absolute', tags: 'buff opt' },
+                { id: 'abdirak', title: "Get Loviatar's blessing from Abdirak", tags: 'buff opt' },
+                { id: 'tortured-prisioner', title: 'Free/kill tortured prisioner', tags: 'opt' },
+                {
+                  id: 'goblin-decision',
+                  title: 'Side with or against the goblin leaders',
+                  tags: 'quest',
+                  subtasks: [
+                    { id: 'halsin', title: 'Free Halsin from the Goblin Camp', tags: 'quest npc' },
+                    { id: 'gut', title: 'Defeat Priestess Gut', tags: 'quest boss' },
+                    { id: 'dror-ragzlin', title: 'Defeat Dror Ragzlin', tags: 'quest boss' },
+                    {
+                      id: 'minty',
+                      title: 'Defeat or ally with Minthara',
+                      tags: 'quest boss',
+                      subtasks: [{ id: 'knock-out-minty', title: 'Knock-out Minthara', tags: 'npc opt' }],
+                    },
+                  ],
+                },
+                { id: 'selune-temple-passage', title: "Go through Priestess Gut's room to the secret passage to the underdark", tags: 'opt' },
+                { id: 'camp-fight', title: 'Kill all goblins in the camp', tags: 'opt' },
               ],
             },
             {
               id: 'risen',
-              subact: 'risen',
+              subact: 'wilderness',
               name: 'Risen Road Side Quests',
               items: [
-                { id: 'paladins-tyr', title: 'Fight Paladins of Tyr', tags: 'boss loot' },
+                {
+                  id: 'paladins-tyr',
+                  title: 'Fight Paladins of Tyr',
+                  tags: 'boss loot',
+                  subtasks: [{ id: 'paladins-tyr-loot', title: 'Loot their Soulcoin and cellar', tags: 'loot' }],
+                },
                 { id: 'gnolls1', title: 'Fight Gnolls near bridge', tags: '' },
-                { id: 'gnolls2', title: 'Fight Gnolls near cave', tags: 'boss loot missable' },
-                { id: 'strongbox', title: 'Steal Iron Flask from Zhentarim', tags: 'opt' },
-                { id: 'fire', title: 'Rescue Commander Florrick', tags: 'quest npc missable' },
-                { id: 'hideout', title: 'Check out Zhentarim hideout', tags: 'loot missable' },
+                { id: 'gnolls2', title: 'Fight Gnolls near cave', tags: 'boss loot', subtasks: [{ id: 'strongbox', title: 'Steal Iron Flask from Zhentarim', tags: 'opt' }] },
+                { id: 'fire', title: 'Rescue Commander Florrick', tags: 'quest npc' },
+                { id: 'hideout', title: 'Check out Zhentarim hideout', tags: 'loot' },
                 { id: 'gith-dragon', title: 'Handle Gith and go to mountain pass', tags: 'boss npc' },
               ],
             },
@@ -450,7 +500,6 @@
                   id: 'sargent-boots',
                   title: "Get Thulla's boots",
                   tags: 'quest loot',
-                  requires: [],
                   subtasks: [{ id: 'return-boots', title: 'Return boots to Sargent Thrinn', tags: 'loot' }],
                 },
               ],
@@ -468,6 +517,18 @@
               id: 'grymforge',
               subact: 'underdark',
               name: 'Grymforge',
+              items: [{ id: 'forge', title: 'Defeat Grym in Grymforge', tags: 'boss' }],
+            },
+            {
+              id: 'monastery',
+              subact: 'creche',
+              name: 'Rosymorn Monastery',
+              items: [{ id: 'grym', title: 'Defeat Grym in Grymforge', tags: 'boss' }],
+            },
+            {
+              id: 'creche-yllek',
+              subact: 'creche',
+              name: "Crèche Y'llek",
               items: [{ id: 'grym', title: 'Defeat Grym in Grymforge', tags: 'boss' }],
             },
           ],
@@ -545,7 +606,7 @@
                   .replace(/[^a-z0-9]+/g, '-')
                   .slice(0, 40),
           ),
-          req: o.requires || [],
+          req: (o.requires?.split && o.requires?.split(' ')) || o.requires || [],
         }
         BY[n.k] = { n, ar: A, act: ai }
         A.list.push(n)
@@ -592,11 +653,11 @@
         return `<section class="area pad"><h3>Profiles</h3><p><select id="prof">${Object.keys(S.profiles)
           .map((n) => `<option ${n == S.cur ? 'selected' : ''}>${esc(n)}</option>`)
           .join('')}</select>
-    <button data-act="add">Add</button> <button data-act="ren">Rename</button> <button data-act="del">Delete</button></p>
-    <h3>Data</h3><p><button data-act="exp">Export JSON</button> <button data-act="imp">Import JSON</button>
-    <button data-act="reset">Reset this profile</button></p>
-    <p class="mu">Progress is saved in this browser's localStorage (key <code>${KEY}</code>). Clearing site data erases it, so export a backup now and then.</p>
-    <input type="file" id="file" accept=".json" hidden></section>`
+      <button data-act="add">Add</button> <button data-act="ren">Rename</button> <button data-act="del">Delete</button></p>
+      <h3>Data</h3><p><button data-act="exp">Export JSON</button> <button data-act="imp">Import JSON</button>
+      <button data-act="reset">Reset this profile</button></p>
+      <p class="mu">Progress is saved in this browser's localStorage (key <code>${KEY}</code>). Clearing site data erases it, so export a backup now and then.</p>
+      <input type="file" id="file" accept=".json" hidden></section>`
       }
 
       function render() {
@@ -630,16 +691,16 @@
               const ok = vis(p, it) && (!p.hideDone || !p.done[it.k]) && (!q || (it.t + ' ' + ar.name).toLowerCase().includes(q))
               if (!ok && !sub) return ''
               return `<li class="${p.done[it.k] ? 'done' : ''}"><label>
-        <input type="checkbox" data-k="${esc(it.k)}" ${p.done[it.k] ? 'checked' : ''}><span class="tx">${fmt(it.t)}</span>
-        ${it.g.map((t) => `<em class="tag tg ${esc(t)}">${esc(TAGS[t] || t)}</em>`).join('')}</label>${reqs(p, it)}${sub ? `<ul class="sub">${sub}</ul>` : ''}</li>`
+          <input type="checkbox" data-k="${esc(it.k)}" ${p.done[it.k] ? 'checked' : ''}><span class="tx">${fmt(it.t)}</span>
+          ${it.g.map((t) => `<em class="tag tg ${esc(t)}">${esc(TAGS[t] || t)}</em>`).join('')}</label>${reqs(p, it)}${sub ? `<ul class="sub">${sub}</ul>` : ''}</li>`
             }
             const rows = ar.tree.map(row).join('')
             if (!rows) return
             const open = q || !p.col[ar.id],
               id = esc(ar.id)
             h += `<section class="area"><h3 data-col="${id}"><span>${open ? '▾' : '▸'} ${esc(ar.name)}</span>
-        <span><button data-all="${id}">Check all</button> <button data-none="${id}">Clear</button>
-        <b class="${c == v.length ? 'ok' : ''}">${c == v.length ? 'Done' : c + '/' + v.length}</b></span></h3>`
+          <span><button data-all="${id}">Check all</button> <button data-none="${id}">Clear</button>
+          <b class="${c == v.length ? 'ok' : ''}">${c == v.length ? 'Done' : c + '/' + v.length}</b></span></h3>`
             if (open) h += '<ul>' + rows + '</ul>'
             h += '</section>'
           })
