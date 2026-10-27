@@ -22,7 +22,7 @@
         --npc: #7cc0f5;
         --quest: #f0b84f;
         --loot: #8fd68a;
-        --missable: #f09af0;
+        --buff: #f09af0;
         --prereq: #e8e36a;
         --opt: #b8b1c9;
         --font-body: 'Alegreya Sans', 'Gill Sans', 'Gill Sans MT', Candara, 'Segoe UI', system-ui, sans-serif;
@@ -42,7 +42,7 @@
           --npc: #145a99;
           --quest: #8a5a00;
           --loot: #1e6e1f;
-          --missable: #9a2a98;
+          --buff: #9a2a98;
           --prereq: #675e00;
           --opt: #5d5575;
         }
@@ -292,7 +292,7 @@
         --c: var(--loot);
       }
       .buff {
-        --c: var(--missable);
+        --c: var(--buff);
       }
       .prereq {
         --c: var(--prereq);
@@ -410,7 +410,7 @@
               subact: 'wilderness',
               name: 'Blighted Village',
               items: [
-                { id: 'blighted-entryway', title: 'Handle goblins in Blighted Village entryway', tags: '' },
+                { id: 'blighted-entryway', title: 'Handle goblins in Blighted Village entryway', tags: 'prereq' },
                 { id: 'windmill', title: 'Fight/handle goblins in windmill and free/kill gnome', tags: 'npc loot opt' },
                 { id: 'ogres', title: 'Talk to Ogres and fight them or get their support', tags: 'boss opt' },
                 { id: 'thay', title: 'Explore cellar, fight skeletons, pass mirror and find Necromancy of Thay', tags: 'opt buff' },
@@ -433,8 +433,7 @@
                   title: "Visit the Hag's Hut and deal with Auntie Ethel",
                   tags: 'boss quest loot opt',
                   subtasks: [
-                    { id: 'hag-minions', title: 'Fight mask wearing hag minions' },
-                    { id: 'hag-final', title: 'Fight Ethel', tags: 'boss loot' },
+                    { id: 'hag-fight', title: 'Fight mask wearing hag minions then fight Ethel', tags: 'boss loot' },
                     { id: 'hag-hair', title: 'Obtain hag hair', tags: 'buff opt' },
                   ],
                 },
@@ -483,7 +482,7 @@
                   tags: 'boss loot',
                   subtasks: [{ id: 'paladins-tyr-loot', title: 'Loot their Soulcoin and cellar', tags: 'loot' }],
                 },
-                { id: 'gnolls1', title: 'Fight Gnolls near bridge', tags: '' },
+                { id: 'gnolls1', title: 'Fight Gnolls near bridge', tags: 'loot' },
                 { id: 'gnolls2', title: 'Fight Gnolls near cave', tags: 'boss loot', subtasks: [{ id: 'strongbox', title: 'Steal Iron Flask from Zhentarim', tags: 'opt' }] },
                 { id: 'fire', title: 'Rescue Commander Florrick', tags: 'quest npc' },
                 { id: 'hideout', title: 'Check out Zhentarim hideout', tags: 'loot' },
@@ -544,7 +543,7 @@
                 { id: 'last-light', title: 'Reach the Last Light Inn and meet Isobel', tags: 'npc' },
                 // {id: 'reithwin', title: 'Explore Reithwin Town', tags: 'quest'},
                 { id: 'gauntlet', title: 'Complete the Gauntlet of Shar', tags: 'quest npc' },
-                { id: 'prisoners', title: 'Free the prisoners at Moonrise Towers', tags: 'quest opt missable' },
+                { id: 'prisoners', title: 'Free the prisoners at Moonrise Towers', tags: 'quest opt' },
                 { id: 'ketheric1', title: 'Defeat Ketheric Thorm', tags: 'boss' },
               ],
             },
