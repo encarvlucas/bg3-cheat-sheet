@@ -172,9 +172,44 @@
         height: 1.05em;
         align-self: center;
       }
-      li.done .tx {
+      li.done > label .tx {
         color: var(--mu);
         text-decoration: line-through;
+      }
+      .sub {
+        margin: 4px 0 0 0.55em;
+        padding-left: 0.9em;
+        border-left: 2px solid var(--bd);
+      }
+      .sub li {
+        border-top: 0;
+        padding: 4px 0;
+      }
+      .req {
+        margin: 1px 0 0 1.7em;
+        font-size: 0.82rem;
+        color: var(--mu);
+      }
+      .req a.met {
+        color: var(--ok);
+      }
+      li.flash > label {
+        animation: flash 1.6s;
+      }
+      @keyframes flash {
+        0%,
+        60% {
+          background: rgba(180, 142, 242, 0.3);
+        }
+        100% {
+          background: transparent;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        li.flash > label {
+          animation: none;
+          background: rgba(180, 142, 242, 0.3);
+        }
       }
       a {
         color: var(--ac);
@@ -203,8 +238,7 @@
         color: #e38fe1;
       }
       .prereq {
-        color: #eef06d;
-        /* color: #b770ed; free to be used for other tag */
+        color: #eef06d; /* color: #b770ed; free to be used for other tag */
       }
       code {
         background: var(--bd);
@@ -234,13 +268,18 @@
    TAGS  : tag id -> label shown on chips/filters. Add your own,
            e.g.  camp:"Camp"  (optional colour: .camp{color:...} in CSS).
    DATA  : acts -> areas -> items.
-   item  : [ "Text", "tag1 tag2", "optional-fixed-id" ]
+   item  : [ "Text", "tag1 tag2", "fixed-id", { sub:[...], requires:[...] } ]
            - Text accepts links: [label](https://example.com)
            - Tags are space-separated and optional ("").
            - Progress is stored per item under an id built from the
              area id + the text. If you reword an item and want to keep
              its progress, give it a fixed id (3rd value).
-   Area ids must be unique. Trailing commas are fine.
+           - 4th value (optional) is an object with:
+               sub      : nested items, same format, any depth. Shown indented
+                          under this item. Checkboxes stay independent.
+               requires : ids of tasks to do first. Shown as links under the
+                          item; clicking one jumps to it. Targets need a fixed id.
+   Area ids must be unique, and so must item ids. Trailing commas are fine.
    ============================================================ */
       const TAGS = {
         boss: 'Boss',
@@ -275,8 +314,12 @@
                 ['Recruit Wyll', 'npc', 'wyll'],
                 ['Save Arabella', 'npc', 'arabella'],
                 ['Rescue Mirkon from Harpies, then talk to Mol', 'missable', 'harpies'],
-                ['Steal Idol of Silvanus and get Ring of Protection', 'quest loot missable opt', 'silvanus-idol-mol'],
-                ['Steal Idol back from Mol', 'loot opt', 'silvanus-idol-permanent'],
+                [
+                  'Steal Idol of Silvanus and get Ring of Protection',
+                  'quest loot missable opt',
+                  'silvanus-idol-mol',
+                  { sub: [['Steal Idol back from Mol', 'loot opt', 'silvanus-idol-permanent']] },
+                ],
                 ['Talk to Dammon the blacksmith about Karlach engine', 'npc loot', 'karlach-engine-1'],
                 ['Handle Kagha situation', 'boss quest', 'kagha'],
               ],
@@ -296,7 +339,7 @@
               name: 'Goblin Camp',
               items: [
                 ['Free Volo', 'npc', 'volo1'],
-                ['Free Owlbear cub', 'npc missable', 'owlbear-cub'],
+                ['Free Owlbear cub', 'npc missable', 'owlbear-cub', { requires: ['owlbear'] }],
                 ['Free Halsin from the Goblin Camp', 'quest npc', 'halsin'],
                 ['Get branded by Absolute', 'missable opt', 'branded'],
                 ['Defeat Priestess Gut', 'boss', 'gut'],
@@ -373,31 +416,42 @@
       const $ = (id) => document.getElementById(id)
       const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
       const fmt = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      const plain = (s) => s.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
       const seen = {}
       const uniq = (k) => {
         while (seen[k]) k += '_'
         return (seen[k] = k)
       }
 
-      const ACTS = DATA.map((a) => ({
+      // Build the item tree. A.list is the flat list (parents and subtasks) used for counts.
+      const BY = {}
+      const mk = (A, ai, [t, g = '', id, o = {}]) => {
+        const n = {
+          t,
+          g: g.split(/\s+/).filter(Boolean),
+          k: uniq(
+            id ||
+              A.id +
+                ':' +
+                t
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, '-')
+                  .slice(0, 40),
+          ),
+          req: o.requires || [],
+        }
+        BY[n.k] = { n, ar: A, act: ai }
+        A.list.push(n)
+        n.sub = (o.sub || []).map((x) => mk(A, ai, x))
+        return n
+      }
+      const ACTS = DATA.map((a, ai) => ({
         name: a.name,
-        areas: a.areas.map((ar) => ({
-          id: ar.id,
-          name: ar.name,
-          list: ar.items.map(([t, g = '', id]) => ({
-            t,
-            g: g.split(/\s+/).filter(Boolean),
-            k: uniq(
-              id ||
-                ar.id +
-                  ':' +
-                  t
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .slice(0, 40),
-            ),
-          })),
-        })),
+        areas: a.areas.map((ar) => {
+          const A = { id: ar.id, name: ar.name, list: [] }
+          A.tree = ar.items.map((x) => mk(A, ai, x))
+          return A
+        }),
       }))
       const AREAS = ACTS.flatMap((a) => a.areas)
 
@@ -406,13 +460,7 @@
         S = JSON.parse(localStorage.getItem(KEY))
       } catch (e) {}
       if (!S || !S.profiles) S = { cur: 'Default', profiles: {} }
-      const blank = () => ({
-        done: {},
-        col: {},
-        hideDone: false,
-        off: {},
-        tab: 0,
-      })
+      const blank = () => ({ done: {}, col: {}, hideDone: false, off: {}, tab: 0 })
       const P = () => (S.profiles[S.cur] = Object.assign(blank(), S.profiles[S.cur]))
       const save = () => {
         try {
@@ -420,6 +468,17 @@
         } catch (e) {}
       }
       const vis = (p, it) => !it.g.length || it.g.some((t) => !p.off[t])
+
+      const reqs = (p, n) =>
+        n.req.length
+          ? `<div class="req">Requires: ${n.req
+              .map((k) =>
+                BY[k]
+                  ? `<a href="#" data-goto="${esc(k)}" class="${p.done[k] ? 'met' : ''}">${p.done[k] ? '✓ ' : ''}${esc(plain(BY[k].n.t))}</a>`
+                  : `<span title="No task has this id">unknown “${esc(k)}”</span>`,
+              )
+              .join(', ')}</div>`
+          : ''
 
       function opts() {
         return `<section class="area pad"><h3>Profiles</h3><p><select id="prof">${Object.keys(S.profiles)
@@ -451,24 +510,23 @@
             n += v.length
             d += c
             if (i != p.tab) return
-            const s = v.filter((it) => (!p.hideDone || !p.done[it.k]) && (!q || (it.t + ' ' + ar.name).toLowerCase().includes(q)))
-            if (!s.length) return
+            // A row shows if it matches the filters, or if any of its subtasks does.
+            const row = (it) => {
+              const sub = it.sub.map(row).join('')
+              const ok = vis(p, it) && (!p.hideDone || !p.done[it.k]) && (!q || (it.t + ' ' + ar.name).toLowerCase().includes(q))
+              if (!ok && !sub) return ''
+              return `<li class="${p.done[it.k] ? 'done' : ''}"><label>
+        <input type="checkbox" data-k="${esc(it.k)}" ${p.done[it.k] ? 'checked' : ''}><span class="tx">${fmt(it.t)}</span>
+        ${it.g.map((t) => `<em class="tag ${esc(t)}">${esc(TAGS[t] || t)}</em>`).join('')}</label>${reqs(p, it)}${sub ? `<ul class="sub">${sub}</ul>` : ''}</li>`
+            }
+            const rows = ar.tree.map(row).join('')
+            if (!rows) return
             const open = q || !p.col[ar.id],
               id = esc(ar.id)
             h += `<section class="area"><h3 data-col="${id}"><span>${open ? '▾' : '▸'} ${esc(ar.name)}</span>
         <span><button data-all="${id}">Check all</button> <button data-none="${id}">Clear</button>
         <b class="${c == v.length ? 'ok' : ''}">${c == v.length ? 'Done' : c + '/' + v.length}</b></span></h3>`
-            if (open)
-              h +=
-                '<ul>' +
-                s
-                  .map(
-                    (it) => `<li class="${p.done[it.k] ? 'done' : ''}"><label>
-        <input type="checkbox" data-k="${esc(it.k)}" ${p.done[it.k] ? 'checked' : ''}><span class="tx">${fmt(it.t)}</span>
-        ${it.g.map((t) => `<em class="tag ${esc(t)}">${esc(TAGS[t] || t)}</em>`).join('')}</label></li>`,
-                  )
-                  .join('') +
-                '</ul>'
+            if (open) h += '<ul>' + rows + '</ul>'
             h += '</section>'
           })
           all += n
@@ -485,6 +543,26 @@
         $('app').innerHTML = onOpts ? opts() : body
         $('tot').textContent = alld + '/' + all
         $('pb').style.width = (all ? (100 * alld) / all : 0) + '%'
+      }
+
+      // Jump to a task: switch act, expand its area, drop filters that would hide it, then highlight it.
+      function jump(k) {
+        const b = BY[k],
+          p = P()
+        if (!b) return
+        p.tab = b.act
+        p.col[b.ar.id] = false
+        $('q').value = ''
+        if (p.done[k]) p.hideDone = false
+        if (!vis(p, b.n)) b.n.g.forEach((t) => delete p.off[t])
+        save()
+        render()
+        const box = [...document.querySelectorAll('input[data-k]')].find((x) => x.dataset.k == k)
+        const li = box && box.closest('li')
+        if (!li) return
+        li.scrollIntoView({ block: 'center' })
+        li.classList.add('flash')
+        setTimeout(() => li.classList.remove('flash'), 1600)
       }
 
       function act(a) {
@@ -523,7 +601,10 @@
         const d = (x) => e.target.closest('[' + x + ']'),
           p = P()
         let el
-        if ((el = d('data-tab'))) p.tab = +el.dataset.tab
+        if ((el = d('data-goto'))) {
+          e.preventDefault()
+          return jump(el.dataset.goto)
+        } else if ((el = d('data-tab'))) p.tab = +el.dataset.tab
         else if ((el = d('data-tag'))) p.off[el.dataset.tag] = !p.off[el.dataset.tag]
         else if ((el = d('data-all') || d('data-none'))) {
           const ar = AREAS.find((x) => x.id == (el.dataset.all || el.dataset.none))
