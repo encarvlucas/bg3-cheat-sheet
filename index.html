@@ -200,10 +200,10 @@
         color: #7fc27a;
       }
       .missable {
-        color: #e460e2;
+        color: #e38fe1;
       }
       .prereq {
-        color: #b76df0;
+        color: #b770ed;
       }
       .opt {
         color: #eef06d;
@@ -262,71 +262,71 @@
               id: 'beach',
               name: 'Ravaged Beach & Wilderness',
               items: [
-                ["Recruit Shadowheart, Lae'zel and Astarion", 'npc'],
-                ['Recruit Gale in the Wilderness', 'npc'],
-                ['Kill mindflayer in crashed out ship'],
-                ['Explore abandoned church and free Withers', 'npc'],
-                ['Explore around and find guidance amulet', 'loot'],
+                ["Recruit Shadowheart, Lae'zel and Astarion", 'npc', 'shart-laezel-astarion'],
+                ['Recruit Gale in the Wilderness', 'npc', 'gale'],
+                ['Kill mindflayer in crashed out ship', 'optional', 'ealry-mindflayer'],
+                ['Explore abandoned church and free Withers', 'npc', 'withers'],
+                ['Explore around and find guidance amulet', 'loot', 'guidance'],
               ],
             },
             {
               id: 'grove',
               name: 'Emerald Grove & Druid Grove',
               items: [
-                ['Meet Zevlor, fight goblins and begin the Save the Grove quest', 'quest npc'],
-                ['Recruit Wyll', 'npc'],
-                ['Save Arabella', 'npc'],
-                ['Rescue Miron from Harpies, then talk to Mol', 'missable'],
-                ['Steal Idol of Silvanus and get Ring of Protection', 'quest loot missable optional'],
-                ['Steal Idol back from Mol', 'loot optional'],
-                ['Talk to Dammon the blacksmith about Karlach engine', 'npc loot'],
-                ['Handle Kagha situation', 'boss quest'],
+                ['Meet Zevlor, fight goblins and begin the Save the Grove quest', 'quest npc', 'grove'],
+                ['Recruit Wyll', 'npc', 'wyll'],
+                ['Save Arabella', 'npc', 'arabella'],
+                ['Rescue Mirkon from Harpies, then talk to Mol', 'missable', 'harpies'],
+                ['Steal Idol of Silvanus and get Ring of Protection', 'quest loot missable opt', 'silvanus-idol-mol'],
+                ['Steal Idol back from Mol', 'loot opt', 'silvanus-idol-permanent'],
+                ['Talk to Dammon the blacksmith about Karlach engine', 'npc loot', 'karlach-engine-1'],
+                ['Handle Kagha situation', 'boss quest', 'kagha'],
               ],
             },
             {
               id: 'wild',
               name: 'Wilderness (South) Side Quests',
               items: [
-                ['Fight Owlbear', 'boss npc missable prereq'],
-                ['Rescue Scratch', 'npc missable'],
-                ['Recruit Karlach', 'npc missable'],
-                ["Visit the Hag's Hut and deal with Auntie Ethel", 'boss quest missable'],
+                ['Fight Owlbear', 'boss npc missable prereq', 'owlbear'],
+                ['Rescue Scratch', 'npc missable', 'scratch'],
+                ['Recruit Karlach', 'npc missable', 'karlach'],
+                ["Visit the Hag's Hut and deal with Auntie Ethel", 'boss quest missable', 'ethel'],
               ],
             },
             {
               id: 'goblins',
               name: 'Goblin Camp',
               items: [
-                ['Free Volo', 'npc'],
-                ['Free Owlbear cub', 'npc missable'],
-                ['Free Halsin from the Goblin Camp', 'quest npc'],
-                ['Defeat Dror Ragzlin', 'boss'],
-                ['Defeat Priestess Gut', 'boss'],
-                ['Defeat or ally with Minthara', 'boss npc missable'],
+                ['Free Volo', 'npc', 'volo1'],
+                ['Free Owlbear cub', 'npc missable', 'owlbear-cub'],
+                ['Free Halsin from the Goblin Camp', 'quest npc', 'halsin'],
+                ['Get branded by Absolute', 'missable opt', 'branded'][('Defeat Priestess Gut', 'boss', 'gut')],
+                ['Defeat Dror Ragzlin', 'boss', 'dror-ragzlin'],
+                ['Defeat or ally with Minthara', 'boss npc missable', 'minty'],
               ],
             },
             {
               id: 'risen',
               name: 'Risen Road Side Quests',
               items: [
-                ['Fight Paladins of Tyr', 'boss loot'],
-                ['Fight Gnolls near bridge'],
-                ['Fight Gnolls near cave', 'boss loot missable'],
-                ['Steal Iron Flask from Zhentarim', 'optional'],
-                ['Rescue Commander Florrick', 'quest npc missable'],
-                ['Check out Zhentarim hideout', 'loot missable'],
-                ['Handle Gith and go to mountain pass', 'boss npc'],
+                ['Fight Paladins of Tyr', 'boss loot', 'paladins-tyr'],
+                ['Fight Gnolls near bridge', '', 'gnolls1'],
+                ['Fight Gnolls near cave', 'boss loot missable', 'gnolls2'],
+                ['Steal Iron Flask from Zhentarim', 'opt', 'strongbox'],
+                ['Rescue Commander Florrick', 'quest npc missable', 'fire'],
+                ['Check out Zhentarim hideout', 'loot missable', 'hideout'],
+                ['Handle Gith and go to mountain pass', 'boss npc', 'gith-dragon'],
               ],
             },
             {
               id: 'underdark',
               name: 'Underdark',
               items: [
-                ['Meet Sovereign Spaw in the Myconid Colony', 'npc'],
-                ['Get gnome boots', 'quest loot'],
-                ["Omelum's quest", 'quest loot'],
-                ["Do Baelen and Derryth's quest and check out her stock", 'quest loot'],
-                ['Defeat Grym in Grymforge', 'boss'],
+                ['Meet Sovereign Spaw in the Myconid Colony', 'npc', 'colony'],
+                ['Get gnome boots', 'quest loot', 'sargent-boots'],
+                ["Do Omelum's quest, then buy his items", 'quest loot', 'omelum'],
+                ["Do Baelen and Derryth's quest and check out her stock", 'quest loot', 'noblestalk'],
+                ['Defeat Grym in Grymforge', 'boss', 'grym'],
               ],
             },
           ],
@@ -338,11 +338,11 @@
               id: 'shadow',
               name: 'Shadow-Cursed Lands',
               items: [
-                ['Reach the Last Light Inn and meet Isobel', 'npc'],
-                ['Explore Reithwin Town', 'quest'],
-                ['Complete the Gauntlet of Shar (Shadowheart)', 'quest'],
-                ['Free the prisoners at Moonrise Towers', 'quest'],
-                ['Defeat Ketheric Thorm', 'boss'],
+                ['Reach the Last Light Inn and meet Isobel', 'npc', 'last-light'],
+                // ['Explore Reithwin Town', 'quest'],
+                ['Complete the Gauntlet of Shar', 'quest npc', 'gauntlet'],
+                ['Free the prisoners at Moonrise Towers', 'quest opt missable', 'prisoners'],
+                ['Defeat Ketheric Thorm', 'boss', 'ketheric1'],
               ],
             },
           ],
@@ -353,16 +353,16 @@
             {
               id: 'lower',
               name: 'Lower City',
-              items: [['Visit Sorcerous Sundries', 'quest']],
+              items: [['Visit Sorcerous Sundries, buy stock', 'quest loot', 'sundries']],
             },
             {
               id: 'upper',
               name: "Upper City & Wyrm's Rock",
               items: [
-                ["Defeat Cazador Szarr (Astarion's questline)", 'boss quest'],
-                ["Defeat Gortash at Wyrm's Rock", 'boss'],
-                ['Defeat Orin the Red', 'boss'],
-                ['Confront the Netherbrain', 'boss'],
+                ['Defeat Cazador Szarr', 'boss quest npc', 'cazador'],
+                ["Defeat Gortash at Wyrm's Rock", 'boss', 'gortash'],
+                ['Defeat Orin the Red', 'boss', 'orin'],
+                ['Confront the Netherbrain', 'boss', 'end'],
               ],
             },
           ],
