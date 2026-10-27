@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Baldur's Gate 3 Checklist</title>
+    <style>
+      :root {
+        --bg: #171421;
+        --card: #211c2e;
+        --bd: #382f4d;
+        --tx: #e6dfd0;
+        --mu: #9b92ad;
+        --ac: #b48ef2;
+        --ok: #d2a65c;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #eeebf4;
+          --card: #fff;
+          --bd: #d6cfe6;
+          --tx: #25203a;
+          --mu: #6d6585;
+          --ac: #6a3fc4;
+          --ok: #8a5f10;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--tx);
+        font:
+          16px/1.5 'Gill Sans',
+          'Gill Sans MT',
+          Candara,
+          'Segoe UI',
+          sans-serif;
+      }
+      .wrap {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 18px 14px 60px;
+      }
+      h1 {
+        margin: 0.1em 0 0.3em;
+        font:
+          600 2rem/1.1 'Palatino Linotype',
+          Palatino,
+          'Book Antiqua',
+          serif;
+        color: var(--ac);
+      }
+      .bar {
+        height: 6px;
+        background: var(--bd);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--ac);
+        box-shadow: 0 0 10px var(--ac);
+        transition: width 0.3s;
+      }
+      .mu {
+        color: var(--mu);
+      }
+      nav,
+      #tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 12px 0;
+      }
+      button,
+      select,
+      input[type='search'] {
+        font: inherit;
+        color: var(--tx);
+        background: var(--card);
+        border: 1px solid var(--bd);
+        border-radius: 6px;
+        padding: 5px 10px;
+      }
+      button {
+        cursor: pointer;
+      }
+      button:hover,
+      button:focus-visible {
+        border-color: var(--ac);
+      }
+      nav .on {
+        background: var(--ac);
+        border-color: var(--ac);
+        color: var(--bg);
+      }
+      #tools label {
+        margin-left: 10px;
+      }
+      .chip.off {
+        opacity: 0.45;
+        text-decoration: line-through;
+      }
+      .chip.on {
+        border-color: var(--ac);
+      }
+      .area {
+        background: var(--card);
+        border: 1px solid var(--bd);
+        border-radius: 8px;
+        margin: 12px 0;
+        overflow: hidden;
+      }
+      .area h3 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        padding: 9px 12px;
+        cursor: pointer;
+        font:
+          600 1.1rem 'Palatino Linotype',
+          Palatino,
+          serif;
+      }
+      .area h3 button {
+        font-size: 0.8rem;
+        padding: 1px 8px;
+      }
+      .area h3 b {
+        font:
+          600 0.9rem 'Gill Sans',
+          sans-serif;
+        color: var(--mu);
+        min-width: 3.2em;
+        text-align: right;
+      }
+      .area h3 b.ok {
+        color: var(--ok);
+      }
+      .pad {
+        padding-bottom: 10px;
+      }
+      .pad p {
+        margin: 6px 12px;
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      li {
+        border-top: 1px solid var(--bd);
+        padding: 7px 12px;
+      }
+      li label {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px 8px;
+        cursor: pointer;
+      }
+      input[type='checkbox'] {
+        accent-color: var(--ac);
+        width: 1.05em;
+        height: 1.05em;
+        align-self: center;
+      }
+      li.done .tx {
+        color: var(--mu);
+        text-decoration: line-through;
+      }
+      a {
+        color: var(--ac);
+      }
+      .tag {
+        font-style: normal;
+        font-size: 0.75rem;
+        border: 1px solid currentColor;
+        border-radius: 10px;
+        padding: 0 7px;
+        color: var(--mu);
+      }
+      .boss {
+        color: #e0766a;
+      }
+      .npc {
+        color: #6fb0e0;
+      }
+      .quest {
+        color: var(--ok);
+      }
+      .loot {
+        color: #7fc27a;
+      }
+      .missable {
+        color: #e8a23c;
+      }
+      code {
+        background: var(--bd);
+        padding: 0 4px;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Baldur's Gate 3 Checklist</h1>
+      <div class="bar"><i id="pb"></i></div>
+      <div class="mu"><span id="tot"></span> done</div>
+      <nav id="tabs"></nav>
+      <div id="tools">
+        <input type="search" id="q" placeholder="Filter points of interest…" />
+        <label><input type="checkbox" id="hd" /> Hide completed</label>
+        <div id="tags"></div>
+      </div>
+      <div id="app"></div>
+    </div>
+
+    <script>
+      /* ============================================================
+   EDIT ME: points of interest
+   ------------------------------------------------------------
+   TAGS  : tag id → label shown on chips/filters. Add your own,
+           e.g.  camp:"Camp"  (optional colour: .camp{color:...} in CSS).
+   DATA  : acts → areas → items.
+   item  : [ "Text", "tag1 tag2", "optional-fixed-id" ]
+           - Text accepts links: [label](https://example.com)
+           - Tags are space-separated and optional ("").
+           - Progress is stored per item under an id built from the
+             area id + the text. If you reword an item and want to keep
+             its progress, give it a fixed id (3rd value).
+   Area ids must be unique. Trailing commas are fine.
+   ============================================================ */
+      const TAGS = {
+        boss: 'Boss',
+        npc: 'NPC',
+        quest: 'Quest',
+        loot: 'Loot',
+        missable: 'Missable',
+      }
+
+      const DATA = [
+        {
+          name: 'Act 1',
+          areas: [
+            {
+              id: 'beach',
+              name: 'Ravaged Beach & Wilderness',
+              items: [
+                ["Recruit Shadowheart, Lae'zel and Astarion", 'npc'],
+                ['Recruit Gale in the Wilderness', 'npc'],
+                ['Explore abandoned church and free Withers', 'npc'],
+                ['Explore around and find guidance amulet', 'loot'],
+              ],
+            },
+            {
+              id: 'grove',
+              name: 'Emerald Grove & Druid Grove',
+              items: [
+                ['Meet Zevlor and begin the Save the Grove quest', 'quest npc'],
+                ['Recruit Wyll', 'npc'],
+                [
+                  'Talk to Dammon the blacksmith about Karlach engine',
+                  'npc loot',
+                ],
+                ['Handle Kagha situation', 'boss quest'],
+              ],
+            },
+            {
+              id: 'wild',
+              name: 'Wilderness Side Quests',
+              items: [
+                [
+                  "Visit the Hag's Hut and deal with Auntie Ethel",
+                  'boss quest missable',
+                ],
+                ['Rescue Scratch', 'npc missable'],
+                ['Recruit Karlach', 'npc missable'],
+              ],
+            },
+            {
+              id: 'goblins',
+              name: 'Goblin Camp',
+              items: [
+                ['Free Halsin from the Goblin Camp', 'quest npc'],
+                ['Defeat Dror Ragzlin', 'boss'],
+                ['Defeat Priestess Gut', 'boss'],
+                ['Defeat or ally with Minthara', 'boss npc missable'],
+              ],
+            },
+            {
+              id: 'underdark',
+              name: 'Underdark',
+              items: [
+                ['Meet Sovereign Spaw in the Myconid Colony', 'npc'],
+                ['Defeat Grym in Grymforge', 'boss'],
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Act 2',
+          areas: [
+            {
+              id: 'shadow',
+              name: 'Shadow-Cursed Lands',
+              items: [
+                ['Reach the Last Light Inn and meet Isobel', 'npc'],
+                ['Explore Reithwin Town', 'quest'],
+                ['Complete the Gauntlet of Shar (Shadowheart)', 'quest'],
+                ['Free the prisoners at Moonrise Towers', 'quest'],
+                ['Defeat Ketheric Thorm', 'boss'],
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Act 3',
+          areas: [
+            {
+              id: 'lower',
+              name: 'Lower City',
+              items: [['Visit Sorcerous Sundries', 'quest']],
+            },
+            {
+              id: 'upper',
+              name: "Upper City & Wyrm's Rock",
+              items: [
+                ["Defeat Cazador Szarr (Astarion's questline)", 'boss quest'],
+                ["Defeat Gortash at Wyrm's Rock", 'boss'],
+                ['Defeat Orin the Red', 'boss'],
+                ['Confront the Netherbrain', 'boss'],
+              ],
+            },
+          ],
+        },
+      ]
+      /* ======================== end of editable data ======================== */
+
+      const KEY = 'bg3_checklist_v1'
+      const $ = (id) => document.getElementById(id)
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"]/g,
+          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c],
+        )
+      const fmt = (s) =>
+        esc(s).replace(
+          /\[([^\]]+)\]\((https?:[^)\s]+)\)/g,
+          '<a href="$2" target="_blank" rel="noopener">$1</a>',
+        )
+      const seen = {}
+      const uniq = (k) => {
+        while (seen[k]) k += '_'
+        return (seen[k] = k)
+      }
+
+      const ACTS = DATA.map((a) => ({
+        name: a.name,
+        areas: a.areas.map((ar) => ({
+          id: ar.id,
+          name: ar.name,
+          list: ar.items.map(([t, g = '', id]) => ({
+            t,
+            g: g.split(/\s+/).filter(Boolean),
+            k: uniq(
+              id ||
+                ar.id +
+                  ':' +
+                  t
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .slice(0, 40),
+            ),
+          })),
+        })),
+      }))
+      const AREAS = ACTS.flatMap((a) => a.areas)
+
+      let S
+      try {
+        S = JSON.parse(localStorage.getItem(KEY))
+      } catch (e) {}
+      if (!S || !S.profiles) S = { cur: 'Default', profiles: {} }
+      const blank = () => ({
+        done: {},
+        col: {},
+        hideDone: false,
+        off: {},
+        tab: 0,
+      })
+      const P = () =>
+        (S.profiles[S.cur] = Object.assign(blank(), S.profiles[S.cur]))
+      const save = () => {
+        try {
+          localStorage.setItem(KEY, JSON.stringify(S))
+        } catch (e) {}
+      }
+      const vis = (p, it) => !it.g.length || it.g.some((t) => !p.off[t])
+
+      function opts() {
+        return `<section class="area pad"><h3>Profiles</h3><p><select id="prof">${Object.keys(
+          S.profiles,
+        )
+          .map(
+            (n) => `<option ${n == S.cur ? 'selected' : ''}>${esc(n)}</option>`,
+          )
+          .join('')}</select>
+    <button data-act="add">Add</button> <button data-act="ren">Rename</button> <button data-act="del">Delete</button></p>
+    <h3>Data</h3><p><button data-act="exp">Export JSON</button> <button data-act="imp">Import JSON</button>
+    <button data-act="reset">Reset this profile</button></p>
+    <p class="mu">Progress is saved in this browser's localStorage (key <code>${KEY}</code>). Clearing site data erases it, so export a backup now and then.</p>
+    <input type="file" id="file" accept=".json" hidden></section>`
+      }
+
+      function render() {
+        const p = P(),
+          q = $('q').value.trim().toLowerCase()
+        if (p.tab > ACTS.length) p.tab = 0
+        const onOpts = p.tab == ACTS.length
+        let tabs = '',
+          body = '',
+          all = 0,
+          alld = 0
+        ACTS.forEach((a, i) => {
+          let n = 0,
+            d = 0,
+            h = ''
+          a.areas.forEach((ar) => {
+            const v = ar.list.filter((it) => vis(p, it)),
+              c = v.filter((it) => p.done[it.k]).length
+            n += v.length
+            d += c
+            if (i != p.tab) return
+            const s = v.filter(
+              (it) =>
+                (!p.hideDone || !p.done[it.k]) &&
+                (!q || (it.t + ' ' + ar.name).toLowerCase().includes(q)),
+            )
+            if (!s.length) return
+            const open = q || !p.col[ar.id],
+              id = esc(ar.id)
+            h += `<section class="area"><h3 data-col="${id}"><span>${open ? '▾' : '▸'} ${esc(ar.name)}</span>
+        <span><button data-all="${id}">Check all</button> <button data-none="${id}">Clear</button>
+        <b class="${c == v.length ? 'ok' : ''}">${c == v.length ? 'Done' : c + '/' + v.length}</b></span></h3>`
+            if (open)
+              h +=
+                '<ul>' +
+                s
+                  .map(
+                    (it) => `<li class="${p.done[it.k] ? 'done' : ''}"><label>
+        <input type="checkbox" data-k="${esc(it.k)}" ${p.done[it.k] ? 'checked' : ''}><span class="tx">${fmt(it.t)}</span>
+        ${it.g.map((t) => `<em class="tag ${esc(t)}">${esc(TAGS[t] || t)}</em>`).join('')}</label></li>`,
+                  )
+                  .join('') +
+                '</ul>'
+            h += '</section>'
+          })
+          all += n
+          alld += d
+          tabs += `<button data-tab="${i}" class="${i == p.tab ? 'on' : ''}">${esc(a.name)} <small>${d}/${n}</small></button>`
+          if (i == p.tab)
+            body =
+              h || '<p class="mu">Nothing to show with the current filters.</p>'
+        })
+        $('tabs').innerHTML =
+          tabs +
+          `<button data-tab="${ACTS.length}" class="${onOpts ? 'on' : ''}">Options</button>`
+        $('tools').hidden = onOpts
+        $('tags').innerHTML = Object.keys(TAGS)
+          .map(
+            (t) =>
+              `<button class="chip ${p.off[t] ? 'off' : 'on'}" data-tag="${esc(t)}">${esc(TAGS[t])}</button>`,
+          )
+          .join('')
+        $('hd').checked = p.hideDone
+        $('app').innerHTML = onOpts ? opts() : body
+        $('tot').textContent = alld + '/' + all
+        $('pb').style.width = (all ? (100 * alld) / all : 0) + '%'
+      }
+
+      function act(a) {
+        const names = Object.keys(S.profiles)
+        if (a == 'add') {
+          const n = (prompt('Profile name') || '').trim()
+          if (n && !S.profiles[n]) S.cur = n
+        }
+        if (a == 'ren') {
+          const n = (prompt('New name', S.cur) || '').trim()
+          if (n && !S.profiles[n]) {
+            S.profiles[n] = S.profiles[S.cur]
+            delete S.profiles[S.cur]
+            S.cur = n
+          }
+        }
+        if (
+          a == 'del' &&
+          names.length > 1 &&
+          confirm('Delete profile “' + S.cur + '”?')
+        ) {
+          delete S.profiles[S.cur]
+          S.cur = Object.keys(S.profiles)[0]
+        }
+        if (a == 'reset' && confirm('Reset all progress in this profile?'))
+          P().done = {}
+        if (a == 'exp') {
+          const el = document.createElement('a')
+          el.href = URL.createObjectURL(
+            new Blob([JSON.stringify(S)], { type: 'application/json' }),
+          )
+          el.download =
+            'bg3-checklist-' + new Date().toISOString().slice(0, 10) + '.json'
+          el.click()
+          URL.revokeObjectURL(el.href)
+          return
+        }
+        if (a == 'imp') return $('file').click()
+        save()
+        render()
+      }
+
+      document.onclick = (e) => {
+        const d = (x) => e.target.closest('[' + x + ']'),
+          p = P()
+        let el
+        if ((el = d('data-tab'))) p.tab = +el.dataset.tab
+        else if ((el = d('data-tag')))
+          p.off[el.dataset.tag] = !p.off[el.dataset.tag]
+        else if ((el = d('data-all') || d('data-none'))) {
+          const ar = AREAS.find(
+            (x) => x.id == (el.dataset.all || el.dataset.none),
+          )
+          ar.list
+            .filter((it) => vis(p, it))
+            .forEach((it) =>
+              el.dataset.all ? (p.done[it.k] = 1) : delete p.done[it.k],
+            )
+        } else if ((el = d('data-col')))
+          p.col[el.dataset.col] = !p.col[el.dataset.col]
+        else if ((el = d('data-act'))) return act(el.dataset.act)
+        else return
+        save()
+        render()
+      }
+
+      document.onchange = (e) => {
+        const t = e.target,
+          p = P()
+        if (t.dataset.k) {
+          if (t.checked) p.done[t.dataset.k] = 1
+          else delete p.done[t.dataset.k]
+        } else if (t.id == 'hd') p.hideDone = t.checked
+        else if (t.id == 'prof') S.cur = t.value
+        else if (t.id == 'file' && t.files[0]) {
+          const fr = new FileReader()
+          fr.onload = () => {
+            try {
+              const d = JSON.parse(fr.result)
+              if (
+                !d.profiles ||
+                !confirm('Replace all current profiles with the imported file?')
+              )
+                return
+              S = d
+              S.cur = S.profiles[S.cur] ? S.cur : Object.keys(S.profiles)[0]
+              save()
+              render()
+            } catch (err) {
+              alert('Invalid file: ' + err.message)
+            }
+          }
+          fr.readAsText(t.files[0])
+          return
+        } else return
+        save()
+        render()
+      }
+
+      $('q').oninput = render
+      render()
+    </script>
+  </body>
+</html>
