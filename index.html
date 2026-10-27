@@ -12,7 +12,7 @@
         --tx: #e6dfd0;
         --mu: #9b92ad;
         --ac: #b48ef2;
-        --ok: #d2a65c;
+        --ok: #dea440;
       }
       @media (prefers-color-scheme: light) {
         :root {
@@ -200,7 +200,13 @@
         color: #7fc27a;
       }
       .missable {
-        color: #e8a23c;
+        color: #e4af60;
+      }
+      .prereq {
+        color: #cb6df0;
+      }
+      .opt {
+        color: #eef06d;
       }
       code {
         background: var(--bd);
@@ -227,9 +233,9 @@
       /* ============================================================
    EDIT ME: points of interest
    ------------------------------------------------------------
-   TAGS  : tag id → label shown on chips/filters. Add your own,
+   TAGS  : tag id -> label shown on chips/filters. Add your own,
            e.g.  camp:"Camp"  (optional colour: .camp{color:...} in CSS).
-   DATA  : acts → areas → items.
+   DATA  : acts -> areas -> items.
    item  : [ "Text", "tag1 tag2", "optional-fixed-id" ]
            - Text accepts links: [label](https://example.com)
            - Tags are space-separated and optional ("").
@@ -240,11 +246,12 @@
    ============================================================ */
       const TAGS = {
         boss: 'Boss',
-        npc: 'NPC',
+        npc: 'Companion/Ally',
         quest: 'Quest',
         loot: 'Loot',
         missable: 'Missable',
-        prerequisite: 'Prerequisite',
+        prereq: 'Prerequisite',
+        opt: 'Optional', 
       }
 
       const DATA = [
@@ -257,6 +264,7 @@
               items: [
                 ["Recruit Shadowheart, Lae'zel and Astarion", 'npc'],
                 ['Recruit Gale in the Wilderness', 'npc'],
+                ['Kill mindflayer in crashed out ship'],
                 ['Explore abandoned church and free Withers', 'npc'],
                 ['Explore around and find guidance amulet', 'loot'],
               ],
@@ -265,8 +273,12 @@
               id: 'grove',
               name: 'Emerald Grove & Druid Grove',
               items: [
-                ['Meet Zevlor and begin the Save the Grove quest', 'quest npc'],
+                ['Meet Zevlor, fight goblins and begin the Save the Grove quest', 'quest npc'],
                 ['Recruit Wyll', 'npc'],
+                ['Save Arabella', 'npc']
+                ['Rescue Miron from Harpies, then talk to Mol', 'missable'],
+                ['Steal Idol of Silvanus and get Ring of Protection', 'quest loot missable optional'],
+                ['Steal Idol back from Mol', 'loot optional']
                 [
                   'Talk to Dammon the blacksmith about Karlach engine',
                   'npc loot',
