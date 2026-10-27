@@ -395,14 +395,15 @@
                 { id: 'wyll', title: 'Recruit Wyll', tags: 'npc' },
                 { id: 'arabella', title: 'Save Arabella', tags: 'npc' },
                 { id: 'harpies', title: 'Rescue Mirkon from Harpies, then talk to Mol', tags: 'opt prereq' },
+                { id: 'kagha', title: 'Handle Kagha situation (shadow Druids)', tags: 'boss quest', requires: 'melphit' },
                 {
                   id: 'silvanus-idol-mol',
                   title: 'Steal Idol of Silvanus and get Ring of Protection',
                   tags: 'quest loot opt',
+                  requires: 'kagha',
                   subtasks: [{ id: 'silvanus-idol-permanent', title: 'Steal Idol back from Mol', tags: 'loot opt buff' }],
                 },
                 { id: 'karlach-engine-1', title: 'Talk to Dammon the blacksmith about Karlach engine', tags: 'npc loot buff', requires: 'karlach' },
-                { id: 'kagha', title: 'Handle Kagha situation (shadow Druids)', tags: 'boss quest', requires: 'melphit' },
               ],
             },
             {
