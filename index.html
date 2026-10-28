@@ -278,6 +278,23 @@
         opacity: 0.6;
         text-decoration: line-through;
       }
+      /* AND / OR switch: a two-segment toggle, the active side is filled */
+      button.mode {
+        display: inline-flex;
+        padding: 2px;
+        border-radius: 14px;
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+      button.mode span {
+        padding: 2px 10px;
+        border-radius: 12px;
+        color: var(--mu);
+      }
+      button.mode span.on {
+        background: var(--ac);
+        color: var(--bg);
+      }
       /* Custom tags: add a line like  .camp { --c: #0a7; }  to give your own tag a colour */
       .boss {
         --c: var(--boss);
@@ -655,9 +672,10 @@
       if (!S || !S.profiles) S = { cur: 'Default', profiles: {} }
       // A fresh profile:
       //   done: task id -> 1 when checked      col: area id -> true when collapsed
-      //   hideDone: hide completed tasks       off: tag id -> true when that tag filter is switched off
+      //   hideDone: hide completed tasks       off: tag id -> true when that tag filter is active (name is historical)
       //   tab: selected act (or Options)       sub: act index -> selected subact id
-      const blank = () => ({ done: {}, col: {}, hideDone: false, off: {}, tab: 0, sub: {} })
+      //   or: tag filters match ANY active tag (OR) instead of ALL of them (AND)
+      const blank = () => ({ done: {}, col: {}, hideDone: false, off: {}, or: false, tab: 0, sub: {} })
       // Current profile (missing fields are filled in from blank(), so old saves keep working)
       const P = () => (S.profiles[S.cur] = Object.assign(blank(), S.profiles[S.cur]))
       // Persist state; ignore errors (e.g. storage blocked in private mode)
@@ -666,16 +684,16 @@
           localStorage.setItem(KEY, JSON.stringify(S))
         } catch (e) {}
       }
-      // A task is visible unless ALL of its tags are switched off (untagged tasks always show)
+      // With no active tag filters everything shows; otherwise AND (default) needs every active tag, OR needs at least one
       const vis = (p, it) => {
-        // Toggle between AND/OR filters
-        if (false /* add toggle check here */) return !it.g.length || it.g.some((t) => !p.off[t])
         // Active tag filters
-        fil = Object.entries(p.off).reduce((acc, [x, y]) => {
+        const fil = Object.entries(p.off).reduce((acc, [x, y]) => {
           if (y) return acc.concat(x)
           return acc
         }, [])
-        // Return only tasks that contain all active filters
+        // OR mode: tasks that contain at least one active filter
+        if (p.or) return !fil.length || fil.some((z) => it.g.includes(z))
+        // AND mode: only tasks that contain all active filters
         return fil.every((z) => it.g.includes(z))
       }
 
@@ -771,11 +789,13 @@
         $('subs').innerHTML = onOpts ? '' : subs
         $('subs').hidden = onOpts || !subs
         $('tools').hidden = onOpts
-        // Tag filter chips (struck through when off) followed by the toggle-all button
+        // Tag filter chips (struck through when off), the toggle-all button and the AND/OR switch
         $('tags').innerHTML =
           Object.keys(TAGS)
             .map((t) => `<button class="chip tg ${esc(t)} ${!p.off[t] ? 'off' : 'on'}" data-tag="${esc(t)}">${esc(TAGS[t])}</button>`)
-            .join('') + `<button class="chip" data-tag-all="1" title="Toggle all tag filters">${Object.keys(TAGS).every((t) => p.off[t]) ? 'Enable all' : 'Disable all'}</button>`
+            .join('') +
+          `<button class="chip" data-tag-all="1" title="Toggle all tag filters">${Object.keys(TAGS).every((t) => p.off[t]) ? 'Disable all' : 'Enable all'}</button>` +
+          `<button class="mode" role="switch" aria-checked="${!!p.or}" data-mode="1" title="Match tasks with ALL active tags (AND) or ANY of them (OR)"><span class="${p.or ? '' : 'on'}">AND</span><span class="${p.or ? 'on' : ''}">OR</span></button>`
         $('hd').checked = p.hideDone
         $('app').innerHTML = onOpts ? opts() : body
         $('tot').textContent = alld + '/' + all
@@ -792,7 +812,7 @@
         p.col[b.ar.id] = false
         $('q').value = ''
         if (p.done[k]) p.hideDone = false
-        if (!vis(p, b.n)) b.n.g.forEach((t) => delete p.off[t])
+        if (!vis(p, b.n)) Object.keys(p.off).forEach((t) => b.n.g.includes(t) || delete p.off[t])
         save()
         render()
         const box = [...document.querySelectorAll('input[data-k]')].find((x) => x.dataset.k == k)
@@ -847,11 +867,13 @@
           return jump(el.dataset.goto)
         } else if ((el = d('data-tab'))) p.tab = +el.dataset.tab
         else if ((el = d('data-sub'))) p.sub[p.tab] = el.dataset.sub
-        // Toggle all tag filters: if every tag is off, turn them all on; otherwise turn them all off
+        // Toggle all tag filters: if every tag is on, turn them all off; otherwise turn them all on
         else if ((el = d('data-tag-all'))) {
-          const allOff = Object.keys(TAGS).every((t) => p.off[t])
-          Object.keys(TAGS).forEach((t) => (p.off[t] = !allOff))
+          const allOn = Object.keys(TAGS).every((t) => p.off[t])
+          Object.keys(TAGS).forEach((t) => (p.off[t] = !allOn))
         } else if ((el = d('data-tag'))) p.off[el.dataset.tag] = !p.off[el.dataset.tag]
+        // AND / OR switch for the tag filters
+        else if ((el = d('data-mode'))) p.or = !p.or
         // Check all / Clear: only affects tasks visible under the current tag filters
         else if ((el = d('data-all') || d('data-none'))) {
           const ar = AREAS.find((x) => x.id == (el.dataset.all || el.dataset.none))
