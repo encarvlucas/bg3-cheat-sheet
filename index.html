@@ -348,7 +348,7 @@
       const TAGS = {
         boss: 'Boss',
         npc: 'Companion/Ally',
-        quest: 'Quest',
+        quest: 'Main Quest',
         loot: 'Loot',
         buff: 'Perm. Buff',
         prereq: 'Prerequisite',
@@ -395,12 +395,12 @@
                 { id: 'wyll', title: 'Recruit Wyll', tags: 'npc' },
                 { id: 'arabella', title: 'Save Arabella', tags: 'npc' },
                 { id: 'harpies', title: 'Rescue Mirkon from Harpies, then talk to Mol', tags: 'opt prereq' },
-                { id: 'kagha', title: 'Handle Kagha situation (shadow Druids)', tags: 'boss quest', requires: 'melphit' },
+                { id: 'kagha', title: 'Handle Kagha situation (shadow Druids)', tags: 'boss', requires: 'melphit' },
                 {
                   id: 'silvanus-idol-mol',
                   title: 'Steal Idol of Silvanus and get Ring of Protection',
                   tags: 'quest loot opt',
-                  requires: 'kagha',
+                  requires: 'kagha harpies',
                   subtasks: [{ id: 'silvanus-idol-permanent', title: 'Steal Idol back from Mol', tags: 'loot opt buff' }],
                 },
                 { id: 'karlach-engine-1', title: 'Talk to Dammon the blacksmith about Karlach engine', tags: 'npc loot buff', requires: 'karlach' },
@@ -424,7 +424,12 @@
               subact: 'wilderness',
               name: 'Wilderness (South) Side Quests',
               items: [
-                { id: 'owlbear', title: 'Fight Owlbear', tags: 'boss npc opt prereq' },
+                {
+                  id: 'owlbear',
+                  title: 'Talk to absolutist siblings and Fight Owlbear',
+                  tags: 'boss npc loot prereq',
+                  subtasks: [{ id: 'owlbear2', title: 'Get them to help in the fight', tags: 'opt' }],
+                },
                 { id: 'scratch', title: 'Rescue Scratch', tags: 'npc' },
                 { id: 'karlach', title: 'Recruit Karlach', tags: 'npc' },
                 { id: 'melphit', title: 'Fight melphits and Woads to find secret Kahga letter', tags: 'loot prereq opt' },
@@ -662,7 +667,17 @@
         } catch (e) {}
       }
       // A task is visible unless ALL of its tags are switched off (untagged tasks always show)
-      const vis = (p, it) => !it.g.length || it.g.some((t) => !p.off[t])
+      const vis = (p, it) => {
+        // Toggle between AND/OR filters
+        if (false /* add toggle check here */) return !it.g.length || it.g.some((t) => !p.off[t])
+        // Active tag filters
+        fil = Object.entries(p.off).reduce((acc, [x, y]) => {
+          if (y) return acc.concat(x)
+          return acc
+        }, [])
+        // Return only tasks that contain all active filters
+        return fil.every((z) => it.g.includes(z))
+      }
 
       // HTML for the "Requires: ..." line under a task; ticks the ones already done
       const reqs = (p, n) =>
@@ -759,7 +774,7 @@
         // Tag filter chips (struck through when off) followed by the toggle-all button
         $('tags').innerHTML =
           Object.keys(TAGS)
-            .map((t) => `<button class="chip tg ${esc(t)} ${p.off[t] ? 'off' : 'on'}" data-tag="${esc(t)}">${esc(TAGS[t])}</button>`)
+            .map((t) => `<button class="chip tg ${esc(t)} ${!p.off[t] ? 'off' : 'on'}" data-tag="${esc(t)}">${esc(TAGS[t])}</button>`)
             .join('') + `<button class="chip" data-tag-all="1" title="Toggle all tag filters">${Object.keys(TAGS).every((t) => p.off[t]) ? 'Enable all' : 'Disable all'}</button>`
         $('hd').checked = p.hideDone
         $('app').innerHTML = onOpts ? opts() : body
