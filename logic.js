@@ -58,6 +58,9 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&l
 const fmt = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
 // Strip [label](url) down to just the label (used where links make no sense)
 const plain = (s) => s.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+// Trash can icon for the skip button
+const TRASH =
+  '<svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg>'
 // Make sure every task id is unique: a duplicate gets '_' appended until it is free
 const seen = {}
 const uniq = (k) => {
@@ -124,7 +127,8 @@ if (!S || !S.profiles) S = { cur: 'Default', profiles: {} }
 //   hideDone: hide completed tasks       off: tag id -> true when that tag filter is active (name is historical)
 //   tab: selected act (or Options)       sub: act index -> selected subact id
 //   or: tag filters match ANY active tag (OR) instead of ALL of them (AND)
-const blank = () => ({ done: {}, col: {}, hideDone: false, off: {}, or: false, tab: 0, sub: {} })
+//   skip: task id -> 1 when skipped (uncompletable); skipped tasks are left out of the counts
+const blank = () => ({ done: {}, skip: {}, col: {}, hideDone: false, off: {}, or: false, tab: 0, sub: {} })
 // Current profile (missing fields are filled in from blank(), so old saves keep working)
 const P = () => (S.profiles[S.cur] = Object.assign(blank(), S.profiles[S.cur]))
 // Persist state; ignore errors (e.g. storage blocked in private mode)
@@ -152,7 +156,7 @@ const reqs = (p, n) =>
     ? `<div class="req">Requires: ${n.req
         .map((k) =>
           BY[k]
-            ? `<a href="#" data-goto="${esc(k)}" class="${p.done[k] ? 'met' : ''}">${p.done[k] ? '✓ ' : ''}${esc(plain(BY[k].n.t))}</a>`
+            ? `<a href="#" data-goto="${esc(k)}" class="${p.done[k] ? 'met' : p.skip[k] ? 'skipped' : ''}">${p.done[k] ? '✓ ' : p.skip[k] ? '✗ ' : ''}${esc(plain(BY[k].n.t))}</a>`
             : `<span title="No task has this id">unknown “${esc(k)}”</span>`,
         )
         .join(', ')}</div>`
@@ -192,8 +196,8 @@ function render() {
     const cs = a.subs.includes(p.sub[i]) ? p.sub[i] : '',
       sc = {}
     a.areas.forEach((ar) => {
-      // v = tasks passing the tag filters, c = how many of those are done (counts ignore search/hide-completed)
-      const v = ar.list.filter((it) => vis(p, it)),
+      // v = tasks passing the tag filters and not skipped, c = how many of those are done (counts ignore search/hide-completed)
+      const v = ar.list.filter((it) => vis(p, it) && !p.skip[it.k]),
         c = v.filter((it) => p.done[it.k]).length
       n += v.length
       d += c
@@ -205,11 +209,13 @@ function render() {
       // A row shows if it matches the filters, or if any of its subtasks does.
       const row = (it) => {
         const sub = it.sub.map(row).join('')
-        const ok = vis(p, it) && (!p.hideDone || !p.done[it.k]) && (!q || (it.t + ' ' + ar.name).toLowerCase().includes(q))
+        const ok = vis(p, it) && (!p.hideDone || !(p.done[it.k] || p.skip[it.k])) && (!q || (it.t + ' ' + ar.name).toLowerCase().includes(q))
         if (!ok && !sub) return ''
-        return `<li class="${p.done[it.k] ? 'done' : ''}"><label>
+        const sk = !!p.skip[it.k]
+        return `<li class="${p.done[it.k] ? 'done' : sk ? 'skip' : ''}"><div class="row"><label>
     <input type="checkbox" data-k="${esc(it.k)}" ${p.done[it.k] ? 'checked' : ''}><span class="tx">${fmt(it.t)}</span>
-    ${it.g.map((t) => `<em class="tag tg ${esc(t)}">${esc(TAGS[t] || t)}</em>`).join('')}</label>${reqs(p, it)}${sub ? `<ul class="sub">${sub}</ul>` : ''}</li>`
+    ${it.g.map((t) => `<em class="tag tg ${esc(t)}">${esc(TAGS[t] || t)}</em>`).join('')}</label>
+    <button class="del" data-skip="${esc(it.k)}" aria-pressed="${sk}" title="${sk ? 'Restore task' : 'Skip task (uncompletable)'}" aria-label="${sk ? 'Restore task' : 'Skip task'}">${TRASH}</button></div>${reqs(p, it)}${sub ? `<ul class="sub">${sub}</ul>` : ''}</li>`
       }
       // Skip areas with nothing to show; collapsed areas show only their header (a search forces them open)
       const rows = ar.tree.map(row).join('')
@@ -260,7 +266,7 @@ function jump(k) {
   p.sub[b.act] = b.ar.sub
   p.col[b.ar.id] = false
   $('q').value = ''
-  if (p.done[k]) p.hideDone = false
+  if (p.done[k] || p.skip[k]) p.hideDone = false
   if (!vis(p, b.n)) Object.keys(p.off).forEach((t) => b.n.g.includes(t) || delete p.off[t])
   save()
   render()
@@ -291,7 +297,7 @@ function act(a) {
     delete S.profiles[S.cur]
     S.cur = Object.keys(S.profiles)[0]
   }
-  if (a == 'reset' && confirm('Reset all progress in this profile?')) P().done = {}
+  if (a == 'reset' && confirm('Reset all progress in this profile?')) Object.assign(P(), { done: {}, skip: {} })
   if (a == 'exp') {
     const el = document.createElement('a')
     el.href = URL.createObjectURL(new Blob([JSON.stringify(S)], { type: 'application/json' }))
@@ -323,10 +329,19 @@ document.onclick = (e) => {
   } else if ((el = d('data-tag'))) p.off[el.dataset.tag] = !p.off[el.dataset.tag]
   // AND / OR switch for the tag filters
   else if ((el = d('data-mode'))) p.or = !p.or
-  // Check all / Clear: only affects tasks visible under the current tag filters
+  // Skip / restore a task (trash button): skipping clears its checkmark
+  else if ((el = d('data-skip'))) {
+    const k = el.dataset.skip
+    if (p.skip[k]) delete p.skip[k]
+    else {
+      p.skip[k] = 1
+      delete p.done[k]
+    }
+  }
+  // Check all / Clear: only affects tasks visible under the current tag filters (Check all leaves skipped tasks alone)
   else if ((el = d('data-all') || d('data-none'))) {
     const ar = AREAS.find((x) => x.id == (el.dataset.all || el.dataset.none))
-    ar.list.filter((it) => vis(p, it)).forEach((it) => (el.dataset.all ? (p.done[it.k] = 1) : delete p.done[it.k]))
+    ar.list.filter((it) => vis(p, it) && !(el.dataset.all && p.skip[it.k])).forEach((it) => (el.dataset.all ? (p.done[it.k] = 1) : delete p.done[it.k]))
   }
   // Collapse / expand an area
   else if ((el = d('data-col'))) p.col[el.dataset.col] = !p.col[el.dataset.col]
@@ -343,8 +358,11 @@ document.onchange = (e) => {
     p = P()
   if (t.dataset.k) {
     // task checkbox
-    if (t.checked) p.done[t.dataset.k] = 1
-    else delete p.done[t.dataset.k]
+    // checking a skipped task restores it
+    if (t.checked) {
+      p.done[t.dataset.k] = 1
+      delete p.skip[t.dataset.k]
+    } else delete p.done[t.dataset.k]
   } else if (t.id == 'hd') p.hideDone = t.checked
   else if (t.id == 'prof') S.cur = t.value
   // Import: read the chosen JSON file and replace all profiles after confirmation

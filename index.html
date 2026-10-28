@@ -17,6 +17,7 @@
         --mu: #a39bb5;
         --ac: #b48ef2;
         --ok: #e0a93f;
+        --sk: #ee6b6b; /* skipped tasks */
         /* tag colours (dark mode: light text on a tinted background) */
         --boss: #ff8f82;
         --npc: #7cc0f5;
@@ -37,6 +38,7 @@
           --mu: #655d7e;
           --ac: #6a3fc4;
           --ok: #8a5a00;
+          --sk: #b42318;
           /* tag colours (light mode: dark text on a pale tinted background) */
           --boss: #b02a1e;
           --npc: #145a99;
@@ -203,9 +205,76 @@
         height: 1.05em;
         align-self: center;
       }
-      li.done > label .tx {
+      /* Task checkboxes are drawn by hand so they can show a tick (done) or a cross (skipped) */
+      li input[type='checkbox'] {
+        -webkit-appearance: none;
+        appearance: none;
+        flex: none;
+        display: grid;
+        place-content: center;
+        width: 1.15em;
+        height: 1.15em;
+        margin: 0;
+        border: 2px solid var(--mu);
+        border-radius: 4px;
+        background: transparent;
+        cursor: pointer;
+      }
+      li input[type='checkbox']::before {
+        content: '';
+        width: 0.75em;
+        height: 0.75em;
+        transform: scale(0);
+        background: var(--bg);
+      }
+      li input[type='checkbox']:checked {
+        background: var(--ac);
+        border-color: var(--ac);
+      }
+      li input[type='checkbox']:checked::before {
+        transform: scale(1);
+        clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+      }
+      li.skip input[type='checkbox'] {
+        border-color: var(--sk);
+      }
+      li.skip input[type='checkbox']::before {
+        transform: scale(1);
+        background: var(--sk);
+        clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+      }
+      li.done > .row label .tx {
         color: var(--mu);
         text-decoration: line-through;
+      }
+      li.skip > .row label .tx {
+        color: var(--sk);
+        text-decoration: line-through;
+      }
+      /* Row = checkbox label on the left, skip (trash) button on the right */
+      .row {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .row label {
+        flex: 1;
+        min-width: 0;
+      }
+      button.del {
+        flex: none;
+        display: inline-flex;
+        padding: 2px 6px;
+        line-height: 1;
+        color: var(--mu);
+        background: transparent;
+        border-color: transparent;
+      }
+      button.del:hover,
+      button.del:focus-visible,
+      button.del[aria-pressed='true'] {
+        color: var(--sk);
+        border-color: var(--sk);
       }
       .sub {
         margin: 4px 0 0 0.55em;
@@ -224,7 +293,10 @@
       .req a.met {
         color: var(--ok);
       }
-      li.flash > label {
+      .req a.skipped {
+        color: var(--sk);
+      }
+      li.flash > .row > label {
         animation: flash 1.6s;
       }
       @keyframes flash {
@@ -237,7 +309,7 @@
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        li.flash > label {
+        li.flash > .row > label {
           animation: none;
           background: color-mix(in srgb, var(--ac) 30%, transparent);
         }
@@ -333,7 +405,7 @@
       <nav id="subs" hidden></nav>
       <div id="tools">
         <input type="search" id="q" placeholder="Filter points of interest…" />
-        <label><input type="checkbox" id="hd" /> Hide completed</label>
+        <label><input type="checkbox" id="hd" /> Hide completed/skipped</label>
         <div id="tags"></div>
       </div>
       <div id="app"></div>
