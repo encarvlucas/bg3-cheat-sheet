@@ -84,7 +84,7 @@ const DATA = [
         items: [
           { id: 'goblin-entrance', title: 'Fight/talk your way out of goblins in entrance to camp', tags: 'loot' },
           { id: 'crusher', title: 'Talk to Crusher and fight/get his ring', tags: 'loot' },
-          { id: 'volo1', title: 'Free Volo', tags: 'npc', subtasks: [{ id: 'volo-eye', title: 'Talk to Volo in camp and get the magic eye', tags: 'buff' }] },
+          { id: 'volo-1', title: 'Free Volo', tags: 'npc', subtasks: [{ id: 'volo-eye', title: 'Talk to Volo in camp and get the magic eye', tags: 'buff' }] },
           { id: 'owlbear-cub', title: 'Free Owlbear cub', tags: 'npc', requires: ['owlbear'] },
           { id: 'branded', title: 'Get branded by Absolute', tags: 'buff opt' },
           { id: 'abdirak', title: "Get Loviatar's blessing from Abdirak", tags: 'buff opt' },
@@ -124,7 +124,7 @@ const DATA = [
           { id: 'gnolls-2', title: 'Fight Gnolls near cave', tags: 'boss loot', subtasks: [{ id: 'strongbox', title: 'Steal Iron Flask from Zhentarim', tags: 'opt' }] },
           { id: 'fire', title: 'Rescue Commander Florrick', tags: 'quest npc' },
           { id: 'hideout', title: 'Check out Zhentarim hideout', tags: 'loot', requires: 'gnolls-2' },
-          { id: 'gith-dragon', title: 'Handle Gith and go to mountain pass', tags: 'boss npc' },
+          { id: 'gith-dragon', title: 'Handle Gith and go to mountain pass', tags: 'quest boss npc' },
         ],
       },
       // --------------------------------- Underdark ---------------------------------------
@@ -231,11 +231,61 @@ const DATA = [
         subact: 'shadow',
         name: 'Shadow-Cursed Lands',
         items: [
-          { id: 'last-light', title: 'Reach the Last Light Inn and meet Isobel', tags: 'npc' },
-          // {id: 'reithwin', title: 'Explore Reithwin Town', tags: 'quest'},
-          { id: 'gauntlet', title: 'Complete the Gauntlet of Shar', tags: 'quest npc' },
-          { id: 'prisoners', title: 'Free the prisoners at Moonrise Towers', tags: 'quest opt' },
-          { id: 'ketheric1', title: 'Defeat Ketheric Thorm', tags: 'boss' },
+          { id: 'oliver', title: 'Talk to Oliver and play his games', tags: 'loot' },
+          { id: 'shadow-hounds', title: 'Turn off circle of everlasting light and fight shadow hounds', tags: 'loot' },
+          { id: 'mound', title: 'Fight Shambling Mound ambush', tags: 'boss loot' },
+        ],
+      },
+      {
+        id: 'last-light-inn',
+        subact: 'shadow',
+        name: 'Shadow-Cursed Lands',
+        items: [
+          { id: 'last-light', title: 'Reach the Last Light Inn and meet Isobel', tags: 'npc loot' },
+          { id: 'rolan', title: 'Talk to Rolan and save him after he leaves', tags: 'npc' },
+          { id: 'art-cullagh', title: 'Save mysterious sleeping man in inn', tags: 'loot', subtasks: [
+            { id: 'thaniel-1', title: 'Rescue Thaniel from the shadow curse realm', tags: 'boss', requires: 'halsin' },
+            { id: 'thaniel-2', title: 'Unite Oliver and Thaniel', tags: 'boss', requires: 'thaniel-1 oliver' },
+          ] },
+          { id: 'karlach-engine-2', title: 'Talk to Dammon and acquire 2nd engine upgrade for Karlach', tags: 'quest', requires: 'karlach karlach-engine-1' },
+        ],
+      },
+      {
+        id: 'reithwin',
+        subact: 'moonrise',
+        name: 'Shadow-Cursed Lands',
+        items: [
+          // TODO
+        ],
+      },
+      {
+        id: 'moonrise',
+        subact: 'moonrise',
+        name: 'Shadow-Cursed Lands',
+        items: [
+          // TODO
+          { id: 'ketheric-1', title: 'Defeat Ketheric Thorm', tags: 'quest boss' },
+          { id: 'save-minthy', title: 'Save Minthera from execution', tags: 'npc opt', requires: 'knock-out-minty' },
+          { id: 'prisoners', title: 'Free the prisoners at Moonrise Towers', tags: 'npc loot', subtasks: [
+            { id: 'warden', title: 'Fight Warden', tags: 'opt' },
+          ] },
+        ],
+      },
+      {
+        id: 'gauntlet',
+        subact: 'gauntlet',
+        name: 'Shadow-Cursed Lands',
+        items: [
+          // TODO
+        ],
+      },
+      {
+        id: 'colony',
+        subact: 'colony',
+        name: 'Mindflayer Colony',
+        items: [
+          // TODO
+          { id: 'ketheric-2', title: 'Defeat the Apostle of Myrkul', tags: 'boss' },
         ],
       },
     ],
