@@ -267,7 +267,9 @@ function jump(k) {
     p = P()
   if (!b) return
   p.tab = b.act
-  p.sub[b.act] = b.ar.sub
+  // Check current subact tab for the act of the referenced task, if its '' or undefined, leave it
+  // otherwise, set the subact of referenced task
+  if (!!p.sub[b.act]) p.sub[b.act] = b.ar.sub
   p.col[b.ar.id] = false
   $('q').value = ''
   if (p.done[k] || p.skip[k]) p.hideDone = false
