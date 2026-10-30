@@ -193,14 +193,16 @@ const DATA = [
           { id: 'grym-entry', title: 'Enter grymforge and talk to Sargent Thrinn', tags: 'quest' },
           { id: 'philomeen', title: 'Find Philomeen and get her explosive', tags: 'loot opt' },
           { id: 'forge-mimics', title: 'Fight forge Mimics', tags: 'fight loot' },
-          { id: 'nere', title: 'Free Nere', tags: 'boss loot' },
+          { id: 'nere', title: 'Free Nere', tags: 'boss loot', subtasks: [
+            { id: 'forge-gnomes', title: 'Free slave gnomes', tags: 'prereq opt' },
+          ] },
           {
             id: 'forge',
             title: 'Open passage to forge',
             tags: 'loot',
             subtasks: [
               { id: 'forge-ores-1', title: 'Find mithral ore with mephits', tags: 'fight loot' },
-              { id: 'forge-ores-2', title: 'Find mithral ore across the lava', tags: 'loot' },
+              { id: 'forge-ores-2', title: 'Find mithral ore across the lava near sharran guards', tags: 'fight loot' },
               { id: 'cursed-amulet', title: 'Find cursed amulet in the lava', tags: 'fight loot opt' },
               { id: 'grym', title: 'Craft mithral equipment and defeat Grym', tags: 'boss loot' },
             ],
