@@ -21,9 +21,10 @@
     Trailing commas are fine.
   ============================================================ */
 const TAGS = {
-  boss: 'Boss',
-  npc: 'Companion/Ally',
   quest: 'Main Quest',
+  boss: 'Boss',
+  fight: 'Fight',
+  npc: 'Ally Quest',
   loot: 'Loot',
   buff: 'Perm. Buff',
   prereq: 'Prerequisite',
@@ -38,6 +39,9 @@ const SUBACTS = {
   underdark: 'Underdark',
   creche: 'Mountain Pass',
   shadow: 'Shadow-Cursed Lands',
+  moonrise: 'Moonrise Towers',
+  gauntlet: 'Gauntlet of Shar',
+  colony: 'Mindflayer Colony',
   'lower-city': 'Lower City',
   'upper-city': 'Upper City',
 }

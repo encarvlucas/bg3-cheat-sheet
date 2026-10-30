@@ -20,6 +20,7 @@
         --sk: #ee6b6b; /* skipped tasks */
         /* tag colours (dark mode: light text on a tinted background) */
         --boss: #ff8f82;
+        --fight: #ffa79d;
         --npc: #7cc0f5;
         --quest: #f0b84f;
         --loot: #8fd68a;
@@ -41,6 +42,7 @@
           --sk: #b42318;
           /* tag colours (light mode: dark text on a pale tinted background) */
           --boss: #b02a1e;
+          --fight: #c25c53;
           --npc: #145a99;
           --quest: #8a5a00;
           --loot: #1e6e1f;
@@ -370,6 +372,9 @@
       /* Custom tags: add a line like  .camp { --c: #0a7; }  to give your own tag a colour */
       .boss {
         --c: var(--boss);
+      }
+      .fight {
+        --c: var(--fight);
       }
       .npc {
         --c: var(--npc);
