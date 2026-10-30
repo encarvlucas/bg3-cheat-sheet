@@ -134,7 +134,13 @@ const DATA = [
             subtasks: [{ id: 'strongbox', title: 'Steal Iron Flask from Zhentarim', tags: 'opt' }],
           },
           { id: 'fire', title: 'Rescue Commander Florrick', tags: 'npc' },
-          { id: 'hideout', title: 'Check out Zhentarim hideout', tags: 'loot', requires: 'gnolls-2' },
+          {
+            id: 'hideout',
+            title: 'Check out Zhentarim hideout',
+            tags: 'loot',
+            requires: 'gnolls-2',
+            subtasks: [{ id: 'oskar', title: 'Free Oskar Fevras (artist prisioner)', tags: 'prereq' }],
+          },
           { id: 'gith-dragon', title: 'Handle Gith and go to mountain pass', tags: 'quest boss npc' },
         ],
       },
@@ -252,6 +258,7 @@ const DATA = [
   {
     name: 'Act 2',
     areas: [
+      // ------------------------------ Shadow-cursed lands -----------------------------------
       {
         id: 'shadow',
         subact: 'shadow',
@@ -297,6 +304,7 @@ const DATA = [
           { id: 'isobel', title: 'Meet and save Isobel', tags: 'boss buff' },
         ],
       },
+      // --------------------------------- Moonrise Towers ---------------------------------------
       {
         id: 'reithwin',
         subact: 'moonrise',
@@ -345,6 +353,7 @@ const DATA = [
           { id: 'ketheric-1', title: 'Defeat Ketheric Thorm', tags: 'quest boss' },
         ],
       },
+      // -------------------------- Gauntlet of Shar/ Mindflayer Colony ------------------------------
       {
         id: 'gauntlet',
         subact: 'gauntlet',
@@ -356,7 +365,7 @@ const DATA = [
       },
       {
         id: 'colony',
-        subact: 'colony',
+        subact: 'gauntlet',
         name: 'Mindflayer Colony',
         items: [
           // TODO
@@ -368,21 +377,69 @@ const DATA = [
   {
     name: 'Act 3',
     areas: [
+      // --------------------------------- Wyrm's Crossing ---------------------------------------
+      {
+        id: 'rivington',
+        subact: 'wyrm-crossing',
+        name: 'Rivington',
+        items: [
+          // TODO
+        ],
+      },
+      {
+        id: 'wyrm-crossing',
+        subact: 'wyrm-crossing',
+        name: "Wyrm's Crossing",
+        items: [
+          // TODO
+          { id: 'gortash', title: "Defeat Gortash at Wyrm's Rock", tags: 'quest boss' },
+        ],
+      },
+      // --------------------------------- Baldur's Gate ---------------------------------------
       {
         id: 'lower',
-        subact: 'lower-city',
+        subact: 'city',
         name: 'Lower City',
-        items: [{ id: 'sundries', title: 'Visit Sorcerous Sundries, buy stock', tags: 'quest loot' }],
+        items: [
+          { id: 'sundries', title: 'Visit Sorcerous Sundries, buy stock', tags: 'quest loot' },
+          {
+            id: 'lady-jannath',
+            title: "Solve Lady Jannath's Estate hauting",
+            tags: 'loot',
+            requires: 'oskar',
+            subtasks: [
+              { id: 'estate', title: 'Remove estate ghosts', tags: 'fight' },
+              {
+                id: 'carrion',
+                title: 'Talk to Mystic Carrion for haunting solution',
+                tags: 'boss',
+                subtasks: [
+                  { id: 'carrion-quest', title: 'Return Thrumbo to Mystic Carrion', tags: 'opt' },
+                  { id: 'carrion-organ', title: "Destroy Mystic Carrion's organs", tags: 'opt' },
+                ],
+              },
+              { id: 'haunting', title: 'Confront the spirit', tags: 'fight' },
+            ],
+          },
+        ],
       },
       {
         id: 'upper',
-        subact: 'upper-city',
+        subact: 'city',
         name: "Upper City & Wyrm's Rock",
         items: [
           { id: 'cazador', title: 'Defeat Cazador Szarr', tags: 'boss npc' },
-          { id: 'gortash', title: "Defeat Gortash at Wyrm's Rock", tags: 'quest boss' },
           { id: 'orin', title: 'Defeat Orin the Red', tags: 'quest boss' },
           { id: 'end', title: 'Confront the Netherbrain', tags: 'quest boss' },
+        ],
+      },
+      // --------------------------------- Sewers ---------------------------------------
+      {
+        id: 'sewers',
+        subact: 'sewers',
+        name: 'Undercity Ruins',
+        items: [
+          // TODO
         ],
       },
     ],

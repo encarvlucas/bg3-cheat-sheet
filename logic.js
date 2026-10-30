@@ -40,10 +40,10 @@ const SUBACTS = {
   creche: 'Mountain Pass',
   shadow: 'Shadow-Cursed Lands',
   moonrise: 'Moonrise Towers',
-  gauntlet: 'Gauntlet of Shar',
-  colony: 'Mindflayer Colony',
-  'lower-city': 'Lower City',
-  'upper-city': 'Upper City',
+  gauntlet: 'Gauntlet of Shar/Mindflayer Colony',
+  'wyrm-crossing': "Wyrm's Crossing",
+  city: "Baldur's Gate",
+  sewers: 'Undercity Ruins',
 }
 
 // const DATA = DATA // From data.js file
