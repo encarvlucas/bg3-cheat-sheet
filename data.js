@@ -239,7 +239,9 @@ const DATA = [
             { id: 'zaithisk-tadpoles', title: "Get the 3 mindflayer tadpoles specimen in the infirmary", tags: 'loot' },
           ] },
           { id: 'gith-egg', title: 'Steal/get Githyanki egg', tags: 'opt' },
-          { id: 'vlaakith', title: "Talk to the Crèche's captain and then with the inquisitor", tags: 'boss' },
+          { id: 'vlaakith', title: "Talk to the Crèche's captain and then with the inquisitor", tags: 'boss', subtasks: [
+            { id: 'inquisitor-cache', title: 'Loot the inquisitor/monastery treasure rooms', tags: 'loot' },
+          ] },
           { id: 'lathander', title: 'Find Blood of Lathander', tags: 'loot', requires: 'crest' },
           {
             id: 'creche-war',
