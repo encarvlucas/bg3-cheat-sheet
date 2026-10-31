@@ -235,7 +235,9 @@ const DATA = [
         name: "Crèche Y'llek",
         items: [
           { id: 'jeera', title: "Shop at Gith's quartermaster", tags: 'loot' },
-          { id: 'zaithisk', title: "Participate in the Zaith'isk procedure", tags: 'fight buff' },
+          { id: 'zaithisk', title: "Participate in the Zaith'isk procedure", tags: 'fight buff', subtasks: [
+            { id: 'zaithisk-tadpoles', title: "Get the 3 mindflayer tadpoles specimen in the infirmary", tags: 'loot' },
+          ] },
           { id: 'gith-egg', title: 'Steal/get Githyanki egg', tags: 'opt' },
           { id: 'vlaakith', title: "Talk to the Crèche's captain and then with the inquisitor", tags: 'boss' },
           { id: 'lathander', title: 'Find Blood of Lathander', tags: 'loot', requires: 'crest' },
