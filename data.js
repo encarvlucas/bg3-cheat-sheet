@@ -270,6 +270,8 @@ const DATA = [
         subact: 'shadow',
         name: 'Shadow-Cursed Lands',
         items: [
+          { id: 'shadow-guide', title: 'Meet with Harper/Absolutist scouting party', tags: 'fight' },
+          { id: 'raven-ambush', title: 'Investigate suspicious raven corpse', tags: 'fight' },
           { id: 'oliver', title: 'Talk to Oliver and play his games', tags: 'fight loot prereq' },
           { id: 'shadow-hounds', title: 'Turn off circle of everlasting light and fight shadow hounds', tags: 'fight' },
           { id: 'mound', title: 'Fight Shambling Mound ambush', tags: 'boss loot' },
