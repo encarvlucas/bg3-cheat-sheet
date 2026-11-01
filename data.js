@@ -62,7 +62,7 @@ const DATA = [
         name: 'Wilderness (South) Side Quests',
         items: [
           {
-            id: 'owlbear',
+            id: 'owlbear',kennel
             title: 'Talk to absolutist siblings and Fight Owlbear',
             tags: 'boss npc prereq',
             subtasks: [{ id: 'owlbear2', title: 'Get them to help in the fight', tags: 'opt' }],
@@ -392,6 +392,16 @@ const DATA = [
         name: 'Rivington',
         items: [
           // TODO
+          { id: 'toys', title: "Investigate donation storage area", tags: 'loot' },
+          { id: 'eviction', title: "Attend Dribbles stand-up set", tags: 'fight' },
+          { id: 'circus', title: "Visit the circus of the last days", tags: 'fight', subtasks: [
+            { id: 'genie', title: "Talk to Akabi, the genie at the circus, and take play the wheel of fortune", tags: 'fight loot' },
+            { id: 'dryad', title: "Talk to Zenthino, the dryad at the circus, and take the love test", tags: 'buff' },
+            { id: 'statue', title: "Talk to Boney and Stoney, the couple in the circus, and purchase a statue of yourself", tags: 'buff' },
+            { id: 'dribbles', title: "Attend Dribbles stand-up set", tags: 'fight' },
+          ] },
+          { id: 'couriers', title: "Check out Sword Coast Couriers", tags: 'loot' },
+          { id: 'exxvikyap', title: "Check out the Rivington General store", tags: 'loot' },
         ],
       },
       {
