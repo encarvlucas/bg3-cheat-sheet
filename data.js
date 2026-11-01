@@ -273,6 +273,7 @@ const DATA = [
           { id: 'shadow-guide', title: 'Meet with Harper/Absolutist scouting party', tags: 'fight' },
           { id: 'raven-ambush', title: 'Investigate suspicious raven corpse', tags: 'fight' },
           { id: 'oliver', title: 'Talk to Oliver and play his games', tags: 'fight loot prereq' },
+          { id: 'meazel', title: 'Survive the Meazel ambush on the old pottery barn', tags: 'fight' },
           { id: 'shadow-hounds', title: 'Turn off circle of everlasting light and fight shadow hounds', tags: 'fight' },
           { id: 'mound', title: 'Fight Shambling Mound ambush', tags: 'boss loot' },
           { id: 'raven', title: 'Talk to He Who Was, and choose whether or not to punish Madeline', tags: 'fight loot', requires: 'waning-moon' },
@@ -377,6 +378,8 @@ const DATA = [
         name: 'Mindflayer Colony',
         items: [
           // TODO
+          { id: 'mizora', title: "Free Mizora's target", tags: 'loot' },
+          { id: 'zevlor', title: 'Free mindflayer pod victims', tags: 'npc' },
           { id: 'ketheric-2', title: 'Defeat the Apostle of Myrkul', tags: 'boss' },
         ],
       },
