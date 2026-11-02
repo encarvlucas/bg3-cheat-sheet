@@ -62,7 +62,7 @@ const DATA = [
         name: 'Wilderness (South) Side Quests',
         items: [
           {
-            id: 'owlbear',kennel
+            id: 'owlbear',
             title: 'Talk to absolutist siblings and Fight Owlbear',
             tags: 'boss npc prereq',
             subtasks: [{ id: 'owlbear2', title: 'Get them to help in the fight', tags: 'opt' }],
