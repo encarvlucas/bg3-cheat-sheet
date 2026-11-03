@@ -328,6 +328,7 @@ const DATA = [
             ],
           },
           { id: 'karlach-engine-2', title: 'Talk to Dammon and acquire 2nd engine upgrade for Karlach', tags: 'npc', requires: 'karlach karlach-engine-1' },
+          { id: 'meenlocks', title: "Investigate the Selunite resistance in the Inn's cellar", tags: 'fight loot' },
           { id: 'isobel', title: 'Meet and save Isobel', tags: 'boss buff' },
         ],
       },
