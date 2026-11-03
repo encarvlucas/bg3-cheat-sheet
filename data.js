@@ -324,11 +324,14 @@ const DATA = [
           { id: 'masons-guild', title: "Fight shadows in basement of Mason's Guild", tags: 'loot' },
           {
             id: 'town-center',
-            title: 'Fight shadows at the center of town',
+            title: 'Fight shadows and cursed harpers at the center of town',
             tags: 'fight',
             subtasks: [{ id: 'sharran-buff', title: 'Find secret Sharran Sanctuary and get temporary buffs', tags: 'opt' }],
           },
-          { id: 'house-of-healing', title: 'Handle Malus Thorm at the House of Healing', tags: 'boss loot' },
+          { id: 'arabella-2', title: 'Save Arabella in the cemetery, again', tags: 'fight npc', requires: 'arabella' },
+          { id: 'house-of-healing', title: 'Handle Malus Thorm at the House of Healing', tags: 'boss loot', subtasks: [
+            { id: 'arabella-parents', title: "Find Arabella's parents in the house of healing", tags: 'npc buff', requires: 'arabella' },
+          ] },
           { id: 'tollhouse', title: 'Handle Gerringothe Thorm at the Tollhouse', tags: 'boss loot' },
           { id: 'waning-moon', title: 'Handle Thisobald Thorm at the Waning Moon bar', tags: 'boss loot prereq' },
         ],
