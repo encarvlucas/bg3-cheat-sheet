@@ -4,6 +4,16 @@ const DATA = [
     areas: [
       // --------------------------------- Wilderness ---------------------------------------
       {
+        id: 'nautiloid',
+        subact: 'wilderness',
+        name: 'Nautiloid',
+        items: [
+          { id: 'sh', title: 'Free Shadowheart', tags: 'opt' },
+          { id: 'us-1', title: 'Free Us, the intellect devour', tags: 'npc' },
+          { id: 'fire-sword', title: 'Kill or make the cambion drop his fire sword', tags: 'loot opt' },
+        ],
+      },
+      {
         id: 'beach',
         subact: 'wilderness',
         name: 'Ravaged Beach & Wilderness',
@@ -49,7 +59,7 @@ const DATA = [
         name: 'Blighted Village',
         items: [
           { id: 'blighted-entryway', title: 'Handle goblins in Blighted Village entryway', tags: 'fight' },
-          { id: 'windmill', title: 'Fight/handle goblins in windmill and free/kill gnome', tags: 'fight npc loot' },
+          { id: 'barcus', title: 'Fight/handle goblins in windmill and free/kill gnome', tags: 'fight npc loot' },
           { id: 'ogres', title: 'Talk to Ogres and fight them or get their support', tags: 'boss opt' },
           { id: 'thay', title: 'Explore cellar, fight skeletons, pass mirror and find Necromancy of Thay', tags: 'fight buff' },
           { id: 'spiders', title: 'Fight phase spiders and grab Amethyst', tags: 'boss loot' },
@@ -94,7 +104,7 @@ const DATA = [
           { id: 'owlbear-cub', title: 'Free Owlbear cub', tags: 'npc', requires: ['owlbear'] },
           { id: 'branded', title: 'Get branded by Absolute', tags: 'buff opt' },
           { id: 'abdirak', title: "Get Loviatar's blessing from Abdirak", tags: 'buff opt' },
-          { id: 'tortured-prisioner', title: 'Free/kill tortured prisioner', tags: 'opt' },
+          { id: 'tortured-prisoner', title: 'Free/kill tortured prisoner', tags: 'opt' },
           {
             id: 'goblin-decision',
             title: 'Side with or against the goblin leaders',
@@ -139,7 +149,7 @@ const DATA = [
             title: 'Check out Zhentarim hideout',
             tags: 'loot',
             requires: 'gnolls-2',
-            subtasks: [{ id: 'oskar', title: 'Free Oskar Fevras (artist prisioner)', tags: 'prereq' }],
+            subtasks: [{ id: 'oskar', title: 'Free Oskar Fevras (artist prisoner)', tags: 'prereq' }],
           },
           { id: 'gith-dragon', title: 'Handle Gith and go to mountain pass', tags: 'quest boss npc' },
         ],
@@ -193,9 +203,7 @@ const DATA = [
           { id: 'grym-entry', title: 'Enter grymforge and talk to Sargent Thrinn', tags: 'quest' },
           { id: 'philomeen', title: 'Find Philomeen and get her explosive', tags: 'loot opt' },
           { id: 'forge-mimics', title: 'Fight forge Mimics', tags: 'fight loot' },
-          { id: 'nere', title: 'Free Nere', tags: 'boss loot', subtasks: [
-            { id: 'forge-gnomes', title: 'Free slave gnomes', tags: 'prereq opt' },
-          ] },
+          { id: 'nere', title: 'Free Nere', tags: 'boss loot', subtasks: [{ id: 'forge-gnomes', title: 'Free slave gnomes', tags: 'prereq opt' }] },
           {
             id: 'forge',
             title: 'Open passage to forge',
@@ -235,13 +243,19 @@ const DATA = [
         name: "Crèche Y'llek",
         items: [
           { id: 'jeera', title: "Shop at Gith's quartermaster", tags: 'loot' },
-          { id: 'zaithisk', title: "Participate in the Zaith'isk procedure", tags: 'fight buff', subtasks: [
-            { id: 'zaithisk-tadpoles', title: "Get the 3 mindflayer tadpoles specimen in the infirmary", tags: 'loot' },
-          ] },
+          {
+            id: 'zaithisk',
+            title: "Participate in the Zaith'isk procedure",
+            tags: 'fight buff',
+            subtasks: [{ id: 'zaithisk-tadpoles', title: 'Get the 3 mindflayer tadpoles specimen in the infirmary', tags: 'loot' }],
+          },
           { id: 'gith-egg', title: 'Steal/get Githyanki egg', tags: 'opt' },
-          { id: 'vlaakith', title: "Talk to the Crèche's captain and then with the inquisitor", tags: 'boss', subtasks: [
-            { id: 'inquisitor-cache', title: 'Loot the inquisitor/monastery treasure rooms', tags: 'loot' },
-          ] },
+          {
+            id: 'vlaakith',
+            title: "Talk to the Crèche's captain and then with the inquisitor",
+            tags: 'boss',
+            subtasks: [{ id: 'inquisitor-cache', title: 'Loot the inquisitor/monastery treasure rooms', tags: 'loot' }],
+          },
           { id: 'lathander', title: 'Find Blood of Lathander', tags: 'loot', requires: 'crest' },
           {
             id: 'creche-war',
@@ -282,7 +296,7 @@ const DATA = [
           { id: 'save-rolan', title: 'Save Rolan from the shadows', tags: 'fight npc', requires: 'rolan' },
           {
             id: 'lantern',
-            title: 'Ambush patroling cultists and steal their lantern',
+            title: 'Ambush patroling cultists/harpers and steal their lantern',
             tags: 'boss loot',
             subtasks: [{ id: 'dolly', title: 'Free Dolly Dolly Dolly', tags: 'buff opt' }],
           },
@@ -296,6 +310,7 @@ const DATA = [
           { id: 'last-light', title: 'Reach the Last Light Inn and meet Jaheira', tags: 'npc' },
           { id: 'talli', title: "Get free suplies and check out Quatermaster Talli's stock", tags: 'loot' },
           { id: 'alfira-inn', title: 'Talk to Alfira after saving Lakrissa', tags: 'loot', requires: 'prisoners' },
+          { id: 'barcus-inn', title: 'Talk to Barcus after saving Wulbren', tags: 'loot', requires: 'barcus prisoners' },
           { id: 'rolan', title: 'Talk to Rolan and save him after he leaves', tags: 'npc prereq' },
           {
             id: 'art-cullagh',
@@ -341,16 +356,27 @@ const DATA = [
           },
           { id: 'cursed-kuo-toa', title: 'Fight cursed Kuo-toa ambush at the fishing shack', tags: 'fight loot' },
           { id: 'arabella-2', title: 'Save Arabella in the cemetery, again', tags: 'fight npc', requires: 'arabella' },
-          { id: 'house-of-healing', title: 'Handle Malus Thorm at the House of Healing', tags: 'boss loot', subtasks: [
-            { id: 'arabella-parents', title: "Find Arabella's parents in the house of healing", tags: 'npc buff', requires: 'arabella' },
-            { id: 'art-lute', title: "Find Art Cullah's lost lute", tags: 'loot' },
-          ] },
-          { id: 'tollhouse', title: 'Handle Gerringothe Thorm at the Tollhouse', tags: 'boss loot', subtasks: [
-            { id: 'tollhouse-basement', title: 'Loot Tollhouse basement', tags: 'loot' },
-          ] },
-          { id: 'waning-moon', title: 'Handle Thisobald Thorm at the Waning Moon bar', tags: 'boss loot prereq', subtasks: [
-            { id: 'madeline-book', title: "Find Madeline's jornal", tags: 'loot' },
-          ] },
+          {
+            id: 'house-of-healing',
+            title: 'Handle Malus Thorm at the House of Healing',
+            tags: 'boss loot',
+            subtasks: [
+              { id: 'arabella-parents', title: "Find Arabella's parents in the house of healing", tags: 'npc buff', requires: 'arabella' },
+              { id: 'art-lute', title: "Find Art Cullah's lost lute", tags: 'loot' },
+            ],
+          },
+          {
+            id: 'tollhouse',
+            title: 'Handle Gerringothe Thorm at the Tollhouse',
+            tags: 'boss loot',
+            subtasks: [{ id: 'tollhouse-basement', title: 'Loot Tollhouse basement', tags: 'loot' }],
+          },
+          {
+            id: 'waning-moon',
+            title: 'Handle Thisobald Thorm at the Waning Moon bar',
+            tags: 'boss loot prereq',
+            subtasks: [{ id: 'madeline-book', title: "Find Madeline's jornal", tags: 'loot' }],
+          },
         ],
       },
       {
@@ -380,8 +406,21 @@ const DATA = [
             subtasks: [{ id: 'gale-buff', title: '(Gale Origin) Get necromantic circle buff (absorb or destroy)', tags: 'buff opt' }],
           },
           { id: 'save-minthy', title: 'Save Minthara from execution', tags: 'npc opt', requires: 'knock-out-minty' },
-          { id: 'prisoners', title: 'Free the prisoners at Moonrise Towers', tags: 'npc loot prereq', subtasks: [{ id: 'warden', title: 'Fight Warden', tags: 'fight loot opt' }] },
-          { id: 'ketheric-1', title: 'Defeat Ketheric Thorm', tags: 'quest boss' },
+          {
+            id: 'prisoners',
+            title: 'Free the prisoners at Moonrise Towers',
+            tags: 'npc loot prereq',
+            subtasks: [
+              { id: 'warden', title: 'Fight Warden', tags: 'fight loot opt' },
+              { id: 'oubliette', title: 'Fight horrors in the flesh hole at the back of the prison', tags: 'fight loot opt' },
+            ],
+          },
+          {
+            id: 'siege',
+            title: 'Siege Moonrise Towers',
+            tags: 'quest fight',
+            subtasks: [{ id: 'ketheric-1', title: 'Defeat Ketheric Thorm and enter the hole', tags: 'quest boss' }],
+          },
         ],
       },
       // -------------------------- Gauntlet of Shar/ Mindflayer Colony ------------------------------
@@ -390,8 +429,36 @@ const DATA = [
         subact: 'gauntlet',
         name: 'Gauntlet of Shar',
         items: [
-          // TODO
           { id: 'mausoleum', title: 'Enter the Grand Mausoleum', tags: 'quest' },
+          { id: 'gauntlet-entrance', title: 'Access the Gauntlet of Shar and solve initial puzzle', tags: 'fight' },
+          { id: 'cloaker', title: 'Fight the Cloaker in the mushroom cave', tags: 'fight' },
+          {
+            id: 'balthazar',
+            title: "Visit Balthazar's hiding spot",
+            tags: 'loot',
+            subtasks: [
+              { id: 'balthazar-brother', title: 'Get support from Balthazar', tags: 'opt' },
+              { id: 'balthazar-fight', title: 'Kill Balthazar in his chamber or in the Shadowfell', tags: 'quest boss' },
+            ],
+          },
+          {
+            id: 'gauntlet-trials',
+            title: 'Descend to Shadowfell',
+            tags: 'quest',
+            subtasks: [
+              { id: 'trial-stealth', title: 'Pass the Soft-Step Trial', tags: 'quest' },
+              { id: 'trial-strength', title: 'Pass the Self-Same Trial', tags: 'quest fight' },
+              { id: 'trial-invisible', title: 'Pass the Faith-Leap Trial', tags: 'quest' },
+            ],
+          },
+          { id: 'gauntlet-library', title: "Get Spear of Night in Shar's library", tags: 'fight loot opt' },
+          {
+            id: 'yurgir',
+            title: 'Talk to or fight Yurgir, the Orthon, in the throne room',
+            tags: 'boss opt',
+            subtasks: [{ id: 'justiciar', title: 'Kill last Justiciar at the basement', tags: 'fight opt' }],
+          },
+          { id: 'nightsong', title: 'Kill or free the Nightsong', tags: 'quest' },
         ],
       },
       {
@@ -399,10 +466,23 @@ const DATA = [
         subact: 'gauntlet',
         name: 'Mindflayer Colony',
         items: [
-          // TODO
-          { id: 'mizora', title: "Free Mizora's target", tags: 'loot' },
-          { id: 'zevlor', title: 'Free mindflayer pod victims', tags: 'npc' },
-          { id: 'ketheric-2', title: 'Defeat the Apostle of Myrkul', tags: 'boss' },
+          {
+            id: 'morgue',
+            title: 'Talk to Chop, the butcher, and free him from his misery or let him be',
+            tags: 'fight loot opt',
+            subtasks: [{ id: 'us-2', title: 'Free mindflayer pod victims', tags: 'fight npc', requires: 'us-1' }],
+          },
+          { id: 'colony-hallway', title: 'Kill intellect devours in the colony hallways', tags: 'fight opt' },
+          {
+            id: 'necro-lab',
+            title: 'Fight zombies in Necrotic Laboratory',
+            tags: 'fight loot',
+            subtasks: [{ id: 'brain-puzzle', title: 'Solve brain puzzle and free trapped gith mind', tags: 'buff opt' }],
+          },
+          { id: 'colony-barracks', title: 'Fight or talk to Kressa and her necromancers', tags: 'fight' },
+          { id: 'zevlor', title: 'Free mindflayer pod victims', tags: 'fight npc' },
+          { id: 'mizora', title: "Free Zariel's asset, per Mizora's request", tags: 'loot', requires: 'wyll' },
+          { id: 'ketheric-2', title: 'Defeat the Apostle of Myrkul', tags: 'quest boss' },
         ],
       },
     ],
@@ -416,26 +496,54 @@ const DATA = [
         subact: 'wyrm-crossing',
         name: 'Rivington',
         items: [
-          // TODO
-          { id: 'toys', title: "Investigate donation storage area", tags: 'loot' },
-          { id: 'eviction', title: "Attend Dribbles stand-up set", tags: 'fight' },
-          { id: 'circus', title: "Visit the circus of the last days", tags: 'fight', subtasks: [
-            { id: 'genie', title: "Talk to Akabi, the genie at the circus, and take play the wheel of fortune", tags: 'fight loot' },
-            { id: 'dryad', title: "Talk to Zenthino, the dryad at the circus, and take the love test", tags: 'buff' },
-            { id: 'statue', title: "Talk to Boney and Stoney, the couple in the circus, and purchase a statue of yourself", tags: 'buff' },
-            { id: 'dribbles', title: "Attend Dribbles stand-up set", tags: 'fight' },
-          ] },
-          { id: 'couriers', title: "Check out Sword Coast Couriers", tags: 'loot' },
-          { id: 'exxvikyap', title: "Check out the Rivington General store", tags: 'loot' },
+          { id: 'barn', title: 'Investigate Requisitioned Barn donations', tags: 'loot' },
+          { id: 'sharran-shop', title: 'Check out Ferg Drogher stock', tags: 'loot' },
+          { id: 'strange-ox', title: 'Help out Strange Ox', tags: 'npc' },
+          { id: 'arfur', title: "Handle the eviction situation at Arfur Gregorio's Mansion", tags: 'fight loot' },
+          { id: 'orin-threat', title: "Talk to Fist Rowan and dying Stone Lord Thug on the beach, to reveal Orin's disguises", tags: 'opt' },
+          { id: 'windmill', title: 'Invistigate abandoned windmill', tags: 'fight loot' },
+          {
+            id: 'circus',
+            title: 'Visit the circus of the last days',
+            tags: 'fight',
+            subtasks: [
+              { id: 'genie', title: 'Talk to Akabi, the genie at the circus, and take play the wheel of fortune', tags: 'fight loot' },
+              { id: 'dryad', title: 'Talk to Zenthino, the dryad at the circus, and take the love test', tags: 'buff' },
+              { id: 'statue', title: 'Talk to Boney and Stoney, the couple in the circus, and purchase a statue of yourself', tags: 'buff' },
+              { id: 'dribbles', title: 'Attend Dribbles stand-up set', tags: 'fight' },
+            ],
+          },
+          {
+            id: 'temple',
+            title: 'Visit the Open Hand temple and invistigate the gruesome murder',
+            tags: 'loot',
+            subtasks: [
+              { id: 'temple-fight', title: "Kill the real murderers in the temple's basement", tags: 'fight loot' },
+              { id: 'temple-amulet', title: "Return the cursed amulet to it's rightful place", tags: 'fight loot', requires: 'cursed-amulet' },
+              { id: 'temple-roof', title: 'Say hello to Tara and retrieve missing letters on the roof', tags: 'loot' },
+            ],
+          },
+          { id: 'couriers', title: 'Check out Sword Coast Couriers', tags: 'loot', requires: 'temple-roof' },
+          { id: 'ironhand', title: "Find the ironhand gnomes and hear Wulbren's request", tags: 'npc' },
+          { id: 'rivington-beach', title: 'Loot around Rivington beach and handle the gang dispute at the clandestine harbor', tags: 'fight loot' },
+          { id: 'exxvikyap', title: 'Check out the Rivington General store', tags: 'loot' },
         ],
       },
       {
         id: 'wyrm-crossing',
         subact: 'wyrm-crossing',
-        name: "Wyrm's Crossing",
+        name: "Wyrm's Crossing/Rock",
         items: [
           // TODO
-          { id: 'gortash', title: "Defeat Gortash at Wyrm's Rock", tags: 'quest boss' },
+          { id: 'pass', title: 'Obtain passage into the city', tags: 'quest loot opt' },
+          { id: 'florrick', title: 'Free Commander Florrick from prison', tags: 'npc' },
+          {
+            id: 'gortash-cerimony',
+            title: "Attend Gortash's coronation at Wyrm's Rock",
+            tags: 'fight npc opt',
+            requires: 'wyll mizora',
+            subtasks: [{ id: 'gortash', title: "Defeat Gortash at Wyrm's Rock", tags: 'quest boss' }],
+          },
         ],
       },
       // --------------------------------- Baldur's Gate ---------------------------------------
@@ -473,16 +581,17 @@ const DATA = [
         items: [
           { id: 'cazador', title: 'Defeat Cazador Szarr', tags: 'boss npc' },
           { id: 'orin', title: 'Defeat Orin the Red', tags: 'quest boss' },
-          { id: 'end', title: 'Confront the Netherbrain', tags: 'quest boss' },
         ],
       },
-      // --------------------------------- Sewers ---------------------------------------
+      // --------------------------------- Undercity ---------------------------------------
       {
         id: 'sewers',
         subact: 'sewers',
         name: 'Undercity Ruins',
         items: [
           // TODO
+          { id: 'arabella-3', title: 'Find Arabella', tags: 'npc opt', requires: 'arabella-2' },
+          { id: 'end', title: 'Confront the Netherbrain', tags: 'quest boss' },
         ],
       },
     ],
