@@ -328,6 +328,17 @@ const DATA = [
             tags: 'fight',
             subtasks: [{ id: 'sharran-buff', title: 'Find secret Sharran Sanctuary and get temporary buffs', tags: 'opt' }],
           },
+          {
+            id: 'morgue',
+            title: 'Investigate morgue',
+            tags: 'loot',
+            subtasks: [
+              { id: 'morgue-entrance', title: 'Fight fallen guards at morgue entrance', tags: 'fight' },
+              { id: 'morgue-poison', title: 'Fight zombies in the main poisonous chamber', tags: 'fight' },
+              { id: 'morgue-backdoor', title: 'Fight oozes and hollow armor at the hole on the backdoor of the morgue', tags: 'fight loot' },
+            ],
+          },
+          { id: 'cursed-kuo-toa', title: 'Fight cursed Kuo-toa ambush at the fishing shack', tags: 'fight loot' },
           { id: 'arabella-2', title: 'Save Arabella in the cemetery, again', tags: 'fight npc', requires: 'arabella' },
           { id: 'house-of-healing', title: 'Handle Malus Thorm at the House of Healing', tags: 'boss loot', subtasks: [
             { id: 'arabella-parents', title: "Find Arabella's parents in the house of healing", tags: 'npc buff', requires: 'arabella' },
