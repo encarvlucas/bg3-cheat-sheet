@@ -278,7 +278,7 @@ const DATA = [
           { id: 'plant-ambush-1', title: 'Fight vine blights ambush near last light inn', tags: 'fight loot' },
           { id: 'plant-ambush-2', title: 'Fight vine blights ambush near creche path', tags: 'fight loot' },
           { id: 'mound', title: 'Fight Shambling Mound ambush', tags: 'boss loot' },
-          { id: 'raven', title: 'Talk to He Who Was, and choose whether or not to punish Madeline', tags: 'fight loot', requires: 'waning-moon' },
+          { id: 'raven', title: 'Talk to He Who Was, and choose whether or not to punish Madeline', tags: 'fight loot', requires: 'madeline-book' },
           { id: 'save-rolan', title: 'Save Rolan from the shadows', tags: 'fight npc', requires: 'rolan' },
           {
             id: 'lantern',
@@ -348,7 +348,9 @@ const DATA = [
           { id: 'tollhouse', title: 'Handle Gerringothe Thorm at the Tollhouse', tags: 'boss loot', subtasks: [
             { id: 'tollhouse-basement', title: 'Loot Tollhouse basement', tags: 'loot' },
           ] },
-          { id: 'waning-moon', title: 'Handle Thisobald Thorm at the Waning Moon bar', tags: 'boss loot prereq' },
+          { id: 'waning-moon', title: 'Handle Thisobald Thorm at the Waning Moon bar', tags: 'boss loot prereq', subtasks: [
+            { id: 'madeline-book', title: "Find Madeline's jornal", tags: 'loot' },
+          ] },
         ],
       },
       {
