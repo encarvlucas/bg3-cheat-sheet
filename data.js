@@ -301,6 +301,7 @@ const DATA = [
             id: 'art-cullagh',
             title: 'Save mysterious sleeping man in inn',
             tags: 'loot',
+            requires: 'art-lute',
             subtasks: [
               {
                 id: 'thaniel-1',
@@ -342,6 +343,7 @@ const DATA = [
           { id: 'arabella-2', title: 'Save Arabella in the cemetery, again', tags: 'fight npc', requires: 'arabella' },
           { id: 'house-of-healing', title: 'Handle Malus Thorm at the House of Healing', tags: 'boss loot', subtasks: [
             { id: 'arabella-parents', title: "Find Arabella's parents in the house of healing", tags: 'npc buff', requires: 'arabella' },
+            { id: 'art-lute', title: "Find Art Cullah's lost lute", tags: 'loot' },
           ] },
           { id: 'tollhouse', title: 'Handle Gerringothe Thorm at the Tollhouse', tags: 'boss loot', subtasks: [
             { id: 'tollhouse-basement', title: 'Loot Tollhouse basement', tags: 'loot' },
