@@ -332,7 +332,9 @@ const DATA = [
           { id: 'house-of-healing', title: 'Handle Malus Thorm at the House of Healing', tags: 'boss loot', subtasks: [
             { id: 'arabella-parents', title: "Find Arabella's parents in the house of healing", tags: 'npc buff', requires: 'arabella' },
           ] },
-          { id: 'tollhouse', title: 'Handle Gerringothe Thorm at the Tollhouse', tags: 'boss loot' },
+          { id: 'tollhouse', title: 'Handle Gerringothe Thorm at the Tollhouse', tags: 'boss loot', subtasks: [
+            { id: 'tollhouse-basement', title: 'Loot Tollhouse basement', tags: 'loot' },
+          ] },
           { id: 'waning-moon', title: 'Handle Thisobald Thorm at the Waning Moon bar', tags: 'boss loot prereq' },
         ],
       },
