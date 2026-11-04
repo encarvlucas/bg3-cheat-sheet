@@ -59,7 +59,7 @@ const DATA = [
         name: 'Blighted Village',
         items: [
           { id: 'blighted-entryway', title: 'Handle goblins in Blighted Village entryway', tags: 'fight' },
-          { id: 'barcus', title: 'Fight/handle goblins in windmill and free/kill gnome', tags: 'fight npc loot' },
+          { id: 'barcus', title: 'Handle goblins in windmill and free the gnome', tags: 'fight npc loot' },
           { id: 'ogres', title: 'Talk to Ogres and fight them or get their support', tags: 'boss opt' },
           { id: 'thay', title: 'Explore cellar, fight skeletons, pass mirror and find Necromancy of Thay', tags: 'fight buff' },
           { id: 'spiders', title: 'Fight phase spiders and grab Amethyst', tags: 'boss loot' },
@@ -316,7 +316,7 @@ const DATA = [
             id: 'art-cullagh',
             title: 'Save mysterious sleeping man in inn',
             tags: 'loot',
-            requires: 'art-lute',
+            requires: 'house-of-healing',
             subtasks: [
               {
                 id: 'thaniel-1',
@@ -363,7 +363,6 @@ const DATA = [
             tags: 'boss loot',
             subtasks: [
               { id: 'arabella-parents', title: "Find Arabella's parents in the house of healing", tags: 'npc buff', requires: 'arabella' },
-              { id: 'art-lute', title: "Find Art Cullah's lost lute", tags: 'loot' },
             ],
           },
           {
