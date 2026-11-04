@@ -61,8 +61,15 @@ const DATA = [
           { id: 'blighted-entryway', title: 'Handle goblins in Blighted Village entryway', tags: 'fight' },
           { id: 'barcus', title: 'Handle goblins in windmill and free the gnome', tags: 'fight npc loot' },
           { id: 'ogres', title: 'Talk to Ogres and fight them or get their support', tags: 'boss opt' },
-          { id: 'thay', title: 'Explore cellar, fight skeletons, pass mirror and find Necromancy of Thay', tags: 'fight buff' },
-          { id: 'spiders', title: 'Fight phase spiders and grab Amethyst', tags: 'boss loot' },
+          {
+            id: 'tome',
+            title: 'Explore cellar, fight skeletons, pass mirror and find the ancient tome',
+            tags: 'fight loot',
+            subtasks: [
+              { id: 'spiders', title: 'Fight phase spiders and grab Amethyst', tags: 'boss loot' },
+              { id: 'thay', title: 'Unlock Necromancy of Thay', tags: 'buff' },
+            ],
+          },
           { id: 'barn-couple', title: "Fight 'couple' copulating in barn", tags: 'fight' },
         ],
       },
@@ -327,7 +334,7 @@ const DATA = [
               },
             ],
           },
-          { id: 'karlach-engine-2', title: 'Talk to Dammon and acquire 2nd engine upgrade for Karlach', tags: 'npc', requires: 'karlach karlach-engine-1' },
+          { id: 'karlach-engine-2', title: 'Talk to Dammon and acquire 2nd engine upgrade for Karlach', tags: 'npc buff', requires: 'karlach karlach-engine-1' },
           { id: 'meenlocks', title: "Investigate the Selunite resistance in the Inn's cellar", tags: 'fight loot' },
           { id: 'isobel', title: 'Meet and save Isobel', tags: 'boss buff' },
         ],
@@ -361,9 +368,7 @@ const DATA = [
             id: 'house-of-healing',
             title: 'Handle Malus Thorm at the House of Healing',
             tags: 'boss loot',
-            subtasks: [
-              { id: 'arabella-parents', title: "Find Arabella's parents in the house of healing", tags: 'npc buff', requires: 'arabella' },
-            ],
+            subtasks: [{ id: 'arabella-parents', title: "Find Arabella's parents in the house of healing", tags: 'npc buff', requires: 'arabella' }],
           },
           {
             id: 'tollhouse',
@@ -532,27 +537,75 @@ const DATA = [
       {
         id: 'wyrm-crossing',
         subact: 'wyrm-crossing',
-        name: "Wyrm's Crossing/Rock",
+        name: "Wyrm's Crossing",
         items: [
-          // TODO
+          {
+            id: 'danthelon',
+            title: "Visit Danthelon's Dancing Axe and check out his stock",
+            tags: 'loot',
+            subtasks: [{ id: 'danthelon-basement', title: 'Meet with the Harper resistance', tags: 'fight' }],
+          },
+          {
+            id: 'sharess',
+            title: "Visit Sharess' Carress and investigate the missing prostitute",
+            tags: 'loot',
+            subtasks: [
+              { id: 'voss', title: 'Meet with Voss and receive your sword', tags: 'loot opt', requires: 'vlaakith' },
+              { id: 'naoise', title: 'Save Naoise, the nymph, at her upstairs room', tags: 'fight' },
+              { id: 'raphael', title: 'Meet with Raphael and hear his proposal', tags: 'quest loot opt' },
+            ],
+          },
+          { id: 'frayago', title: "Investigate Frayago's Flophouse", tags: 'npc' },
           { id: 'pass', title: 'Obtain passage into the city', tags: 'quest loot opt' },
+        ],
+      },
+      {
+        id: 'wyrm-rock',
+        subact: 'wyrm-crossing',
+        name: "Wyrm's Rock",
+        items: [
           { id: 'florrick', title: 'Free Commander Florrick from prison', tags: 'npc' },
           {
             id: 'gortash-cerimony',
             title: "Attend Gortash's coronation at Wyrm's Rock",
             tags: 'fight npc opt',
             requires: 'wyll mizora',
-            subtasks: [{ id: 'gortash', title: "Defeat Gortash at Wyrm's Rock", tags: 'quest boss' }],
+            subtasks: [{ id: 'gortash', title: "Defeat Gortash at his chambers in Wyrm's Rock", tags: 'quest boss' }],
           },
+          { id: 'wyrm-rock-top', title: 'Loot treasures on the top floor', tags: 'loot' },
         ],
       },
       // --------------------------------- Baldur's Gate ---------------------------------------
       {
         id: 'lower',
         subact: 'city',
-        name: 'Lower City',
+        name: 'Lower City (East)',
         items: [
-          { id: 'sundries', title: 'Visit Sorcerous Sundries, buy stock', tags: 'quest loot' },
+          { id: 'dammon', title: 'Visit Dammon at the Forge of the Nine and check out his stock', tags: 'npc loot' },
+          { id: 'sahuagin', title: 'Fight the Sahuagin ambush on the beach', tags: 'fight' },
+          {
+            id: 'sundries',
+            title: 'Visit Sorcerous Sundries, check out their stock',
+            tags: 'loot',
+            subtasks: [
+              {
+                id: 'vault',
+                title: 'Gain entrance into their secret vault',
+                tags: 'loot',
+                subtasks: [
+                  { id: 'lamp', title: 'Explore the Magic Lamp', tags: 'loot' },
+                  { id: 'stratagem', title: "Find the 'Red Knight's Stratagem'", tags: 'loot' },
+                  { id: 'seelie', title: "Find the 'Caution Before the Seelie'", tags: 'loot' },
+                  { id: 'codex', title: "Find the 'Tharchiate Codex'", tags: 'buff', requires: 'thay' },
+                  { id: 'karsus', title: "Find the 'Tome of Karsus'", tags: 'npc' },
+                ],
+              },
+              { id: 'lorroakan', title: 'Confront Lorroakan and deliver the Nightsong to him or kill him', tags: 'boss npc opt' },
+              { id: 'ramazith', title: "Loot the legendary items at the bottom of Ramazith's Tower", tags: 'loot' },
+            ],
+          },
+          { id: 'fytz', title: 'Visit the Stormshore Armory and check out their stock', tags: 'loot' },
+          { id: 'gazette', title: 'Stop the press from printing lies about you', tags: 'loot' },
           {
             id: 'lady-jannath',
             title: "Solve Lady Jannath's Estate hauting",
@@ -577,10 +630,14 @@ const DATA = [
       {
         id: 'upper',
         subact: 'city',
-        name: "Upper City & Wyrm's Rock",
+        name: 'Lower City (West)',
         items: [
+          // TODO
+          { id: 'brilliance', title: 'Visit the Society of Brilliance headequarters', tags: 'loot' },
+          { id: 'iron-throne', title: 'Rescue prisoners in Iron Throne', tags: 'fight npc' },
+          { id: 'foundry', title: 'Invade the Steel Watch Foundry and destroy it', tags: 'boss' },
+          { id: 'wavemother', title: "Visit the Water Queen's House and avenge their fallen friend", tags: 'loot' },
           { id: 'cazador', title: 'Defeat Cazador Szarr', tags: 'boss npc' },
-          { id: 'orin', title: 'Defeat Orin the Red', tags: 'quest boss' },
         ],
       },
       // --------------------------------- Undercity ---------------------------------------
@@ -592,6 +649,7 @@ const DATA = [
           // TODO
           { id: 'arabella-3', title: 'Find Arabella', tags: 'npc opt', requires: 'arabella-2' },
           { id: 'end', title: 'Confront the Netherbrain', tags: 'quest boss' },
+          { id: 'orin', title: 'Defeat Orin the Red', tags: 'quest boss' },
         ],
       },
     ],
