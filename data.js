@@ -504,7 +504,9 @@ const DATA = [
           { id: 'barn', title: 'Investigate Requisitioned Barn donations', tags: 'loot' },
           { id: 'sharran-shop', title: 'Check out Ferg Drogher stock', tags: 'loot' },
           { id: 'strange-ox', title: 'Help out Strange Ox', tags: 'npc' },
-          { id: 'arfur', title: "Handle the eviction situation at Arfur Gregorio's Mansion", tags: 'fight loot' },
+          { id: 'arfur', title: "Handle the eviction situation at Arfur Gregorio's Mansion", tags: 'fight loot', subtasks: [
+            { id: 'arfur-blackmail', title: 'Investigate mansion cellar', tags: 'loot' },
+          ] },
           { id: 'orin-threat', title: "Talk to Fist Rowan and dying Stone Lord Thug on the beach, to reveal Orin's disguises", tags: 'opt' },
           { id: 'windmill', title: 'Invistigate abandoned windmill', tags: 'fight loot' },
           {
@@ -531,7 +533,7 @@ const DATA = [
           { id: 'couriers', title: 'Check out Sword Coast Couriers', tags: 'loot', requires: 'temple-roof' },
           { id: 'ironhand', title: "Find the ironhand gnomes and hear Wulbren's request", tags: 'npc' },
           { id: 'rivington-beach', title: 'Loot around Rivington beach and handle the gang dispute at the clandestine harbor', tags: 'fight loot' },
-          { id: 'exxvikyap', title: 'Check out the Rivington General store', tags: 'loot' },
+          { id: 'exxvikyap', title: "Check out Exxvikyap's stock at the Rivington General store", tags: 'loot' },
         ],
       },
       {
@@ -583,6 +585,10 @@ const DATA = [
         items: [
           { id: 'dammon', title: 'Visit Dammon at the Forge of the Nine and check out his stock', tags: 'npc loot' },
           { id: 'sahuagin', title: 'Fight the Sahuagin ambush on the beach', tags: 'fight' },
+          { id: 'lora', title: 'Meet Lora at the Basilisk Gate Barracks and look for her daughter, Vanra', tags: 'loot', subtasks: [
+            { id: 'mayrina', title: "Find Mayrina at Old Garlow's Place and return her to her human form", tags: 'fight' },
+            { id: 'ethel-act-3', title: 'Invistigate the Blushing Mermaid', tags: 'boss loot' },
+          ] },
           {
             id: 'sundries',
             title: 'Visit Sorcerous Sundries, check out their stock',
