@@ -194,7 +194,7 @@ const DATA = [
         items: [
           { id: 'underdark-temple', title: 'Explore Selune Temple', tags: 'loot' },
           { id: 'phalar-aluve', title: 'Take Phalar Aluve from the stone', tags: 'loot' },
-          { id: 'minotaurs', name: 'Fight Underdark Minotaurs', tags: 'fight' },
+          { id: 'minotaurs', title: 'Fight Underdark Minotaurs', tags: 'fight' },
           { id: 'horrors', title: 'Fight Hook Horrors near Sussur Tree', tags: 'fight loot' },
           { id: 'bulette', title: 'Fight the Bulette', tags: 'boss' },
           { id: 'spectator', title: 'Fight Spectator', tags: 'boss loot' },
@@ -303,7 +303,7 @@ const DATA = [
           { id: 'save-rolan', title: 'Save Rolan from the shadows', tags: 'fight npc', requires: 'rolan' },
           {
             id: 'lantern',
-            title: 'Ambush patroling cultists/harpers and steal their lantern',
+            title: 'Ambush patrolling cultists/harpers and steal their lantern',
             tags: 'boss loot',
             subtasks: [{ id: 'dolly', title: 'Free Dolly Dolly Dolly', tags: 'buff opt' }],
           },
@@ -315,7 +315,7 @@ const DATA = [
         name: 'Last Light Inn',
         items: [
           { id: 'last-light', title: 'Reach the Last Light Inn and meet Jaheira', tags: 'npc' },
-          { id: 'talli', title: "Get free suplies and check out Quatermaster Talli's stock", tags: 'loot' },
+          { id: 'talli', title: "Get free supplies and check out Quatermaster Talli's stock", tags: 'loot' },
           { id: 'alfira-inn', title: 'Talk to Alfira after saving Lakrissa', tags: 'loot', requires: 'prisoners' },
           { id: 'barcus-inn', title: 'Talk to Barcus after saving Wulbren', tags: 'loot', requires: 'barcus prisoners' },
           { id: 'rolan', title: 'Talk to Rolan and save him after he leaves', tags: 'npc prereq' },
@@ -380,7 +380,7 @@ const DATA = [
             id: 'waning-moon',
             title: 'Handle Thisobald Thorm at the Waning Moon bar',
             tags: 'boss loot prereq',
-            subtasks: [{ id: 'madeline-book', title: "Find Madeline's jornal", tags: 'loot' }],
+            subtasks: [{ id: 'madeline-book', title: "Find Madeline's journal", tags: 'loot' }],
           },
         ],
       },
@@ -389,7 +389,7 @@ const DATA = [
         subact: 'moonrise',
         name: 'Moonrise Towers',
         items: [
-          { id: 'moonrise-entrance', title: "Enter Moonrise Towers and atend Minthara's trial", tags: 'quest' },
+          { id: 'moonrise-entrance', title: "Enter Moonrise Towers and attend Minthara's trial", tags: 'quest' },
           {
             id: 'moonrise-shop',
             title: 'Shop around with Roah Moonglow and Lann Tarv',
@@ -401,7 +401,7 @@ const DATA = [
             id: 'blood-potion',
             title: 'Get blood potions from Araj Oblodra',
             tags: 'loot opt',
-            subtasks: [{ id: 'blood-strength', title: 'Get her Potion of Evelasting Strength (+2 Str) by bringing Astarion to talk to her', tags: 'loot buff opt' }],
+            subtasks: [{ id: 'blood-strength', title: 'Get her Potion of Everlasting Vigour (+2 Str) by bringing Astarion to talk to her', tags: 'loot buff opt' }],
           },
           { id: 'moonrise-docks', title: 'Visit Moonrise Docks and get some tadpoles', tags: 'loot' },
           {
@@ -472,10 +472,10 @@ const DATA = [
         name: 'Mindflayer Colony',
         items: [
           {
-            id: 'morgue',
+            id: 'chop',
             title: 'Talk to Chop, the butcher, and free him from his misery or let him be',
             tags: 'fight loot opt',
-            subtasks: [{ id: 'us-2', title: 'Free mindflayer pod victims', tags: 'fight npc', requires: 'us-1' }],
+            subtasks: [{ id: 'us-2', title: 'Free Us, the aberrant intellect devourer', tags: 'fight npc', requires: 'us-1' }],
           },
           { id: 'colony-hallway', title: 'Kill intellect devours in the colony hallways', tags: 'fight opt' },
           {
