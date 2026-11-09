@@ -580,6 +580,10 @@ const DATA = [
         name: "Wyrm's Rock",
         items: [
           { id: 'florrick', title: 'Free Commander Florrick from prison', tags: 'npc', requires: 'fire' },
+          { id: 'wyrmway', title: 'Enter the Wyrmway', tags: 'companion', subtasks: [
+            { id: 'trial', title: 'Pass the trial of the four chambers: justice, insight, strategy, courage', tags: 'fight' },
+            { id: 'ansur', title: 'Fight Ansur, the guardian dragon', tags: 'boss loot' },
+          ] },
           {
             id: 'gortash-ceremony',
             title: "Attend Gortash's coronation at Wyrm's Rock",
