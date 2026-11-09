@@ -24,10 +24,11 @@ const TAGS = {
   quest: 'Main Quest',
   boss: 'Boss',
   fight: 'Fight',
-  npc: 'Ally Quest',
+  companion: 'Companion',
+  npc: 'Ally',
   loot: 'Loot',
+  shop: 'Shop',
   buff: 'Perm. Buff',
-  prereq: 'Prerequisite',
   opt: 'Optional',
 }
 

@@ -13,10 +13,11 @@ tags:
   "quest": "Main Quest",
   "boss": "Boss",
   "fight": "Fight",
+  "companion": "Companion",
   "npc": "Ally Quest",
   "loot": "Loot",
+  "shop": "Shop",
   "buff": "Perm. Buff",
-  "prereq": "Prerequisite",
   "opt": "Optional"
 }
 ```
