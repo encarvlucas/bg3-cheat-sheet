@@ -671,7 +671,7 @@ const DATA = [
             subtasks: [
               { id: 'viconia', title: 'Kill Viconia DeVir', tags: 'boss peace loot' },
               { id: 'parents', title: "Free or kill Shadowheart's parents", tags: 'companion', requires: 'shart' },
-              { id: 'mirror', title: 'Use the Mirror of Loss', tags: 'buff' },
+              { id: 'shar-hideout', title: "Find Shadowheart's hideout and read the 'Hastly Written Note'", tags: 'loot', subtasks: [{ id: 'mirror', title: 'Use the Mirror of Loss', tags: 'buff' },] },
             ],
           },
           {
