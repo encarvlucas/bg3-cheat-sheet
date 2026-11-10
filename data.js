@@ -622,7 +622,8 @@ const DATA = [
             ],
           },
           { id: 'tribunal', title: 'Infiltrate the Murder Tribunal and confront Sarevok', tags: 'quest boss loot', requires: 'cora' },
-          { id: 'cemetery', title: 'Visit the cemetery and loot the tombs', tags: 'loot opt' },
+          { id: 'cemetery', title: 'Visit the cemetery and loot the tombs', tags: 'loot opt', subtasks: [
+          { id: 'necromancy', title: 'Talk to necromancer girl', tags: 'fight opt' },] },
           { id: 'park', title: 'Visit the park and handle the assassin ambush', tags: 'fight' },
           {
             id: 'grief',
@@ -704,6 +705,7 @@ const DATA = [
               { id: 'raphael-fight', title: 'Kill Raphael and escape the House of Hope', tags: 'boss loot' },
             ],
           },
+          { id: 'araj', title: 'Meet with Araj Oblodra again', tags: 'fight loot', requires: 'blood-potion' },
           {
             id: 'bank',
             title: 'Investigate the Counting House heist',
@@ -736,6 +738,7 @@ const DATA = [
             tags: 'loot',
             subtasks: [{ id: 'ptaris', title: 'Fight or calm down Ptaris', tags: 'fight', requires: 'esther-egg' }],
           },
+          { id: 'volo-2', title: 'Rescue Volo', tags: 'fight npc', requires: 'volo-1' },
           { id: 'iron-throne', title: 'Rescue Duke Ravengard and the other prisoners in Iron Throne', tags: 'fight companion npc' },
           { id: 'foundry', title: 'Invade the Steel Watch Foundry and destroy it', tags: 'boss', requires: 'iron-throne' },
           {
