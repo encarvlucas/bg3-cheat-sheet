@@ -20,32 +20,9 @@
                             Shown indented, checkboxes are independent of the parent.
     Trailing commas are fine.
   ============================================================ */
-const TAGS = {
-  quest: 'Main Quest',
-  boss: 'Boss',
-  fight: 'Fight',
-  companion: 'Companion',
-  npc: 'Ally',
-  loot: 'Loot',
-  shop: 'Shop',
-  buff: 'Perm. Buff',
-  opt: 'Optional',
-}
+// const TAGS = TAGS // From data.js file
 
-const SUBACTS = {
-  wilderness: 'Wilderness',
-  grove: 'Emerald Grove',
-  goblins: 'Goblin Camp',
-  risen: 'Risen Road',
-  underdark: 'Underdark',
-  creche: 'Mountain Pass',
-  shadow: 'Shadow-Cursed Lands',
-  moonrise: 'Moonrise Towers',
-  gauntlet: 'Gauntlet of Shar/Mindflayer Colony',
-  'wyrm-crossing': "Wyrm's Crossing",
-  city: "Baldur's Gate",
-  sewers: 'Undercity Ruins',
-}
+// const SUBACTS = SUBACTS // From data.js file
 
 // const DATA = DATA // From data.js file
 
