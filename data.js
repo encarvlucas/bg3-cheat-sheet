@@ -523,7 +523,7 @@ const DATA = [
           { id: 'colony-barracks', title: 'Fight or talk to Kressa and her necromancers', tags: 'fight peace' },
           { id: 'zevlor', title: 'Free mindflayer pod victims', tags: 'fight npc' },
           { id: 'mizora', title: "Free Zariel's asset, per Mizora's request", tags: 'companion loot', requires: 'wyll' },
-          { id: 'ketheric-2', title: 'Defeat the Apostle of Myrkul', tags: 'quest boss' },
+          { id: 'ketheric-2', title: 'Defeat the Apostle of Myrkul', tags: 'quest boss', tooltip: 'Get his Netherstone from his corpse' },
         ],
       },
     ],
@@ -615,7 +615,14 @@ const DATA = [
             title: "Attend Gortash's coronation at Wyrm's Rock",
             tags: 'fight peace npc',
             requires: 'wyll mizora',
-            subtasks: [{ id: 'gortash', title: "Defeat (or ally with) Gortash at his chambers in Wyrm's Rock", tags: 'quest boss peace' }],
+            subtasks: [
+              {
+                id: 'gortash',
+                title: 'Defeat (or ally with) Gortash',
+                tags: 'quest boss peace',
+                tooltip: "Fight him at his chambers at the top of Wyrm's Rock and grab his Netherstone",
+              },
+            ],
           },
           // { id: 'wyrm-rock-top', title: 'Loot treasures on the top floor', tags: 'loot' },
           {
@@ -671,7 +678,12 @@ const DATA = [
             subtasks: [
               { id: 'viconia', title: 'Kill Viconia DeVir', tags: 'boss peace loot' },
               { id: 'parents', title: "Free or kill Shadowheart's parents", tags: 'companion', requires: 'shart' },
-              { id: 'shar-hideout', title: "Find Shadowheart's hideout and read the 'Hastly Written Note'", tags: 'loot', subtasks: [{ id: 'mirror', title: 'Use the Mirror of Loss', tags: 'buff' },] },
+              {
+                id: 'shar-hideout',
+                title: "Find Shadowheart's hideout and read the 'Hastly Written Note'",
+                tags: 'loot',
+                subtasks: [{ id: 'mirror', title: 'Use the Mirror of Loss', tags: 'buff' }],
+              },
             ],
           },
           {
@@ -694,8 +706,13 @@ const DATA = [
             title: 'Meet Lora at the Basilisk Gate Barracks and return her daughter, Vanra',
             tags: 'loot',
             subtasks: [
-              { id: 'mayrina', title: "Find Mayrina at Old Garlow's Place and return her to her human form", tags: 'fight' },
-              { id: 'ethel-act-3', title: 'Investigate the Blushing Mermaid and kill Ethel for good', tags: 'boss loot' },
+              { id: 'mayrina', title: "Find Mayrina at Old Garlow's Place and return her to her human form", tags: 'fight', tooltip: "Get the recipe to make Hag's Bane" },
+              {
+                id: 'ethel-act-3',
+                title: 'Investigate the Blushing Mermaid and kill Ethel for good',
+                tags: 'boss loot',
+                tooltip: "Throw the Hag's Bane potion on her or knock her out to save Vanra",
+              },
             ],
           },
           {
@@ -708,11 +725,37 @@ const DATA = [
                 title: 'Gain entrance into their secret vault',
                 tags: 'loot',
                 subtasks: [
-                  { id: 'lamp', title: 'Explore the Magic Lamp behind wall over invisible bridge', tags: 'fight peace loot' },
-                  { id: 'stratagem', title: "Find the 'Red Knight's Stratagem' on the secret door over the other side", tags: 'loot' },
-                  { id: 'seelie', title: "Find the 'Caution Before the Seelie' behind wall over invisible bridge", tags: 'loot' },
-                  { id: 'codex', title: "Find the 'Tharchiate Codex', Silverhand -> Evocation -> Wish -> Elminster", tags: 'buff', requires: 'thay' },
-                  { id: 'karsus', title: "Find the 'Tome of Karsus', Silverhand -> Abjuration -> Silver -> Wild", tags: 'companion' },
+                  {
+                    id: 'stratagem',
+                    title: "Find the 'Red Knight's Stratagem'",
+                    tags: 'loot',
+                    tooltip: 'The book is over the bridge, behind the secret door over the other side of the teleporting rooms',
+                  },
+                  {
+                    id: 'lamp',
+                    title: 'Explore the Magic Lamp',
+                    tags: 'fight peace loot',
+                    tooltip: 'The lamp is behind the wall over an invisible bridge before the room with the stratagem',
+                  },
+                  {
+                    id: 'seelie',
+                    title: "Find the 'Caution Before the Seelie'",
+                    tags: 'loot',
+                    tooltip: 'The book is behind a fake wall over invisible bridge leading to the teleporting rooms',
+                  },
+                  {
+                    id: 'codex',
+                    title: "Find the 'Tharchiate Codex'",
+                    tags: 'buff',
+                    requires: 'thay',
+                    tooltip: "You can unlock the 'Karsus' door by pulling the lever in: Silverhand -> Evocation -> Wish -> Foresight -> Elminster",
+                  },
+                  {
+                    id: 'karsus',
+                    title: "Find the 'Tome of Karsus'",
+                    tags: 'companion',
+                    tooltip: "You can unlock the 'Karsus' door by pulling the lever in: Silverhand -> Abjuration -> Silver -> Wild -> Karsus",
+                  },
                 ],
               },
               { id: 'lorroakan', title: 'Confront Lorroakan and deliver the Nightsong to him or kill him', tags: 'boss npc', requires: 'nightsong' },
@@ -735,8 +778,13 @@ const DATA = [
             title: "Visit Helsik, the Diabolist, at the Devil's Fee and get passage to the House of Hope",
             tags: 'quest',
             subtasks: [
-              { id: 'diabolist', title: 'Check out her secret stock, bring Karlach for guarantee', tags: 'shop' },
-              { id: 'hope-vault', title: "Steal Mol's contract and other goodies from Raphael's secret vault", tags: 'loot' },
+              { id: 'diabolist', title: 'Check out her secret stock', tags: 'shop', tooltip: 'Bring Karlach for guaranteed access' },
+              {
+                id: 'hope-vault',
+                title: "Raid Raphael's secret vault",
+                tags: 'loot',
+                tooltip: "The vault is located in front of the door to the boudoir, there you can find Mol's contract and other goodies",
+              },
               {
                 id: 'boudoir',
                 title: "Enter Raphael's boudoir and get the password from Haarlep",
@@ -810,7 +858,12 @@ const DATA = [
             title: "Invade Cazador's Castle and disrupt his secret ritual",
             tags: 'companion',
             subtasks: [
-              { id: 'dining', title: 'Get the key to the main hall (his family ring) and kill the werewolves', tags: 'fight' },
+              {
+                id: 'dining',
+                title: 'Get the key to the main hall (his family ring) and kill the werewolves',
+                tags: 'fight',
+                tooltip: 'His ring key is in a cursed corpse on the basement',
+              },
               {
                 id: 'cazador',
                 title: 'Defeat Cazador Szarr',
@@ -842,8 +895,8 @@ const DATA = [
             tags: 'quest fight peace',
             requires: 'tribunal',
             subtasks: [
-              { id: 'orin-secret', title: "Find Orin's secret in her chambers by speaking with her mother's corpse", tags: 'peace' },
-              { id: 'orin', title: 'Defeat Orin the Red', tags: 'quest boss loot' },
+              { id: 'orin-victim', title: "Save Orin's hostage", tooltip: "Find Orin's secret in her chambers by speaking with her mother's corpse", tags: 'peace' },
+              { id: 'orin', title: 'Defeat Orin the Red', tags: 'quest boss loot', tooltip: 'Get her Netherstone from her corpse' },
             ],
           },
           { id: 'end', title: 'Confront the Netherbrain', tags: 'quest boss', requires: 'ketheric-2 orin gortash' },

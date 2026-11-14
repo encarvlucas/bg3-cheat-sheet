@@ -9,13 +9,15 @@
     DATA     : acts -> areas -> items.
     area     : { id, subact, name, items }
                 - id must be unique; subact groups areas inside an act.
-    item     : { id, title, tags, requires, subtasks }
+    item     : { id, title, tags, requires, tooltip, subtasks }
                 - id       : unique and fixed. Progress is stored under it, so
                             keep it if you reword the title.
                 - title    : text. Accepts links: [label](https://example.com)
                 - tags     : space-separated tag ids, optional ('')
                 - requires : ids of tasks to do first, optional. Shown as links
                             under the item; clicking one jumps to it.
+                - tooltip  : optional plain text with clarifying info. Shows an ⓘ button
+                            on the row; the text appears on hover, focus or tap.
                 - subtasks : optional nested entries, same fields.
                             Shown indented, checkboxes are independent of the parent.
     Trailing commas are fine.
@@ -75,6 +77,8 @@ const mk = (A, ai, o) => {
             .replace(/[^a-z0-9]+/g, '-')
             .slice(0, 40),
     ),
+    // optional clarifying text shown in a tooltip
+    tip: o.tooltip ? String(o.tooltip) : '',
     // requires can be an array of ids or a space-separated string
     req: (o.requires?.split && o.requires?.split(' ')) || o.requires || [],
   }
@@ -96,6 +100,33 @@ const ACTS = DATA.map((a, ai) => {
 })
 // Flat list of all areas across all acts
 const AREAS = ACTS.flatMap((a) => a.areas)
+
+// ---------- Tooltips ----------
+// One floating element is reused for every ⓘ button (hover, keyboard focus or tap)
+const tipEl = document.createElement('div')
+tipEl.id = 'tip'
+tipEl.setAttribute('role', 'tooltip')
+tipEl.hidden = true
+document.body.appendChild(tipEl)
+const hideTip = () => (tipEl.hidden = true)
+const showTip = (b) => {
+  tipEl.textContent = b.dataset.tip
+  tipEl.hidden = false
+  const r = b.getBoundingClientRect(),
+    w = tipEl.offsetWidth,
+    h = tipEl.offsetHeight
+  // Centre above the button, clamp to the viewport, flip below if there is no room above
+  tipEl.style.left = Math.max(8, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 8)) + 'px'
+  tipEl.style.top = (r.top - h - 6 >= 8 ? r.top - h - 6 : r.bottom + 6) + 'px'
+}
+const tipBtn = (e) => e.target.closest && e.target.closest('.tipbtn')
+document.addEventListener('mouseover', (e) => tipBtn(e) && showTip(tipBtn(e)))
+document.addEventListener('mouseout', (e) => tipBtn(e) && hideTip())
+document.addEventListener('focusin', (e) => (tipBtn(e) ? showTip(tipBtn(e)) : hideTip()))
+document.addEventListener('focusout', (e) => tipBtn(e) && hideTip())
+document.addEventListener('click', (e) => (tipBtn(e) ? showTip(tipBtn(e)) : hideTip()))
+document.addEventListener('keydown', (e) => e.key == 'Escape' && hideTip())
+window.addEventListener('scroll', hideTip, true)
 
 // ---------- State ----------
 // S = { cur: current profile name, profiles: { name: profile } }, loaded from localStorage
@@ -158,6 +189,7 @@ function opts() {
 
 // Re-draw the whole page from the current state. Called after every change.
 function render() {
+  hideTip()
   const p = P(),
     q = $('q').value.trim().toLowerCase()
   if (p.tab > ACTS.length) p.tab = 0
@@ -197,6 +229,7 @@ function render() {
         return `<li class="${p.done[it.k] ? 'done' : sk ? 'skip' : ''}"><div class="row"><label>
     <input type="checkbox" data-k="${esc(it.k)}" ${p.done[it.k] ? 'checked' : ''}><span class="tx">${fmt(it.t)}</span>
     ${it.g.map((t) => `<em class="tag tg ${esc(t)}">${esc(TAGS[t] || t)}</em>`).join('')}</label>
+    ${it.tip ? `<button type="button" class="tipbtn" data-tip="${esc(it.tip)}" aria-label="${esc(it.tip)}">ⓘ</button>` : ''}
     <button class="del" data-skip="${esc(it.k)}" aria-pressed="${sk}" title="${sk ? 'Restore task' : 'Skip task (uncompletable)'}" aria-label="${sk ? 'Restore task' : 'Skip task'}">${TRASH}</button></div>${reqs(p, it)}${sub ? `<ul class="sub">${sub}</ul>` : ''}</li>`
       }
       // Skip areas with nothing to show; collapsed areas show only their header (a search forces them open)
