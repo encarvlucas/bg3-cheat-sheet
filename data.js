@@ -617,7 +617,7 @@ const DATA = [
             requires: 'wyll mizora',
             subtasks: [{ id: 'gortash', title: "Defeat (or ally with) Gortash at his chambers in Wyrm's Rock", tags: 'quest boss peace' }],
           },
-          { id: 'wyrm-rock-top', title: 'Loot treasures on the top floor', tags: 'loot' },
+          // { id: 'wyrm-rock-top', title: 'Loot treasures on the top floor', tags: 'loot' },
           {
             id: 'wyrmway',
             title: 'Enter the Wyrmway',
@@ -646,7 +646,7 @@ const DATA = [
               {
                 id: 'devella',
                 title: 'Meet with Devella and continue the murder investigation',
-                tags: 'quest',
+                tags: 'quest temple frayago',
                 subtasks: [
                   { id: 'chef-roveer', title: 'Warn or kill Chef Roveer', tags: 'fight peace' },
                   { id: 'nesha', title: 'Warn or kill Nesha Leesha', tags: 'fight peace' },
@@ -722,6 +722,7 @@ const DATA = [
           { id: 'fytz', title: 'Visit the Stormshore Armory, Fitz and Gloomy, to check out their stock', tags: 'shop' },
           { id: 'gazette', title: 'Stop the press from printing lies about you', tags: 'fight peace' },
           { id: 'jaheira', title: "Visit Jaheira's family and check out her secret spot", tags: 'companion loot', requires: 'last-light' },
+          { id: 'felogyr', title: "Investigate Felogyr's Fireworks", tags: 'fight', requires: 'arfur-blackmail' },
         ],
       },
       {
