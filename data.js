@@ -658,7 +658,7 @@ const DATA = [
                   { id: 'chef-roveer', title: 'Warn or kill Chef Roveer', tags: 'fight peace' },
                   { id: 'nesha', title: 'Warn or kill Nesha Leesha', tags: 'fight peace' },
                   { id: 'cora', title: 'Save or kill Cora Highberry', tags: 'fight' },
-                  { id: 'figaro', title: 'Save or kill Figaro Pennygood', tags: 'fight peace' },
+                  { id: 'figaro', title: 'Save or kill Figaro Pennygood', tags: 'fight peace', requires: 'cora', tooltip: 'If Dolor escapes the attemp on Cora, he will try Figaro next' },
                 ],
               },
             ],
