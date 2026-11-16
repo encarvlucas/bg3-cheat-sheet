@@ -820,7 +820,7 @@ const DATA = [
                 tags: 'shop',
                 subtasks: [
                   { id: 'carrion-quest', title: 'Return Thrumbo to Mystic Carrion', tags: 'peace' },
-                  { id: 'carrion-organ', title: "Destroy Mystic Carrion's organs", tags: 'boss' },
+                  { id: 'carrion-fight', title: "Kill Mystic Carrion and get the torch", tags: 'boss', requires: 'carrion-organ' },
                 ],
               },
               { id: 'haunting', title: 'Confront the spirit', tags: 'fight peace' },
@@ -889,6 +889,9 @@ const DATA = [
           { id: 'arabella-3', title: 'Find Arabella', tags: 'npc', requires: 'arabella-2' },
           { id: 'aelis', title: 'Meet the underground mad sorcerer', tags: 'fight peace' },
           { id: 'sewer-assassins', title: 'Fight sewer assassins', tags: 'fight' },
+          { id: 'tomb', title: 'Investigate cursed tomb', tags: 'fight', subtasks: [
+            { id: 'carrion-organ', title: "Destroy Mystic Carrion's organs", tags: 'peace' },
+          ] },
           {
             id: 'bhaal',
             title: 'Enter the Temple of Bhaal and pass the entrance trial',
