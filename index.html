@@ -430,6 +430,91 @@
       #tip[hidden] {
         display: none;
       }
+      button.lootbtn {
+        flex: none;
+        display: inline-flex;
+        padding: 2px 6px;
+        line-height: 1;
+        color: var(--ok);
+        background: transparent;
+        border-color: transparent;
+      }
+      button.lootbtn:hover,
+      button.lootbtn:focus-visible {
+        border-color: var(--ok);
+        background: color-mix(in srgb, var(--ok) 14%, transparent);
+        filter: drop-shadow(0 0 4px color-mix(in srgb, var(--ok) 60%, transparent));
+      }
+      #tip.loot {
+        min-width: 220px;
+        max-width: min(360px, calc(100vw - 16px));
+        padding: 0 0 6px;
+        color: #e8e2d4;
+        background: linear-gradient(180deg, #231c35, #14111d);
+        border: 1px solid #8a6a2c;
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.55),
+          0 0 14px rgba(224, 169, 63, 0.18);
+        overflow: hidden;
+      }
+      #tip .lh {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        font: 600 0.9rem var(--font-head);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #e0a93f;
+        background: linear-gradient(90deg, rgba(224, 169, 63, 0.22), transparent);
+        border-bottom: 1px solid rgba(224, 169, 63, 0.4);
+        margin-bottom: 4px;
+      }
+      #tip .li {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: baseline;
+        gap: 0 12px;
+        padding: 5px 12px 5px 10px;
+        border-left: 3px solid var(--rc, #a39bb5);
+        background: linear-gradient(90deg, color-mix(in srgb, var(--rc, #a39bb5) 16%, transparent), transparent 75%);
+      }
+      #tip .ln {
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: var(--rc, #e8e2d4);
+        text-shadow: 0 0 8px color-mix(in srgb, var(--rc, transparent) 45%, transparent);
+      }
+      #tip .lr {
+        font: 700 0.68rem var(--font-body);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--rc);
+        opacity: 0.9;
+      }
+      #tip .lo {
+        grid-column: 1 / -1;
+        font-size: 0.88rem;
+        font-style: italic;
+        color: #a39bb5;
+      }
+      #tip.loot {
+        pointer-events: auto;
+      }
+      #tip a.ln {
+        text-decoration: none;
+      }
+      #tip a.ln::after {
+        content: '↗';
+        margin-left: 0.3em;
+        font-size: 0.7em;
+        opacity: 0.7;
+      }
+      #tip a.ln:hover,
+      #tip a.ln:focus-visible {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
       code {
         background: var(--bd);
         padding: 0 4px;

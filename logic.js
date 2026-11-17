@@ -9,7 +9,7 @@
     DATA     : acts -> areas -> items.
     area     : { id, subact, name, items }
                 - id must be unique; subact groups areas inside an act.
-    item     : { id, title, tags, requires, tooltip, subtasks }
+    item     : { id, title, tags, requires, tooltip, loot, subtasks }
                 - id       : unique and fixed. Progress is stored under it, so
                             keep it if you reword the title.
                 - title    : text. Accepts links: [label](https://example.com)
@@ -18,6 +18,12 @@
                             under the item; clicking one jumps to it.
                 - tooltip  : optional plain text with clarifying info. Shows an ⓘ button
                             on the row; the text appears on hover, focus or tap.
+                - loot     : optional array of notable loot, shown in a chest popover:
+                            [{ url, r, note, alias }] 
+                            url: http(s) link, the name opens it in a new tab, used to show the name if no name is present.
+                            r: rarity c|u|r|v|l (common, uncommon, rare, very rare, legendary),
+                            note: optional text,
+                            alias: optional text for alternate names,
                 - subtasks : optional nested entries, same fields.
                             Shown indented, checkboxes are independent of the parent.
     Trailing commas are fine.
@@ -38,6 +44,12 @@ const KEY = 'bg3_checklist_v1'
 const $ = (id) => document.getElementById(id)
 // Escape HTML special characters so titles can't inject markup
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
+// Escape, then extract item name from url
+const escUrl = (s) =>
+  esc(s)
+    .match(/\/wiki\/([^/?#]+)/)?.[1]
+    ?.replace(/_/g, ' ')
+    ?.replace(/%27/g, "'")
 // Escape, then turn [label](https://...) into a clickable link
 const fmt = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
 // Strip [label](url) down to just the label (used where links make no sense)
@@ -45,6 +57,9 @@ const plain = (s) => s.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
 // Trash can icon for the skip button
 const TRASH =
   '<svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg>'
+// Treasure chest icon for the notable-loot button
+const CHEST =
+  '<svg viewBox="0 0 24 24" width="1.2em" height="1.2em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11V9a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2"/><rect x="3" y="11" width="18" height="9" rx="1.5"/><path d="M7.5 11v9M16.5 11v9"/><rect x="10.5" y="9.5" width="3" height="4.5" rx=".7" fill="currentColor"/></svg>'
 // Make sure every task id is unique: a duplicate gets '_' appended until it is free
 const seen = {}
 const uniq = (k) => {
@@ -77,6 +92,8 @@ const mk = (A, ai, o) => {
             .replace(/[^a-z0-9]+/g, '-')
             .slice(0, 40),
     ),
+    // optional notable loot: [{ url, r, note, alias }]
+    loot: Array.isArray(o.loot) ? o.loot.filter((x) => x && x.url) : [],
     // optional clarifying text shown in a tooltip
     tip: o.tooltip ? String(o.tooltip) : '',
     // requires can be an array of ids or a space-separated string
@@ -102,15 +119,49 @@ const ACTS = DATA.map((a, ai) => {
 const AREAS = ACTS.flatMap((a) => a.areas)
 
 // ---------- Tooltips ----------
-// One floating element is reused for every ⓘ button (hover, keyboard focus or tap)
+// One floating element is reused for every ⓘ / chest button (hover, keyboard focus or tap)
+// Rarity id -> [label, colour]; the loot popover is always dark so these colours read in both themes
+const RARITY = {
+  c: ['Common', '#f1ffff'],
+  u: ['Uncommon', '#01ae2d'],
+  r: ['Rare', '#01bfff'],
+  v: ['Very Rare', '#d10172'],
+  l: ['Legendary', '#b7861f'],
+}
+// Popover HTML for a task's notable loot (all text escaped)
+const lootHtml = (n) =>
+  `<div class="lh">${CHEST}<span>Notable items</span></div>` +
+  n.loot
+    .map((x) => {
+      const r = RARITY[String(x.r || '').toLowerCase()]
+      const escName = escUrl(x.name ?? x.url)
+      const link = /^https?:\/\//i.test(x.url || '')
+      const name = link ? `<a class="ln" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${escName}</a>` : `<span class="ln">${escName}</span>`
+      return `<div class="li"${r ? ` style="--rc:${r[1]}"` : ''}>${name}${r ? `<small class="lr">${r[0]}</small>` : ''}${x.note ? `<span class="lo">${esc(x.note)}</span>` : ''}</div>`
+    })
+    .join('')
 const tipEl = document.createElement('div')
 tipEl.id = 'tip'
 tipEl.setAttribute('role', 'tooltip')
 tipEl.hidden = true
 document.body.appendChild(tipEl)
-const hideTip = () => (tipEl.hidden = true)
+// The popover stays open while the pointer is over the button or the popover itself (so links can be clicked)
+let tipTimer
+const hideTip = () => {
+  clearTimeout(tipTimer)
+  tipEl.hidden = true
+}
+const hideSoon = () => {
+  clearTimeout(tipTimer)
+  tipTimer = setTimeout(hideTip, 200)
+}
+const inTip = (e) => e.target.closest && e.target.closest('#tip')
 const showTip = (b) => {
-  tipEl.textContent = b.dataset.tip
+  clearTimeout(tipTimer)
+  const n = b.dataset.loot && BY[b.dataset.loot] && BY[b.dataset.loot].n
+  tipEl.className = n ? 'loot' : ''
+  if (n) tipEl.innerHTML = lootHtml(n)
+  else tipEl.textContent = b.dataset.tip
   tipEl.hidden = false
   const r = b.getBoundingClientRect(),
     w = tipEl.offsetWidth,
@@ -119,12 +170,12 @@ const showTip = (b) => {
   tipEl.style.left = Math.max(8, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 8)) + 'px'
   tipEl.style.top = (r.top - h - 6 >= 8 ? r.top - h - 6 : r.bottom + 6) + 'px'
 }
-const tipBtn = (e) => e.target.closest && e.target.closest('.tipbtn')
-document.addEventListener('mouseover', (e) => tipBtn(e) && showTip(tipBtn(e)))
-document.addEventListener('mouseout', (e) => tipBtn(e) && hideTip())
-document.addEventListener('focusin', (e) => (tipBtn(e) ? showTip(tipBtn(e)) : hideTip()))
+const tipBtn = (e) => e.target.closest && e.target.closest('.tipbtn, .lootbtn')
+document.addEventListener('mouseover', (e) => (tipBtn(e) ? showTip(tipBtn(e)) : inTip(e) && clearTimeout(tipTimer)))
+document.addEventListener('mouseout', (e) => (tipBtn(e) || inTip(e)) && hideSoon())
+document.addEventListener('focusin', (e) => (tipBtn(e) ? showTip(tipBtn(e)) : inTip(e) || hideTip()))
 document.addEventListener('focusout', (e) => tipBtn(e) && hideTip())
-document.addEventListener('click', (e) => (tipBtn(e) ? showTip(tipBtn(e)) : hideTip()))
+document.addEventListener('click', (e) => (tipBtn(e) ? showTip(tipBtn(e)) : inTip(e) || hideTip()))
 document.addEventListener('keydown', (e) => e.key == 'Escape' && hideTip())
 window.addEventListener('scroll', hideTip, true)
 
@@ -223,12 +274,16 @@ function render() {
       // A row shows if it matches the filters, or if any of its subtasks does.
       const row = (it) => {
         const sub = it.sub.map(row).join('')
-        const ok = vis(p, it) && (!p.hideDone || !(p.done[it.k] || p.skip[it.k])) && (!q || (it.t + ' ' + ar.name).toLowerCase().includes(q))
+        const ok =
+          vis(p, it) &&
+          (!p.hideDone || !(p.done[it.k] || p.skip[it.k])) &&
+          (!q || (it.t + ' ' + ar.name + ' ' + it.loot.map((x) => escUrl(x.url) + ' ' + x.alias).join(' ')).toLowerCase().includes(q))
         if (!ok && !sub) return ''
         const sk = !!p.skip[it.k]
         return `<li class="${p.done[it.k] ? 'done' : sk ? 'skip' : ''}"><div class="row"><label>
     <input type="checkbox" data-k="${esc(it.k)}" ${p.done[it.k] ? 'checked' : ''}><span class="tx">${fmt(it.t)}</span>
     ${it.g.map((t) => `<em class="tag tg ${esc(t)}">${esc(TAGS[t] || t)}</em>`).join('')}</label>
+    ${it.loot.length ? `<button type="button" class="lootbtn" data-loot="${esc(it.k)}" aria-label="Notable items (${it.loot.length})">${CHEST}</button>` : ''}
     ${it.tip ? `<button type="button" class="tipbtn" data-tip="${esc(it.tip)}" aria-label="${esc(it.tip)}">ⓘ</button>` : ''}
     <button class="del" data-skip="${esc(it.k)}" aria-pressed="${sk}" title="${sk ? 'Restore task' : 'Skip task (uncompletable)'}" aria-label="${sk ? 'Restore task' : 'Skip task'}">${TRASH}</button></div>${reqs(p, it)}${sub ? `<ul class="sub">${sub}</ul>` : ''}</li>`
       }
