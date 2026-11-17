@@ -540,6 +540,13 @@
       .r-l {
         --rc: #b7861f;
       }
+      li.lootcard {
+        cursor: pointer;
+        border-left: 3px solid var(--rc, var(--bd));
+      }
+      li.lootcard:hover {
+        background: color-mix(in srgb, var(--ac) 10%, transparent);
+      }
       .lootrow {
         flex: 1;
         min-width: 0;
@@ -547,15 +554,6 @@
         flex-wrap: wrap;
         align-items: baseline;
         gap: 2px 8px;
-        color: inherit;
-        text-decoration: none;
-        border-left: 3px solid var(--rc, var(--bd));
-        padding-left: 8px;
-        border-radius: 3px;
-      }
-      .lootrow:hover,
-      .lootrow:focus-visible {
-        background: color-mix(in srgb, var(--ac) 10%, transparent);
       }
       .lootrow input[type='checkbox'] {
         pointer-events: none;
@@ -563,19 +561,26 @@
       }
       .lootrow .ln {
         font-weight: 700;
+        color: var(--tx);
+        text-decoration: none;
+      }
+      /* inline-block so a strike-through on the name does not run through the arrow */
+      .lootrow a.ln::after {
+        content: '↗';
+        display: inline-block;
+        margin-left: 0.3em;
+        font-size: 0.7em;
+        opacity: 0.7;
       }
       .lootrow em.tg {
         --c: var(--rc, var(--mu));
       }
-      .lootrow .lt,
-      .lootrow .lo {
+      .lootrow .lt {
         flex-basis: 100%;
         margin-left: calc(1.15em + 8px);
         font-size: 0.9rem;
-      }
-      .lootrow .lo {
-        font-style: italic;
         color: var(--mu);
+        text-decoration: none;
       }
       li.done .lootrow .ln {
         color: var(--mu);
@@ -585,14 +590,10 @@
         color: var(--sk);
         text-decoration: line-through;
       }
-      a.ext {
-        flex: none;
-        padding: 2px 6px;
-        text-decoration: none;
-        color: var(--mu);
-      }
-      a.ext:hover,
-      a.ext:focus-visible {
+      .lootrow a.ln:hover,
+      .lootrow a.ln:focus-visible,
+      .lootrow .lt:hover,
+      .lootrow .lt:focus-visible {
         color: var(--ac);
       }
       @media (prefers-color-scheme: light) {

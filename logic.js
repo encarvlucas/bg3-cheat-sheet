@@ -117,6 +117,21 @@ const ACTS = DATA.map((a, ai) => {
 })
 // Flat list of all areas across all acts
 const AREAS = ACTS.flatMap((a) => a.areas)
+// Tab indexes: one per act, then Loot, then Options
+const LOOT_TAB = ACTS.length
+const OPTS_TAB = ACTS.length + 1
+// Flat list of every notable item: one entry per (task, item), in act > area > task order.
+// n = task, ar = its area, ai = its act index, x = raw loot item, name = display name, hay = lowercase search text
+const LOOTS = ACTS.flatMap((a, ai) =>
+  a.areas.flatMap((ar) =>
+    ar.list.flatMap((n) =>
+      n.loot.map((x) => {
+        const name = escUrl(x.name ?? x.url)
+        return { n, ar, ai, x, name, hay: [name, x.alias, x.note, plain(n.t), ar.name].filter(Boolean).join(' ').toLowerCase() }
+      }),
+    ),
+  ),
+)
 
 // ---------- Tooltips ----------
 // One floating element is reused for every ⓘ / chest button (hover, keyboard focus or tap)
@@ -201,7 +216,8 @@ if (!S || !S.profiles) S = { cur: 'Default', profiles: {} }
 //   tab: selected act (or Options)       sub: act index -> selected subact id
 //   or: tag filters match ANY active tag (OR) instead of ALL of them (AND)
 //   skip: task id -> 1 when skipped (uncompletable); skipped tasks are left out of the counts
-const blank = () => ({ done: {}, skip: {}, col: {}, hideDone: false, off: {}, or: false, tab: 0, sub: {} })
+//   lact / lsub: act index and subact id selected on the Loot tab ('' = all)
+const blank = () => ({ done: {}, skip: {}, col: {}, hideDone: false, off: {}, or: false, tab: 0, sub: {}, lact: '', lsub: '' })
 // Current profile (missing fields are filled in from blank(), so old saves keep working)
 const P = () => (S.profiles[S.cur] = Object.assign(blank(), S.profiles[S.cur]))
 // Persist state; ignore errors (e.g. storage blocked in private mode)
@@ -247,13 +263,67 @@ function opts() {
 <input type="file" id="file" accept=".json" hidden></section>`
 }
 
+// Loot tab: one row per notable item (an item found in several tasks shows once per task).
+// The checkbox mirrors the state of the task it comes from: ticked = done, crossed = skipped.
+// Clicking a card jumps to the task in its own act tab; the name opens the wiki page; ⓘ shows the note.
+function lootView(p, q) {
+  const ai = ACTS[p.lact] ? +p.lact : -1
+  const subs = [...new Set(ACTS.filter((_, i) => ai < 0 || i == ai).flatMap((a) => a.subs))]
+  const cs = subs.includes(p.lsub) ? p.lsub : ''
+  // Tab counter: all items from tasks that are not skipped
+  const live = LOOTS.filter((r) => !p.skip[r.n.k])
+  const n = live.length,
+    d = live.filter((r) => p.done[r.n.k]).length
+  const filters =
+    `<label class="mu">Act <select id="lact"><option value="">All</option>${ACTS.map((a, i) => `<option value="${i}" ${i == ai ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}</select></label>` +
+    (subs.length
+      ? `<label class="mu">Subact <select id="lsub"><option value="">All</option>${subs.map((s) => `<option value="${esc(s)}" ${s == cs ? 'selected' : ''}>${esc(subLabel(s))}</option>`).join('')}</select></label>`
+      : '')
+  const rows = LOOTS.filter((r) => (ai < 0 || r.ai == ai) && (!cs || r.ar.sub == cs) && (!p.hideDone || !(p.done[r.n.k] || p.skip[r.n.k])) && (!q || r.hay.includes(q)))
+  // Group consecutive rows by area
+  const groups = []
+  let g
+  rows.forEach((r) => {
+    if (!g || g.ar !== r.ar) groups.push((g = { ar: r.ar, ai: r.ai, rows: [] }))
+    g.rows.push(r)
+  })
+  const item = ({ n, x, name }) => {
+    const k = String(x.r || '').toLowerCase(),
+      r = RARITY[k],
+      dn = !!p.done[n.k],
+      sk = !!p.skip[n.k],
+      link = /^https?:\/\//i.test(x.url || '')
+    // The whole card jumps to the task; only the name (wiki link) do something else
+    return `<li class="lootcard ${dn ? 'done' : sk ? 'skip' : ''} ${r ? 'r-' + k : ''}" data-goto="${esc(n.k)}"><div class="row"><div class="lootrow">
+    <input type="checkbox" disabled tabindex="-1" aria-label="${dn ? 'Task done' : sk ? 'Task skipped' : 'Task not done'}" ${dn ? 'checked' : ''}>
+    ${link ? `<a class="ln" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer" title="Open wiki page">${esc(name)}</a>` : `<span class="ln">${esc(name)}</span>`}${r ? `<em class="tg">${r[0]}</em>` : ''}
+    <a href="#" class="lt" data-goto="${esc(n.k)}" title="Show task">${esc(plain(n.t))}</a></div>
+    ${x.note ? `<button type="button" class="tipbtn" data-tip="${esc(x.note)}" aria-label="${esc(x.note)}">ⓘ</button>` : ''}</div></li>`
+  }
+  const body = groups.length
+    ? `<p class="mu">${rows.length} of ${LOOTS.length} items</p>` +
+      groups
+        .map(({ ar, ai, rows }) => {
+          const id = 'loot:' + ar.id,
+            open = q || !p.col[id],
+            v = rows.filter((r) => !p.skip[r.n.k]),
+            c = v.filter((r) => p.done[r.n.k]).length
+          return `<section class="area"><h3 data-col="${esc(id)}"><span>${open ? '▾' : '▸'} ${esc(ar.name)} <small class="mu">${esc(ACTS[ai].name)}</small></span>
+    <b class="${v.length && c == v.length ? 'ok' : ''}">${v.length && c == v.length ? 'Done' : c + '/' + v.length}</b></h3>${open ? '<ul>' + rows.map(item).join('') + '</ul>' : ''}</section>`
+        })
+        .join('')
+    : '<p class="mu">No items match the current filters.</p>'
+  return { body, filters, n, d }
+}
+
 // Re-draw the whole page from the current state. Called after every change.
 function render() {
   hideTip()
   const p = P(),
     q = $('q').value.trim().toLowerCase()
-  if (p.tab > ACTS.length) p.tab = 0
-  const onOpts = p.tab == ACTS.length
+  if (p.tab > OPTS_TAB) p.tab = 0
+  const onOpts = p.tab == OPTS_TAB,
+    onLoot = p.tab == LOOT_TAB
   // tabs/subs/body collect HTML; all/alld are overall totals (tasks / done) for the progress bar
   let tabs = '',
     subs = '',
@@ -318,8 +388,19 @@ function render() {
           a.subs.map((s) => `<button data-sub="${esc(s)}" class="${s == cs ? 'on' : ''}">${esc(subLabel(s))} <small>${sc[s].d}/${sc[s].n}</small></button>`).join('')
     }
   })
+  // Loot tab: its own act/subact selectors replace the subact buttons
+  const lv = lootView(p, q)
+  if (onLoot) {
+    body = lv.body
+    subs = lv.filters
+  }
   // Write everything into the page
-  $('tabs').innerHTML = tabs + `<button data-tab="${ACTS.length}" class="${onOpts ? 'on' : ''}">Options</button>`
+  $('tabs').innerHTML =
+    tabs +
+    `<button data-tab="${LOOT_TAB}" class="${onLoot ? 'on' : ''}">Loot <small>${lv.d}/${lv.n}</small></button>` +
+    `<button data-tab="${OPTS_TAB}" class="${onOpts ? 'on' : ''}">Options</button>`
+  $('q').placeholder = onLoot ? 'Filter loot…' : 'Filter points of interest…'
+  $('tags').hidden = onLoot
   $('subs').innerHTML = onOpts ? '' : subs
   $('subs').hidden = onOpts || !subs
   $('tools').hidden = onOpts
@@ -395,6 +476,8 @@ function act(a) {
 // One click handler for every button. Buttons carry data-* attributes saying what they do;
 // d(attr) finds the clicked element (or an ancestor) with that attribute.
 document.onclick = (e) => {
+  // Wiki links (item names) keep their own behaviour, they must not trigger a card's jump
+  if (e.target.closest('a.ln')) return
   const d = (x) => e.target.closest('[' + x + ']'),
     p = P()
   let el
@@ -444,7 +527,11 @@ document.onchange = (e) => {
       p.done[t.dataset.k] = 1
       delete p.skip[t.dataset.k]
     } else delete p.done[t.dataset.k]
-  } else if (t.id == 'hd') p.hideDone = t.checked
+  } else if (t.id == 'lact') {
+    p.lact = t.value
+    p.lsub = ''
+  } else if (t.id == 'lsub') p.lsub = t.value
+  else if (t.id == 'hd') p.hideDone = t.checked
   else if (t.id == 'prof') S.cur = t.value
   // Import: read the chosen JSON file and replace all profiles after confirmation
   else if (t.id == 'file' && t.files[0]) {
@@ -466,6 +553,8 @@ document.onchange = (e) => {
   } else return
   save()
   render()
+  // The selectors are redrawn, so give focus back to the one just used
+  if (t.id == 'lact' || t.id == 'lsub') $(t.id)?.focus()
 }
 
 // Re-render as the search box changes, then draw the page for the first time

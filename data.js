@@ -1254,7 +1254,7 @@ const DATA = [
                     title: 'Invade the Steel Watch Foundry and destroy it',
                     tags: 'boss',
                     requires: 'iron-throne',
-                    loot: [{ url: 'https://bg3.wiki/wiki/Gontr_Mael', r: 'l', note: 'light bow' }],
+                    loot: [{ url: 'https://bg3.wiki/wiki/Gontr_Mael', r: 'l', alias: 'light bow' }],
                   },
                 ],
               },
