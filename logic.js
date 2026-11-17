@@ -166,7 +166,16 @@ const showTip = (b) => {
   const r = b.getBoundingClientRect(),
     w = tipEl.offsetWidth,
     h = tipEl.offsetHeight
-  // Centre above the button, clamp to the viewport, flip below if there is no room above
+  if (n) {
+    // Loot: to the right of the icon, or to its left if there is no room; top-aligned, clamped to the viewport
+    const x = r.right + 8 + w <= innerWidth - 8 ? r.right + 8 : r.left - w - 8
+    if (x >= 8) {
+      tipEl.style.left = x + 'px'
+      tipEl.style.top = Math.max(8, Math.min(r.top - 6, innerHeight - h - 8)) + 'px'
+      return
+    }
+  }
+  // Otherwise centre above the button, clamp to the viewport, flip below if there is no room above
   tipEl.style.left = Math.max(8, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 8)) + 'px'
   tipEl.style.top = (r.top - h - 6 >= 8 ? r.top - h - 6 : r.bottom + 6) + 'px'
 }

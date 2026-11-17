@@ -72,13 +72,13 @@ const DATA = [
           {
             id: 'grove',
             title: 'Meet Zevlor, fight goblins and begin the Save the Grove quest',
-            tags: 'fight quest npc',
+            tags: 'quest fight companion loot',
             loot: [{ url: 'https://bg3.wiki/wiki/Gloves_of_Power', r: 'u' }],
             subtasks: [
               {
                 id: 'save-grove',
                 title: 'Save the tieflings',
-                tags: 'peace',
+                tags: 'npc loot',
                 loot: [{ url: 'https://bg3.wiki/wiki/Wapira%27s_Crown', r: 'u', note: 'You must accept their reward to get it' }],
               },
             ],
@@ -290,7 +290,7 @@ const DATA = [
             id: 'sargent-boots',
             title: "Get Thulla's boots",
             tags: 'loot',
-            loot: [{ url: 'https://bg3.wiki/wiki/Boots_of_Speed', r: 'r', note: 'speedy sargent' }],
+            loot: [{ url: 'https://bg3.wiki/wiki/Boots_of_Speed', r: 'r', alias: 'speedy sargent' }],
           },
           {
             id: 'omelum',
@@ -398,13 +398,14 @@ const DATA = [
                 id: 'grym',
                 title: 'Craft mithral equipment and defeat Grym',
                 tags: 'boss loot',
+                tooltip: 'You can only forge 2 items',
                 loot: [
                   { url: 'https://bg3.wiki/wiki/Adamantine_Splint_Armour', r: 'v', note: 'Crafted on the forge' },
                   { url: 'https://bg3.wiki/wiki/Adamantine_Scale_Mail', r: 'v', note: 'Crafted on the forge' },
                   { url: 'https://bg3.wiki/wiki/Adamantine_Shield', r: 'v', note: 'Crafted on the forge' },
-                  { url: 'https://bg3.wiki/wiki/Adamantine_Longsword', r: 'v', note: 'Crafted on the forge' },
-                  { url: 'https://bg3.wiki/wiki/Adamantine_Mace', r: 'v', note: 'Crafted on the forge' },
-                  { url: 'https://bg3.wiki/wiki/Adamantine_Scimitar', r: 'v', note: 'Crafted on the forge' },
+                  { url: 'https://bg3.wiki/wiki/Adamantine_Longsword', r: 'r', note: 'Crafted on the forge' },
+                  { url: 'https://bg3.wiki/wiki/Adamantine_Mace', r: 'r', note: 'Crafted on the forge' },
+                  { url: 'https://bg3.wiki/wiki/Adamantine_Scimitar', r: 'r', note: 'Crafted on the forge' },
                   { url: 'https://bg3.wiki/wiki/Grymskull_Helm', r: 'v', note: 'After defeating Grym' },
                 ],
               },

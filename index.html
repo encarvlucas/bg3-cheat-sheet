@@ -515,6 +515,94 @@
         text-decoration: underline;
         text-underline-offset: 3px;
       }
+      #tags[hidden] {
+        display: none;
+      }
+      #subs label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-right: 8px;
+      }
+      /* ---- Loot tab ---- */
+      .r-c {
+        --rc: #f1ffff;
+      }
+      .r-u {
+        --rc: #01ae2d;
+      }
+      .r-r {
+        --rc: #01bfff;
+      }
+      .r-v {
+        --rc: #d10172;
+      }
+      .r-l {
+        --rc: #b7861f;
+      }
+      .lootrow {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 2px 8px;
+        color: inherit;
+        text-decoration: none;
+        border-left: 3px solid var(--rc, var(--bd));
+        padding-left: 8px;
+        border-radius: 3px;
+      }
+      .lootrow:hover,
+      .lootrow:focus-visible {
+        background: color-mix(in srgb, var(--ac) 10%, transparent);
+      }
+      .lootrow input[type='checkbox'] {
+        pointer-events: none;
+        align-self: center;
+      }
+      .lootrow .ln {
+        font-weight: 700;
+      }
+      .lootrow em.tg {
+        --c: var(--rc, var(--mu));
+      }
+      .lootrow .lt,
+      .lootrow .lo {
+        flex-basis: 100%;
+        margin-left: calc(1.15em + 8px);
+        font-size: 0.9rem;
+      }
+      .lootrow .lo {
+        font-style: italic;
+        color: var(--mu);
+      }
+      li.done .lootrow .ln {
+        color: var(--mu);
+        text-decoration: line-through;
+      }
+      li.skip .lootrow .ln {
+        color: var(--sk);
+        text-decoration: line-through;
+      }
+      a.ext {
+        flex: none;
+        padding: 2px 6px;
+        text-decoration: none;
+        color: var(--mu);
+      }
+      a.ext:hover,
+      a.ext:focus-visible {
+        color: var(--ac);
+      }
+      @media (prefers-color-scheme: light) {
+        .r-c {
+          --rc: #6f8080;
+        }
+        .lootrow em.tg {
+          color: color-mix(in srgb, var(--rc) 60%, #000);
+        }
+      }
       code {
         background: var(--bd);
         padding: 0 4px;
