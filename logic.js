@@ -362,8 +362,8 @@ function render() {
         return `<li class="${p.done[it.k] ? 'done' : sk ? 'skip' : ''}"><div class="row"><label>
     <input type="checkbox" data-k="${esc(it.k)}" ${p.done[it.k] ? 'checked' : ''}><span class="tx">${fmt(it.t)}</span>
     ${it.g.map((t) => `<em class="tag tg ${esc(t)}">${esc(TAGS[t] || t)}</em>`).join('')}</label>
-    ${it.loot.length ? `<button type="button" class="lootbtn" data-loot="${esc(it.k)}" aria-label="Notable items (${it.loot.length})">${CHEST}</button>` : ''}
     ${it.tip ? `<button type="button" class="tipbtn" data-tip="${esc(it.tip)}" aria-label="${esc(it.tip)}">ⓘ</button>` : ''}
+    ${it.loot.length ? `<button type="button" class="lootbtn" data-loot="${esc(it.k)}" aria-label="Notable items (${it.loot.length})">${CHEST}</button>` : ''}
     <button class="del" data-skip="${esc(it.k)}" aria-pressed="${sk}" title="${sk ? 'Restore task' : 'Skip task (uncompletable)'}" aria-label="${sk ? 'Restore task' : 'Skip task'}">${TRASH}</button></div>${reqs(p, it)}${sub ? `<ul class="sub">${sub}</ul>` : ''}</li>`
       }
       // Skip areas with nothing to show; collapsed areas show only their header (a search forces them open)
