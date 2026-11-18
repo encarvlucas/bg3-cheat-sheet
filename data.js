@@ -12,14 +12,11 @@ const TAGS = {
 
 const SUBACTS = {
   wilderness: 'Wilderness',
-  grove: 'Emerald Grove',
-  goblins: 'Goblin Camp',
-  risen: 'Risen Road',
   underdark: 'Underdark',
   creche: 'Mountain Pass',
   shadow: 'Shadow-Cursed Lands',
   moonrise: 'Moonrise Towers',
-  gauntlet: 'Gauntlet of Shar/Mindflayer Colony',
+  gauntlet: 'Gauntlet of Shar/Mind Flayer Colony',
   'wyrm-crossing': "Wyrm's Crossing",
   city: "Baldur's Gate",
   sewers: 'Undercity Ruins',
@@ -36,7 +33,7 @@ const DATA = [
         name: 'Nautiloid',
         items: [
           { id: 'sh', title: 'Free Shadowheart', tags: 'companion' },
-          { id: 'us-1', title: 'Free Us, the intellect devour', tags: 'npc' },
+          { id: 'us-1', title: 'Free Us, the intellect devourer', tags: 'npc' },
           { id: 'fire-sword', title: 'Kill or make the cambion drop his fire sword', tags: 'loot', loot: [{ url: 'https://bg3.wiki/wiki/Everburn_Blade', r: 'u' }] },
         ],
       },
@@ -49,7 +46,7 @@ const DATA = [
           { id: 'laezel', title: "Recruit Lae'zel", tags: 'companion peace' },
           { id: 'astarion', title: 'Recruit Astarion', tags: 'companion' },
           { id: 'gale', title: 'Recruit Gale', tags: 'companion' },
-          { id: 'early-mindflayer', title: 'Kill mindflayer in crashed out ship', tags: 'loot' },
+          { id: 'early-mind-flayer', title: 'Kill Mind Flayer in crashed ship', tags: 'loot' },
           {
             id: 'church',
             title: 'Handle bandits at the church',
@@ -72,7 +69,7 @@ const DATA = [
           {
             id: 'grove',
             title: 'Meet Zevlor, fight goblins and begin the Save the Grove quest',
-            tags: 'quest fight companion loot',
+            tags: 'fight companion loot',
             loot: [{ url: 'https://bg3.wiki/wiki/Gloves_of_Power', r: 'u' }],
             subtasks: [
               {
@@ -83,22 +80,22 @@ const DATA = [
               },
             ],
           },
-          { id: 'tief-assassin', title: 'Save tiefling from assassination, get her Soulcoin', tags: 'fight' },
+          { id: 'tief-assassin', title: 'Save tiefling from assassination, get her Soul Coin', tags: 'fight' },
           { id: 'wyll', title: 'Recruit Wyll', tags: 'companion' },
           { id: 'arabella', title: 'Save Arabella', tags: 'npc peace' },
           { id: 'harpies', title: 'Rescue Mirkon from Harpies, then talk to Mol', tags: 'fight' },
           {
-            id: 'kahga',
-            title: 'Handle Kahga situation (shadow Druids)',
-            tags: 'fight',
+            id: 'kagha',
+            title: 'Handle Kagha situation (shadow Druids)',
+            tags: 'fight loot',
             requires: 'mud-mephit',
-            loot: [{ url: 'https://bg3.wiki/wiki/Broodmother%27s_Revenge', r: 'u', note: 'Must kill Khaga to get it', alias: 'poison amulet' }],
+            loot: [{ url: 'https://bg3.wiki/wiki/Broodmother%27s_Revenge', r: 'u', note: 'Must kill Kagha to get it', alias: 'poison amulet' }],
           },
           {
             id: 'silvanus-idol-mol',
             title: 'Steal Idol of Silvanus and get Ring of Protection',
             tags: 'loot',
-            requires: 'kahga harpies',
+            requires: 'kagha harpies',
             loot: [{ url: 'https://bg3.wiki/wiki/Ring_of_Protection', r: 'r', alias: 'defence +1ac class' }],
             subtasks: [{ id: 'silvanus-idol-permanent', title: 'Steal Idol back from Mol', tags: 'loot buff' }],
           },
@@ -154,7 +151,7 @@ const DATA = [
           },
           { id: 'scratch', title: 'Rescue Scratch', tags: 'npc' },
           { id: 'karlach', title: 'Recruit Karlach', tags: 'companion' },
-          { id: 'mud-mephit', title: 'Fight mephits and Woads to find secret Kahga letter', tags: 'fight loot' },
+          { id: 'mud-mephit', title: 'Fight mephits and Woads to find secret Kagha letter', tags: 'fight loot' },
           { id: 'hag-redcaps', title: 'Fight Sheep (Redcaps) outside of hag lair', tags: 'fight' },
           {
             id: 'ethel',
@@ -202,31 +199,31 @@ const DATA = [
           {
             id: 'goblin-decision',
             title: 'Side with or against the goblin leaders',
-            tags: 'quest peace',
+            tags: 'peace',
             subtasks: [
-              { id: 'halsin', title: 'Free Halsin from the Goblin Camp', tags: 'quest fight companion' },
-              { id: 'gut', title: 'Defeat Priestess Gut', tags: 'quest boss loot', loot: [{ url: 'https://bg3.wiki/wiki/Absolute%27s_Warboard', r: 'u' }] },
+              { id: 'halsin', title: 'Free Halsin from the Goblin Camp', tags: 'fight companion' },
+              { id: 'gut', title: 'Defeat Priestess Gut', tags: 'boss loot', loot: [{ url: 'https://bg3.wiki/wiki/Absolute%27s_Warboard', r: 'u' }] },
               {
                 id: 'dror-ragzlin',
                 title: 'Defeat Dror Ragzlin',
-                tags: 'quest boss',
+                tags: 'boss loot',
                 loot: [
                   { url: 'https://bg3.wiki/wiki/Gloves_of_the_Growling_Underdog', r: 'u' },
-                  { url: 'https://bg3.wiki/wiki/Amulet_of_Sel%C3%BBne%27s_Chosen', name: '/wiki/Amulet_of_Selune%27s_Chosen', r: 'u' },
+                  { url: 'https://bg3.wiki/wiki/Amulet_of_Sel%C3%BBne%27s_Chosen', r: 'u' },
                 ],
               },
               {
                 id: 'minty',
                 title: 'Defeat or ally with Minthara',
-                tags: 'quest boss',
+                tags: 'boss loot',
                 loot: [{ url: 'https://bg3.wiki/wiki/Boots_of_Striding', r: 'u' }],
                 subtasks: [{ id: 'knock-out-minty', title: 'Knock-out Minthara', tags: 'companion' }],
               },
-              { id: 'raid', title: 'Raid the grove and turn on the absolutists or the tieflings', tags: 'quest boss' },
+              { id: 'raid', title: 'Raid the grove and turn on the absolutists or the tieflings', tags: 'boss' },
               { id: 'camp-fight', title: 'Kill all goblins in the camp', tags: 'fight' },
             ],
           },
-          { id: 'selune-temple-passage', title: "Go through Priestess Gut's room to the secret passage to the underdark", tags: 'quest fight peace' },
+          { id: 'selune-temple-passage', title: "Go through Priestess Gut's room to the secret passage to the Underdark", tags: 'quest fight peace' },
         ],
       },
       {
@@ -238,7 +235,7 @@ const DATA = [
             id: 'paladins-tyr',
             title: 'Fight Paladins of Tyr',
             tags: 'boss companion loot',
-            subtasks: [{ id: 'paladins-tyr-loot', title: 'Loot their Soulcoin and cellar', tags: 'loot' }],
+            subtasks: [{ id: 'paladins-tyr-loot', title: 'Loot their Soul Coin and cellar', tags: 'loot' }],
           },
           { id: 'gnolls-1', title: 'Fight Gnolls near bridge', tags: 'fight' },
           {
@@ -272,7 +269,7 @@ const DATA = [
             subtasks: [
               {
                 id: 'glut',
-                title: 'Talk to Gut and ask for his help',
+                title: 'Talk to Glut and ask for his help',
                 tags: 'npc',
                 subtasks: [
                   {
@@ -287,10 +284,10 @@ const DATA = [
             ],
           },
           {
-            id: 'sargent-boots',
+            id: 'sargeant-boots',
             title: "Get Thulla's boots",
             tags: 'loot',
-            loot: [{ url: 'https://bg3.wiki/wiki/Boots_of_Speed', r: 'r', alias: 'speedy sargent' }],
+            loot: [{ url: 'https://bg3.wiki/wiki/Boots_of_Speed', r: 'r', alias: 'speedy sargeant' }],
           },
           {
             id: 'omelum',
@@ -300,7 +297,8 @@ const DATA = [
               { url: 'https://bg3.wiki/wiki/Ring_of_Salving', r: 'u', alias: 'healing ring' },
               { url: 'https://bg3.wiki/wiki/Pearl_of_Power_Amulet', r: 'u', alias: 'spell slot' },
               { url: 'https://bg3.wiki/wiki/Boots_of_Stormy_Clamour', r: 'u', alias: 'reverberation' },
-              { url: 'https://bg3.wiki/wiki/Psychic_Spark', r: 'u', alias: 'magic missle amulet', note: 'Sold by Blurg' },
+              { url: 'https://bg3.wiki/wiki/Psychic_Spark', r: 'u', alias: 'magic missle missile amulet', note: 'Sold by Blurg' },
+              { url: 'https://bg3.wiki/wiki/Melf%27s_First_Staff', r: 'u', alias: 'acid', note: 'Sold by Blurg' },
             ],
           },
           {
@@ -365,14 +363,14 @@ const DATA = [
         items: [
           {
             id: 'grym-entry',
-            title: 'Enter Grymforge and talk to Sargent Thrinn',
+            title: 'Enter Grymforge and talk to Sargeant Thrinn',
             tags: 'quest peace',
             subtasks: [
               {
                 id: 'return-boots',
-                title: 'Return boots to Sargent Thrinn',
+                title: 'Return boots to Sargeant Thrinn',
                 tags: 'loot',
-                requires: 'sargent-boots',
+                requires: 'sargeant-boots',
                 loot: [{ url: 'https://bg3.wiki/wiki/Armour_of_Uninhibited_Kushigo', r: 'u' }],
               },
             ],
@@ -421,7 +419,7 @@ const DATA = [
         items: [
           {
             id: 'esther',
-            title: 'Talk to lady Esther to get egg quest and check out her inventory',
+            title: 'Talk to Lady Esther to get egg quest and check out her inventory',
             tags: 'shop',
             loot: [
               { url: 'https://bg3.wiki/wiki/The_Graceful_Cloth', r: 'r' },
@@ -464,7 +462,7 @@ const DATA = [
             id: 'zaithisk',
             title: "Participate in the Zaith'isk procedure",
             tags: 'fight peace buff',
-            subtasks: [{ id: 'zaithisk-tadpoles', title: 'Get the 3 mindflayer tadpoles specimen in the infirmary', tags: 'loot' }],
+            subtasks: [{ id: 'zaithisk-tadpoles', title: 'Get the 3 tadpoles specimen in the infirmary', tags: 'loot' }],
           },
           { id: 'gith-egg', title: 'Steal/get Githyanki egg', tags: 'companion' },
           { id: 'lathander', title: 'Find Blood of Lathander', tags: 'loot', requires: 'crest' },
@@ -486,15 +484,15 @@ const DATA = [
               },
               {
                 id: 'creche-war',
-                title: 'Fight everyone in the creche',
+                title: 'Fight everyone in the Crèche',
                 tags: 'fight',
                 subtasks: [
-                  { id: 'creche-inquisitor', title: 'Fight the inquisitor', tags: 'boss', loot: [{ url: 'https://bg3.wiki/wiki/Diadem_of_Arcane_Synergy', r: 'r' }] },
-                  { id: 'creche-captain', title: 'Fight the captain', tags: 'fight', loot: [{ url: 'https://bg3.wiki/wiki/Soulbreaker_Greatsword', r: 'r' }] },
+                  { id: 'creche-inquisitor', title: 'Fight the inquisitor', tags: 'boss loot', loot: [{ url: 'https://bg3.wiki/wiki/Diadem_of_Arcane_Synergy', r: 'r' }] },
+                  { id: 'creche-captain', title: 'Fight the captain', tags: 'fight loot', loot: [{ url: 'https://bg3.wiki/wiki/Soulbreaker_Greatsword', r: 'r' }] },
                   { id: 'creche-quartermaster', title: 'Fight the quartermaster', tags: 'fight loot' },
                   {
                     id: 'creche-dormitory',
-                    title: 'Fight the infirmary/domitory giths',
+                    title: 'Fight the infirmary/dormitory giths',
                     tags: 'fight',
                     loot: [{ url: 'https://bg3.wiki/wiki/Ring_of_Elemental_Infusion', r: 'u' }],
                   },
@@ -529,7 +527,7 @@ const DATA = [
             loot: [{ url: 'https://bg3.wiki/wiki/Shadow-Cloaked_Ring', r: 'u' }],
           },
           { id: 'plant-ambush-1', title: 'Fight vine blights ambush near last light inn', tags: 'fight loot' },
-          { id: 'plant-ambush-2', title: 'Fight vine blights ambush near creche path', tags: 'fight loot' },
+          { id: 'plant-ambush-2', title: 'Fight vine blights ambush near crèche path', tags: 'fight loot' },
           { id: 'mound', title: 'Fight Shambling Mound ambush', tags: 'boss loot' },
           { id: 'raven', title: 'Talk to He Who Was, and choose whether or not to punish Madeline', tags: 'fight peace loot', requires: 'madeline-book' },
           { id: 'save-rolan', title: 'Save Rolan from the shadows', tags: 'fight npc', requires: 'rolan' },
@@ -549,7 +547,7 @@ const DATA = [
           { id: 'last-light', title: 'Reach the Last Light Inn and meet Jaheira', tags: 'companion' },
           {
             id: 'talli',
-            title: "Get free supplies and check out Quatermaster Talli's stock",
+            title: "Get free supplies and check out Quartermaster Talli's stock",
             tags: 'shop',
             loot: [
               { url: 'https://bg3.wiki/wiki/Cloak_of_Protection', r: 'u', alias: '+1ac class' },
@@ -576,7 +574,7 @@ const DATA = [
                 subtasks: [{ id: 'thaniel-2', title: 'Unite Oliver and Thaniel', tags: 'boss', requires: 'thaniel-1 oliver' }],
               },
             ],
-            loot: [{ url: 'https://bg3.wiki/wiki/Snowburst_Ring', r: 'u' }],
+            loot: [{ url: 'https://bg3.wiki/wiki/Snowburst_Ring', r: 'u', note: 'In the room next to Art' }],
           },
           {
             id: 'karlach-engine-2',
@@ -710,12 +708,12 @@ const DATA = [
           {
             id: 'siege',
             title: 'Siege Moonrise Towers',
-            tags: 'quest fight',
+            tags: 'fight',
             subtasks: [{ id: 'ketheric-1', title: 'Defeat Ketheric Thorm and enter the hole', tags: 'quest boss' }],
           },
         ],
       },
-      // -------------------------- Gauntlet of Shar/ Mindflayer Colony ------------------------------
+      // -------------------------- Gauntlet of Shar/ Mind Flayer Colony ------------------------------
       {
         id: 'gauntlet',
         subact: 'gauntlet',
@@ -739,9 +737,9 @@ const DATA = [
             title: 'Descend to Shadowfell',
             tags: 'quest',
             subtasks: [
-              { id: 'trial-stealth', title: 'Pass the Soft-Step Trial', tags: 'quest' },
-              { id: 'trial-strength', title: 'Pass the Self-Same Trial', tags: 'quest fight' },
-              { id: 'trial-invisible', title: 'Pass the Faith-Leap Trial', tags: 'quest' },
+              { id: 'trial-stealth', title: 'Pass the Soft-Step Trial', tags: 'peace' },
+              { id: 'trial-strength', title: 'Pass the Self-Same Trial', tags: 'fight' },
+              { id: 'trial-invisible', title: 'Pass the Faith-Leap Trial', tags: 'peace' },
             ],
           },
           {
@@ -754,7 +752,7 @@ const DATA = [
             id: 'yurgir',
             title: 'Talk to or fight Yurgir, the Orthon, in the throne room',
             tags: 'boss peace',
-            subtasks: [{ id: 'justiciar', title: 'Kill last Justiciar at the basement', tags: 'fight peace' }],
+            subtasks: [{ id: 'justiciar', title: 'Kill last Justiciar in the basement', tags: 'fight peace' }],
           },
           { id: 'nightsong', title: 'Kill or free the Nightsong', tags: 'quest companion' },
         ],
@@ -762,7 +760,7 @@ const DATA = [
       {
         id: 'colony',
         subact: 'gauntlet',
-        name: 'Mindflayer Colony',
+        name: 'Mind Flayer Colony',
         items: [
           {
             id: 'chop',
@@ -778,12 +776,12 @@ const DATA = [
             subtasks: [{ id: 'brain-puzzle', title: 'Solve brain puzzle and free trapped gith mind', tags: 'buff' }],
           },
           { id: 'colony-barracks', title: 'Fight or talk to Kressa and her necromancers', tags: 'fight peace' },
-          { id: 'zevlor', title: 'Free mindflayer pod victims', tags: 'fight npc' },
+          { id: 'zevlor', title: 'Free mind flayer pod victims', tags: 'fight npc' },
           { id: 'mizora', title: "Free Zariel's asset, per Mizora's request", tags: 'companion loot', requires: 'wyll' },
           {
             id: 'ketheric-2',
             title: 'Defeat the Apostle of Myrkul',
-            tags: 'quest boss',
+            tags: 'quest boss loot',
             tooltip: 'Get his Netherstone from his corpse',
             loot: [
               { url: 'https://bg3.wiki/wiki/Reaper%27s_Embrace', r: 'v', alias: 'ketheric armor armour' },
@@ -818,7 +816,7 @@ const DATA = [
             tags: 'fight peace loot',
             subtasks: [{ id: 'arfur-blackmail', title: 'Investigate mansion cellar', tags: 'loot' }],
           },
-          { id: 'orin-threat', title: "Talk to Fist Rowan and dying Stone Lord Thug on the beach, to reveal Orin's disguises", tags: 'quest' },
+          { id: 'orin-threat', title: "Talk to Fist Rowan and dying Stone Lord Thug on the beach, to reveal Orin's disguises", tags: 'peace' },
           { id: 'windmill', title: 'Investigate abandoned windmill', tags: 'fight peace loot' },
           {
             id: 'circus',
@@ -846,7 +844,7 @@ const DATA = [
                 title: 'Return the cursed amulet to its rightful place',
                 tags: 'fight peace loot',
                 requires: 'cursed-amulet',
-                loot: [{ url: 'https://bg3.wiki/wiki/Sentient_Amulet_(Very_Rare)', r: 'v', notes: 'Must fight spirit to get it' }],
+                loot: [{ url: 'https://bg3.wiki/wiki/Sentient_Amulet_(Very_Rare)', r: 'v', note: 'Upgrades original amulet, must fight spirit to get it' }],
               },
               { id: 'temple-roof', title: 'Say hello to Tara and retrieve missing letters on the roof', tags: 'loot', requires: 'gale' },
             ],
@@ -887,11 +885,11 @@ const DATA = [
           },
           {
             id: 'sharess',
-            title: "Visit Sharess' Carress and investigate the missing prostitute",
+            title: "Visit Sharess' Caress and investigate the missing prostitute",
             tags: 'shop',
             subtasks: [
               { id: 'naoise', title: 'Save Naoise, the nymph, at her upstairs room', tags: 'fight' },
-              { id: 'raphael', title: 'Meet with Raphael and hear his proposal', tags: 'quest loot' },
+              { id: 'raphael', title: 'Meet with Raphael and hear his proposal', tags: 'companion loot' },
               {
                 id: 'voss',
                 title: 'Meet with Voss and receive your silver sword',
@@ -920,7 +918,7 @@ const DATA = [
               {
                 id: 'gortash',
                 title: 'Defeat (or ally with) Gortash',
-                tags: 'quest boss peace',
+                tags: 'quest boss peace loot',
                 tooltip: "Fight him at his chambers at the top of Wyrm's Rock and grab his Netherstone",
                 loot: [
                   { url: 'https://bg3.wiki/wiki/Gauntlet_of_the_Tyrant', r: 'v' },
@@ -951,52 +949,10 @@ const DATA = [
       },
       // --------------------------------- Baldur's Gate ---------------------------------------
       {
-        id: 'lower',
+        id: 'east',
         subact: 'city',
         name: 'Lower City (East)',
         items: [
-          {
-            id: 'elfsong',
-            title: 'Visit Elfsong and get an accommodation',
-            tags: 'shop',
-            subtasks: [
-              { id: 'emperor', title: "Visit Emperor's hideout and grab his things", tags: 'fight loot' },
-              {
-                id: 'devella',
-                title: 'Meet with Devella and continue the murder investigation',
-                tags: 'quest temple frayago',
-                subtasks: [
-                  { id: 'chef-roveer', title: 'Warn or kill Chef Roveer', tags: 'fight peace' },
-                  { id: 'nesha', title: 'Warn or kill Nesha Leesha', tags: 'fight peace' },
-                  { id: 'cora', title: 'Save or kill Cora Highberry', tags: 'fight', loot: [{ url: 'https://bg3.wiki/wiki/Dolor_Amarus', r: 'r', alias: 'crit' }] },
-                  {
-                    id: 'figaro',
-                    title: 'Save or kill Figaro Pennygood',
-                    tags: 'fight peace',
-                    requires: 'cora',
-                    tooltip: 'If Dolor escapes the attempt on Cora, he will try Figaro next',
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            id: 'tribunal',
-            title: 'Infiltrate the Murder Tribunal and confront Sarevok',
-            tags: 'quest boss peace loot',
-            requires: 'cora',
-            loot: [
-              { url: 'https://bg3.wiki/wiki/Sarevok%27s_Horned_Helmet', r: 'v', alias: 'crit' },
-              { url: 'https://bg3.wiki/wiki/Sword_of_Chaos', r: 'v' },
-            ],
-          },
-          {
-            id: 'cemetery',
-            title: 'Visit the cemetery and loot the tombs',
-            tags: 'loot',
-            subtasks: [{ id: 'necromancy', title: 'Talk to necromancer girl', tags: 'fight peace' }],
-          },
-          { id: 'park', title: 'Visit the park and handle the assassin ambush', tags: 'fight' },
           {
             id: 'tabernacle',
             title: 'Visit the Stormshore Tabernacle and donate 4500 gold to your God',
@@ -1014,19 +970,51 @@ const DATA = [
             ],
           },
           {
+            id: 'elfsong',
+            title: 'Visit Elfsong and get an accommodation',
+            tags: 'shop',
+            subtasks: [
+              { id: 'emperor', title: "Visit Emperor's hideout and grab his things", tags: 'fight loot' },
+              {
+                id: 'devella',
+                title: 'Meet with Devella and continue the murder investigation',
+                tags: 'quest',
+                requires: 'temple frayago',
+                subtasks: [
+                  { id: 'chef-roveer', title: 'Warn or kill Chef Roveer', tags: 'fight peace' },
+                  { id: 'nesha', title: 'Warn or kill Nesha Leesha', tags: 'fight peace' },
+                  { id: 'cora', title: 'Save or kill Cora Highberry', tags: 'fight loot', loot: [{ url: 'https://bg3.wiki/wiki/Dolor_Amarus', r: 'r', alias: 'crit' }] },
+                  {
+                    id: 'figaro',
+                    title: 'Save or kill Figaro Pennygood',
+                    tags: 'fight peace',
+                    requires: 'cora',
+                    tooltip: 'If Dolor escapes the attempt on Cora, he will try Figaro next',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'cemetery',
+            title: 'Visit the cemetery and loot the tombs',
+            tags: 'loot',
+            subtasks: [{ id: 'necromancy', title: 'Talk to necromancer girl', tags: 'fight peace' }],
+          },
+          {
+            id: 'tribunal',
+            title: 'Infiltrate the Murder Tribunal and confront Sarevok',
+            tags: 'quest boss peace loot',
+            requires: 'cora',
+            loot: [
+              { url: 'https://bg3.wiki/wiki/Sarevok%27s_Horned_Helmet', r: 'v', alias: 'crit' },
+              { url: 'https://bg3.wiki/wiki/Sword_of_Chaos', r: 'v' },
+            ],
+          },
+          {
             id: 'lora',
             title: 'Meet Lora at the Basilisk Gate Barracks and return her daughter, Vanra',
             tags: 'loot',
-            subtasks: [
-              { id: 'mayrina', title: "Find Mayrina at Old Garlow's Place and return her to her human form", tags: 'fight', tooltip: "Get the recipe to make Hag's Bane" },
-              {
-                id: 'ethel-act-3',
-                title: 'Investigate the Blushing Mermaid and kill Ethel for good',
-                tags: 'boss loot',
-                tooltip: "Throw the Hag's Bane potion on her or knock her out to save Vanra",
-                loot: [{ url: 'https://bg3.wiki/wiki/Ring_of_Feywild_Sparks', r: 'v', note: "The ring gives +1 DC even though it doesn't say" }],
-              },
-            ],
             loot: [{ url: 'https://bg3.wiki/wiki/Duellist%27s_Prerogative', r: 'l', alias: 'legendary rapier crit' }],
           },
           {
@@ -1039,10 +1027,11 @@ const DATA = [
               { url: 'https://bg3.wiki/wiki/Boots_of_Persistence', r: 'v' },
             ],
           },
+          { id: 'gazette', title: 'Stop the press from printing lies about you', tags: 'fight peace' },
           {
             id: 'helsik',
             title: "Visit Helsik, the Diabolist, at the Devil's Fee and get passage to the House of Hope",
-            tags: 'quest',
+            tags: 'peace loot',
             loot: [{ url: 'https://bg3.wiki/wiki/Mask_of_Soul_Perception', r: 'v', note: 'In chest in her room near the ritual circle' }],
             subtasks: [
               {
@@ -1056,8 +1045,11 @@ const DATA = [
                 id: 'hope-vault',
                 title: "Raid Raphael's secret vault",
                 tags: 'loot',
-                tooltip: "The vault is located in front of the door to the boudoir, there you can find Mol's contract and other goodies",
-                loot: [{ url: 'https://bg3.wiki/wiki/Helldusk_Helmet', r: 'v' }],
+                tooltip: "The vault is located in front of the door to the boudoir, there you can find Mol's contract and other goodies. Needs to pass 3 DC checks to open",
+                loot: [
+                  { url: 'https://bg3.wiki/wiki/Helldusk_Helmet', r: 'v' },
+                  { url: 'https://bg3.wiki/wiki/Staff_of_Spellpower', r: 'v' },
+                ],
               },
               {
                 id: 'boudoir',
@@ -1075,12 +1067,12 @@ const DATA = [
                   {
                     id: 'hammer',
                     title: 'Steal the Orphic Hammer or the contract you signed for it',
-                    tags: 'quest loot',
+                    tags: 'companion loot',
                     loot: [{ url: 'https://bg3.wiki/wiki/Orphic_Hammer', r: 'l' }],
                   },
                 ],
               },
-              { id: 'hope', title: 'Free Hope on the basement', tags: 'loot', loot: [{ url: 'https://bg3.wiki/wiki/Gloves_of_Soul_Catching', r: 'l' }] },
+              { id: 'hope', title: 'Free Hope in the basement', tags: 'loot', loot: [{ url: 'https://bg3.wiki/wiki/Gloves_of_Soul_Catching', r: 'l' }] },
               {
                 id: 'raphael-fight',
                 title: 'Kill Raphael and escape the House of Hope',
@@ -1089,6 +1081,15 @@ const DATA = [
               },
             ],
           },
+          { id: 'felogyr', title: "Investigate Felogyr's Fireworks", tags: 'fight', requires: 'arfur-blackmail' },
+          { id: 'sahuagin', title: 'Fight the Sahuagin ambush on the beach', tags: 'fight' },
+        ],
+      },
+      {
+        id: 'center',
+        subact: 'city',
+        name: 'Lower City (Center)',
+        items: [
           {
             id: 'sundries',
             title: 'Visit Sorcerous Sundries, check out their stock',
@@ -1127,7 +1128,7 @@ const DATA = [
                     title: "Find the 'Tharchiate Codex'",
                     tags: 'buff',
                     requires: 'thay',
-                    tooltip: "You can unlock the 'Karsus' door by pulling the lever in: Silverhand -> Evocation -> Wish -> Foresight -> Elminster",
+                    tooltip: "You can unlock the 'Elminster' door by pulling the lever in: Silverhand -> Evocation -> Wish -> Foresight -> Elminster",
                   },
                   {
                     id: 'karsus',
@@ -1163,13 +1164,80 @@ const DATA = [
               { url: 'https://bg3.wiki/wiki/Armour_of_Agility', r: 'v', note: 'Sold by Gloomy', alias: 'armor dex' },
             ],
           },
-          { id: 'gazette', title: 'Stop the press from printing lies about you', tags: 'fight peace' },
-          { id: 'felogyr', title: "Investigate Felogyr's Fireworks", tags: 'fight', requires: 'arfur-blackmail' },
-          { id: 'sahuagin', title: 'Fight the Sahuagin ambush on the beach', tags: 'fight' },
+          { id: 'park', title: 'Visit the park and handle the assassin ambush', tags: 'fight' },
+          {
+            id: 'brilliance',
+            title: 'Visit the Society of Brilliance headquarters',
+            tags: 'shop',
+            subtasks: [{ id: 'ptaris', title: 'Fight or calm down Ptaris', tags: 'fight peace', requires: 'esther-egg' }],
+          },
+          {
+            id: 'castle',
+            title: "Invade Cazador's Castle and disrupt his secret ritual",
+            tags: 'companion',
+            subtasks: [
+              {
+                id: 'dining',
+                title: 'Get the key to the main hall (his family ring) and kill the werewolves',
+                tags: 'fight loot',
+                tooltip: 'His ring key is in a cursed corpse in the basement',
+                loot: [{ url: 'https://bg3.wiki/wiki/Helmet_of_Grit', r: 'v', note: 'In the same room with the cursed corpse' }],
+              },
+              {
+                id: 'cazador',
+                title: 'Defeat Cazador Szarr',
+                tags: 'boss loot',
+                subtasks: [{ id: 'ascended', title: "Decide Astarion and the other vampire spawn's fate", tags: 'companion', requires: 'astarion' }],
+              },
+            ],
+          },
+          {
+            id: 'mayrina',
+            title: "Find Mayrina at Old Garlow's Place and return her to her human form",
+            tags: 'fight',
+            tooltip: "Get the recipe to make Hag's Bane",
+            requires: 'ethel',
+          },
+          {
+            id: 'ethel-act-3',
+            title: 'Investigate the Blushing Mermaid and kill Ethel for good',
+            tags: 'boss loot',
+            tooltip: "Throw the Hag's Bane potion on her or knock her out to save Vanra",
+            loot: [{ url: 'https://bg3.wiki/wiki/Ring_of_Feywild_Sparks', r: 'v', note: "The ring gives +1 DC even though it doesn't say" }],
+          },
+          {
+            id: 'araj',
+            title: 'Meet with Araj Oblodra again',
+            tags: 'fight peace shop',
+            requires: 'blood-potion',
+            loot: [
+              { url: 'https://bg3.wiki/wiki/Risky_Ring', r: 'r' },
+              { url: 'https://bg3.wiki/wiki/Ring_of_Free_Action', r: 'r' },
+            ],
+          },
+          {
+            id: 'bank',
+            title: 'Investigate the Counting House heist',
+            tags: 'fight',
+            subtasks: [{ id: 'bank-vault', title: 'Loot the high security vaults', tags: 'loot' }],
+          },
+          {
+            id: 'warehouse',
+            title: 'Investigate suspicious warehouse, Flymm Cargo',
+            tags: 'fight',
+            subtasks: [
+              {
+                id: 'iron-throne',
+                title: 'Rescue Duke Ravengard and the other prisoners in Iron Throne',
+                tags: 'fight companion npc',
+              },
+              { id: 'redhammer', title: 'Kill or defend Redhammer', tags: 'fight' },
+            ],
+          },
         ],
       },
       {
-        id: 'upper',
+        id: 'west',
         subact: 'city',
         name: 'Lower City (West)',
         items: [
@@ -1189,30 +1257,13 @@ const DATA = [
               { id: 'parents', title: "Free or kill Shadowheart's parents", tags: 'companion', requires: 'shart' },
               {
                 id: 'shar-hideout',
-                title: "Find Shadowheart's hideout and read the 'Hastly Written Note'",
+                title: "Find Shadowheart's hideout and read the 'Hastily Written Note'",
                 tags: 'loot',
-                notes: 'Finding the note before using the mirror bypasses the religion check',
+                tooltip: 'Finding the note before using the mirror bypasses the religion check',
                 subtasks: [{ id: 'mirror', title: 'Use the Mirror of Loss', tags: 'buff' }],
               },
             ],
           },
-          {
-            id: 'araj',
-            title: 'Meet with Araj Oblodra again',
-            tags: 'fight peace shop',
-            requires: 'blood-potion',
-            loot: [
-              { url: 'https://bg3.wiki/wiki/Risky_Ring', r: 'r' },
-              { url: 'https://bg3.wiki/wiki/Ring_of_Free_Action', r: 'r' },
-            ],
-          },
-          {
-            id: 'bank',
-            title: 'Investigate the Counting House heist',
-            tags: 'fight',
-            subtasks: [{ id: 'bank-vault', title: 'Loot the high security vaults', tags: 'loot' }],
-          },
-          { id: 'minsc', title: 'Catch the Stone Lord', tags: 'fight companion', requires: 'bank' },
           {
             id: 'lady-jannath',
             title: "Solve Lady Jannath's Estate haunting",
@@ -1224,6 +1275,7 @@ const DATA = [
                 id: 'carrion',
                 title: 'Talk to Mystic Carrion for a solution to the haunting problem',
                 tags: 'shop',
+                loot: [{ url: 'https://bg3.wiki/wiki/Staff_of_Cherished_Necromancy', r: 'v', note: 'Dropped by Mystic Carrion on death' }],
                 subtasks: [
                   { id: 'carrion-quest', title: 'Return Thrumbo to Mystic Carrion', tags: 'peace' },
                   { id: 'carrion-fight', title: 'Kill Mystic Carrion and get the torch', tags: 'boss', requires: 'carrion-organ' },
@@ -1233,33 +1285,19 @@ const DATA = [
             ],
           },
           {
-            id: 'brilliance',
-            title: 'Visit the Society of Brilliance headquarters',
-            tags: 'shop',
-            subtasks: [{ id: 'ptaris', title: 'Fight or calm down Ptaris', tags: 'fight peace', requires: 'esther-egg' }],
+            id: 'minsc',
+            title: 'Catch the Stone Lord',
+            tags: 'fight companion',
+            requires: 'bank',
+            tooltip: "The entrance is found in the basement of Lady Jannath's Estate (enter from a door outside)",
           },
           { id: 'volo-2', title: 'Rescue Volo, again', tags: 'fight npc', requires: 'volo-1' },
           {
-            id: 'warehouse',
-            title: 'Investigate suspicious warehouse, Flymm Cargo',
-            tags: 'fight',
-            subtasks: [
-              {
-                id: 'iron-throne',
-                title: 'Rescue Duke Ravengard and the other prisoners in Iron Throne',
-                tags: 'fight companion npc',
-                subtasks: [
-                  {
-                    id: 'foundry',
-                    title: 'Invade the Steel Watch Foundry and destroy it',
-                    tags: 'boss',
-                    requires: 'iron-throne',
-                    loot: [{ url: 'https://bg3.wiki/wiki/Gontr_Mael', r: 'l', alias: 'light bow' }],
-                  },
-                ],
-              },
-              { id: 'redhammer', title: 'Kill or defend Redhammer', tags: 'fight' },
-            ],
+            id: 'foundry',
+            title: 'Invade the Steel Watch Foundry and destroy it',
+            tags: 'boss',
+            requires: 'iron-throne',
+            loot: [{ url: 'https://bg3.wiki/wiki/Gontr_Mael', r: 'l', alias: 'light bow' }],
           },
           {
             id: 'wavemother',
@@ -1267,26 +1305,6 @@ const DATA = [
             tags: 'loot',
             requires: 'redhammer',
             loot: [{ url: 'https://bg3.wiki/wiki/Wavemother%27s_Cloak', r: 'r', note: 'In a chest on the second floor' }],
-          },
-          {
-            id: 'castle',
-            title: "Invade Cazador's Castle and disrupt his secret ritual",
-            tags: 'companion',
-            subtasks: [
-              {
-                id: 'dining',
-                title: 'Get the key to the main hall (his family ring) and kill the werewolves',
-                tags: 'fight',
-                tooltip: 'His ring key is in a cursed corpse on the basement',
-                loot: [{ url: 'https://bg3.wiki/wiki/Helmet_of_Grit', r: 'v', note: 'In the same room with the cursed corpse' }],
-              },
-              {
-                id: 'cazador',
-                title: 'Defeat Cazador Szarr',
-                tags: 'boss loot',
-                subtasks: [{ id: 'ascended', title: "Decide Astarion and the other vampire spawn's fate", tags: 'companion', requires: 'astarion' }],
-              },
-            ],
           },
         ],
       },
@@ -1309,7 +1327,7 @@ const DATA = [
           {
             id: 'bhaal',
             title: 'Enter the Temple of Bhaal and pass the entrance trial',
-            tags: 'quest fight peace',
+            tags: 'fight peace',
             requires: 'tribunal',
             subtasks: [
               { id: 'orin-victim', title: "Save Orin's hostage", tooltip: "Find Orin's secret in her chambers by speaking with her mother's corpse", tags: 'peace' },
@@ -1322,7 +1340,18 @@ const DATA = [
               },
             ],
           },
-          { id: 'end', title: 'Confront the Netherbrain', tags: 'quest boss', requires: 'ketheric-2 orin gortash' },
+          {
+            id: 'endgame',
+            title: 'Enter the Morphic Pool',
+            tags: 'quest',
+            requires: 'ketheric-2 orin gortash',
+            subtasks: [
+              { id: 'brain', title: 'Confront the Netherbrain', tags: 'fight' },
+              { id: 'high-hall', title: 'Fight through the courtyard or go through the sewers', tags: 'fight' },
+              { id: 'bombardment', title: 'Survive the Nautiloid bombardment and reach the Brain', tags: 'fight' },
+              { id: 'end', title: 'Subdue the Netherbrain', tags: 'boss' },
+            ],
+          },
         ],
       },
     ],

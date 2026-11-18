@@ -24,6 +24,7 @@
                             r: rarity c|u|r|v|l (common, uncommon, rare, very rare, legendary),
                             note: optional text,
                             alias: optional text for alternate names,
+                            name: optional override
                 - subtasks : optional nested entries, same fields.
                             Shown indented, checkboxes are independent of the parent.
     Trailing commas are fine.
@@ -45,11 +46,7 @@ const $ = (id) => document.getElementById(id)
 // Escape HTML special characters so titles can't inject markup
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
 // Escape, then extract item name from url
-const escUrl = (s) =>
-  esc(s)
-    .match(/\/wiki\/([^/?#]+)/)?.[1]
-    ?.replace(/_/g, ' ')
-    ?.replace(/%27/g, "'")
+const escUrl = (s) => decodeURIComponent(esc(s).match(/\/wiki\/([^/?#]+)/)?.[1])?.replace(/_/g, ' ')
 // Escape, then turn [label](https://...) into a clickable link
 const fmt = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
 // Strip [label](url) down to just the label (used where links make no sense)
@@ -97,7 +94,7 @@ const mk = (A, ai, o) => {
     // optional clarifying text shown in a tooltip
     tip: o.tooltip ? String(o.tooltip) : '',
     // requires can be an array of ids or a space-separated string
-    req: (o.requires?.split && o.requires?.split(' ')) || o.requires || [],
+    req: (o.requires?.split && o.requires?.split(/\s+/).filter(Boolean)) || o.requires || [],
   }
   BY[n.k] = { n, ar: A, act: ai }
   A.list.push(n)
@@ -356,7 +353,7 @@ function render() {
         const ok =
           vis(p, it) &&
           (!p.hideDone || !(p.done[it.k] || p.skip[it.k])) &&
-          (!q || (it.t + ' ' + ar.name + ' ' + it.loot.map((x) => escUrl(x.url) + ' ' + x.alias).join(' ')).toLowerCase().includes(q))
+          (!q || (it.t + ' ' + ar.name + ' ' + it.loot.map((x) => [escUrl(x.url), x.alias].filter(Boolean)).join(' ')).toLowerCase().includes(q))
         if (!ok && !sub) return ''
         const sk = !!p.skip[it.k]
         return `<li class="${p.done[it.k] ? 'done' : sk ? 'skip' : ''}"><div class="row"><label>
@@ -477,7 +474,7 @@ function act(a) {
 // d(attr) finds the clicked element (or an ancestor) with that attribute.
 document.onclick = (e) => {
   // Wiki links (item names) keep their own behaviour, they must not trigger a card's jump
-  if (e.target.closest('a.ln')) return
+  if (e.target.closest('a.ln, .tipbtn')) return
   const d = (x) => e.target.closest('[' + x + ']'),
     p = P()
   let el
