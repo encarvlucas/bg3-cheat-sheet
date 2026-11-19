@@ -23,8 +23,7 @@
                             url: http(s) link, the name opens it in a new tab, used to show the name if no name is present.
                             r: rarity c|u|r|v|l (common, uncommon, rare, very rare, legendary),
                             note: optional text,
-                            alias: optional text for alternate names,
-                            name: optional override
+                            alias: optional text for alternate names used in filtering
                 - subtasks : optional nested entries, same fields.
                             Shown indented, checkboxes are independent of the parent.
     Trailing commas are fine.
@@ -46,7 +45,15 @@ const $ = (id) => document.getElementById(id)
 // Escape HTML special characters so titles can't inject markup
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
 // Escape, then extract item name from url
-const escUrl = (s) => decodeURIComponent(esc(s).match(/\/wiki\/([^/?#]+)/)?.[1])?.replace(/_/g, ' ')
+const escUrl = (s) => {
+  const m = String(s).match(/\/wiki\/([^/?#]+)/)?.[1]
+  if (!m) return undefined
+  let t = m
+  try {
+    t = decodeURIComponent(m)
+  } catch (e) {}
+  return esc(t.replace(/_/g, ' '))
+}
 // Escape, then turn [label](https://...) into a clickable link
 const fmt = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
 // Strip [label](url) down to just the label (used where links make no sense)
@@ -57,6 +64,9 @@ const TRASH =
 // Treasure chest icon for the notable-loot button
 const CHEST =
   '<svg viewBox="0 0 24 24" width="1.2em" height="1.2em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11V9a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2"/><rect x="3" y="11" width="18" height="9" rx="1.5"/><path d="M7.5 11v9M16.5 11v9"/><rect x="10.5" y="9.5" width="3" height="4.5" rx=".7" fill="currentColor"/></svg>'
+// Star icon for the wishlist button (filled through CSS when pressed)
+const STAR =
+  '<svg viewBox="0 0 24 24" width="1.15em" height="1.15em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'
 // Make sure every task id is unique: a duplicate gets '_' appended until it is free
 const seen = {}
 const uniq = (k) => {
@@ -123,7 +133,7 @@ const LOOTS = ACTS.flatMap((a, ai) =>
   a.areas.flatMap((ar) =>
     ar.list.flatMap((n) =>
       n.loot.map((x) => {
-        const name = escUrl(x.name ?? x.url)
+        const name = escUrl(x.url)
         return { n, ar, ai, x, name, hay: [name, x.alias, x.note, plain(n.t), ar.name].filter(Boolean).join(' ').toLowerCase() }
       }),
     ),
@@ -146,9 +156,9 @@ const lootHtml = (n) =>
   n.loot
     .map((x) => {
       const r = RARITY[String(x.r || '').toLowerCase()]
-      const escName = escUrl(x.name ?? x.url)
       const link = /^https?:\/\//i.test(x.url || '')
-      const name = link ? `<a class="ln" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${escName}</a>` : `<span class="ln">${escName}</span>`
+      const label = (P().wish[x.url] ? '<span class="lw" title="On your wishlist">★</span> ' : '') + escUrl(x.url)
+      const name = link ? `<a class="ln" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${label}</a>` : `<span class="ln">${label}</span>`
       return `<div class="li"${r ? ` style="--rc:${r[1]}"` : ''}>${name}${r ? `<small class="lr">${r[0]}</small>` : ''}${x.note ? `<span class="lo">${esc(x.note)}</span>` : ''}</div>`
     })
     .join('')
@@ -214,7 +224,8 @@ if (!S || !S.profiles) S = { cur: 'Default', profiles: {} }
 //   or: tag filters match ANY active tag (OR) instead of ALL of them (AND)
 //   skip: task id -> 1 when skipped (uncompletable); skipped tasks are left out of the counts
 //   lact / lsub: act index and subact id selected on the Loot tab ('' = all)
-const blank = () => ({ done: {}, skip: {}, col: {}, hideDone: false, off: {}, or: false, tab: 0, sub: {}, lact: '', lsub: '' })
+//   wish: loot url -> 1 when that item is wishlisted (a preference, so it survives 'Reset this profile')
+const blank = () => ({ done: {}, skip: {}, col: {}, hideDone: false, off: {}, or: false, tab: 0, sub: {}, lact: '', lsub: '', wish: {} })
 // Current profile (missing fields are filled in from blank(), so old saves keep working)
 const P = () => (S.profiles[S.cur] = Object.assign(blank(), S.profiles[S.cur]))
 // Persist state; ignore errors (e.g. storage blocked in private mode)
@@ -277,13 +288,18 @@ function lootView(p, q) {
       ? `<label class="mu">Subact <select id="lsub"><option value="">All</option>${subs.map((s) => `<option value="${esc(s)}" ${s == cs ? 'selected' : ''}>${esc(subLabel(s))}</option>`).join('')}</select></label>`
       : '')
   const rows = LOOTS.filter((r) => (ai < 0 || r.ai == ai) && (!cs || r.ar.sub == cs) && (!p.hideDone || !(p.done[r.n.k] || p.skip[r.n.k])) && (!q || r.hay.includes(q)))
+  // Wishlisted items are pulled out into their own section at the top; the rest is grouped by area
+  const wished = (r) => !!p.wish[r.x.url]
+  const wrows = rows.filter(wished)
   // Group consecutive rows by area
   const groups = []
   let g
-  rows.forEach((r) => {
-    if (!g || g.ar !== r.ar) groups.push((g = { ar: r.ar, ai: r.ai, rows: [] }))
-    g.rows.push(r)
-  })
+  rows
+    .filter((r) => !wished(r))
+    .forEach((r) => {
+      if (!g || g.ar !== r.ar) groups.push((g = { ar: r.ar, ai: r.ai, rows: [] }))
+      g.rows.push(r)
+    })
   const item = ({ n, x, name }) => {
     const k = String(x.r || '').toLowerCase(),
       r = RARITY[k],
@@ -291,24 +307,26 @@ function lootView(p, q) {
       sk = !!p.skip[n.k],
       link = /^https?:\/\//i.test(x.url || '')
     // The whole card jumps to the task; only the name (wiki link) do something else
-    return `<li class="lootcard ${dn ? 'done' : sk ? 'skip' : ''} ${r ? 'r-' + k : ''}" data-goto="${esc(n.k)}"><div class="row"><div class="lootrow">
+    const w = !!p.wish[x.url]
+    return `<li class="lootcard ${dn ? 'done' : sk ? 'skip' : ''} ${r ? 'r-' + k : ''}${w ? ' wish' : ''}" data-goto="${esc(n.k)}"><div class="row"><div class="lootrow">
     <input type="checkbox" disabled tabindex="-1" aria-label="${dn ? 'Task done' : sk ? 'Task skipped' : 'Task not done'}" ${dn ? 'checked' : ''}>
-    ${link ? `<a class="ln" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer" title="Open wiki page">${esc(name)}</a>` : `<span class="ln">${esc(name)}</span>`}${r ? `<em class="tg">${r[0]}</em>` : ''}
+    ${link ? `<a class="ln" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer" title="Open wiki page">${name}</a>` : `<span class="ln">${name}</span>`}${r ? `<em class="tg">${r[0]}</em>` : ''}
     <a href="#" class="lt" data-goto="${esc(n.k)}" title="Show task">${esc(plain(n.t))}</a></div>
-    ${x.note ? `<button type="button" class="tipbtn" data-tip="${esc(x.note)}" aria-label="${esc(x.note)}">ⓘ</button>` : ''}</div></li>`
+    ${x.note ? `<button type="button" class="tipbtn" data-tip="${esc(x.note)}" aria-label="${esc(x.note)}">ⓘ</button>` : ''}
+    <button type="button" class="star" data-wish="${esc(x.url)}" aria-pressed="${w}" title="${w ? 'Remove from wishlist' : 'Add to wishlist'}" aria-label="${w ? 'Remove from wishlist' : 'Add to wishlist'}">${STAR}</button></div></li>`
   }
-  const body = groups.length
-    ? `<p class="mu">${rows.length} of ${LOOTS.length} items</p>` +
-      groups
-        .map(({ ar, ai, rows }) => {
-          const id = 'loot:' + ar.id,
-            open = q || !p.col[id],
-            v = rows.filter((r) => !p.skip[r.n.k]),
-            c = v.filter((r) => p.done[r.n.k]).length
-          return `<section class="area"><h3 data-col="${esc(id)}"><span>${open ? '▾' : '▸'} ${esc(ar.name)} <small class="mu">${esc(ACTS[ai].name)}</small></span>
-    <b class="${v.length && c == v.length ? 'ok' : ''}">${v.length && c == v.length ? 'Done' : c + '/' + v.length}</b></h3>${open ? '<ul>' + rows.map(item).join('') + '</ul>' : ''}</section>`
-        })
-        .join('')
+  // One collapsible section: header with done counter, then its cards
+  const section = (id, head, list, cls = '') => {
+    const open = q || !p.col[id],
+      v = list.filter((r) => !p.skip[r.n.k]),
+      c = v.filter((r) => p.done[r.n.k]).length
+    return `<section class="area ${cls}"><h3 data-col="${esc(id)}"><span>${open ? '▾' : '▸'} ${head}</span>
+    <b class="${v.length && c == v.length ? 'ok' : ''}">${v.length && c == v.length ? 'Done' : c + '/' + v.length}</b></h3>${open ? '<ul>' + list.map(item).join('') + '</ul>' : ''}</section>`
+  }
+  const body = rows.length
+    ? `<p class="mu">${rows.length} of ${LOOTS.length} items${wrows.length ? ` · ${wrows.length} wishlisted` : ''}</p>` +
+      (wrows.length ? section('loot:*wishlist', `<span class="ws">★</span> Wishlist`, wrows, 'wishlist') : '') +
+      groups.map(({ ar, ai, rows }) => section('loot:' + ar.id, `${esc(ar.name)} <small class="mu">${esc(ACTS[ai].name)}</small>`, rows)).join('')
     : '<p class="mu">No items match the current filters.</p>'
   return { body, filters, n, d }
 }
@@ -353,10 +371,11 @@ function render() {
         const ok =
           vis(p, it) &&
           (!p.hideDone || !(p.done[it.k] || p.skip[it.k])) &&
-          (!q || (it.t + ' ' + ar.name + ' ' + it.loot.map((x) => [escUrl(x.url), x.alias].filter(Boolean)).join(' ')).toLowerCase().includes(q))
+          (!q || (it.t + ' ' + ar.name + ' ' + it.loot.map((x) => [escUrl(x.url), x.alias].filter(Boolean).join(' ')).join(' ')).toLowerCase().includes(q))
         if (!ok && !sub) return ''
         const sk = !!p.skip[it.k]
-        return `<li class="${p.done[it.k] ? 'done' : sk ? 'skip' : ''}"><div class="row"><label>
+        const wl = it.loot.some((x) => p.wish[x.url])
+        return `<li class="${p.done[it.k] ? 'done' : sk ? 'skip' : ''}${wl ? ' wish' : ''}"><div class="row"><label>
     <input type="checkbox" data-k="${esc(it.k)}" ${p.done[it.k] ? 'checked' : ''}><span class="tx">${fmt(it.t)}</span>
     ${it.g.map((t) => `<em class="tag tg ${esc(t)}">${esc(TAGS[t] || t)}</em>`).join('')}</label>
     ${it.tip ? `<button type="button" class="tipbtn" data-tip="${esc(it.tip)}" aria-label="${esc(it.tip)}">ⓘ</button>` : ''}
@@ -478,7 +497,12 @@ document.onclick = (e) => {
   const d = (x) => e.target.closest('[' + x + ']'),
     p = P()
   let el
-  if ((el = d('data-goto'))) {
+  // Wishlist star (checked first: it lives inside a card that would otherwise jump to the task)
+  if ((el = d('data-wish'))) {
+    const u = el.dataset.wish
+    if (p.wish[u]) delete p.wish[u]
+    else p.wish[u] = 1
+  } else if ((el = d('data-goto'))) {
     e.preventDefault()
     return jump(el.dataset.goto)
   } else if ((el = d('data-tab'))) p.tab = +el.dataset.tab

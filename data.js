@@ -209,7 +209,7 @@ const DATA = [
                 tags: 'boss loot',
                 loot: [
                   { url: 'https://bg3.wiki/wiki/Gloves_of_the_Growling_Underdog', r: 'u' },
-                  { url: 'https://bg3.wiki/wiki/Amulet_of_Sel%C3%BBne%27s_Chosen', r: 'u' },
+                  { url: 'https://bg3.wiki/wiki/Amulet_of_Sel%C3%BBne%27s_Chosen', r: 'u', alias: 'selune' },
                 ],
               },
               {

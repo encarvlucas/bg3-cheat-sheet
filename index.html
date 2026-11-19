@@ -21,6 +21,7 @@
         --ac: #b48ef2;
         --ok: #e0a93f;
         --sk: #ee6b6b; /* skipped tasks */
+        --wish: #4fcf7f; /* wishlist hint (green) */
         /* tag colours (dark mode: light text on a tinted background) */
         --boss: #ff8f82;
         --fight: #ffa79d;
@@ -45,6 +46,7 @@
           --ac: #6a3fc4;
           --ok: #8a5a00;
           --sk: #b42318;
+          --wish: #1f8a45;
           /* tag colours (light mode: dark text on a pale tinted background) */
           --boss: #b02a1e;
           --fight: #c25c53;
@@ -606,6 +608,49 @@
         .lootrow em.tg {
           color: color-mix(in srgb, var(--rc) 60%, #000);
         }
+      }
+      /* ---- Wishlist ---- */
+      button.star {
+        flex: none;
+        display: inline-flex;
+        padding: 2px 6px;
+        line-height: 1;
+        color: var(--mu);
+        background: transparent;
+        border-color: transparent;
+      }
+      button.star:hover,
+      button.star:focus-visible {
+        color: var(--ok);
+        border-color: var(--ok);
+      }
+      button.star[aria-pressed='true'] {
+        color: var(--ok);
+      }
+      button.star[aria-pressed='true'] svg {
+        fill: currentColor;
+      }
+      li.lootcard.wish {
+        background: color-mix(in srgb, var(--wish) 12%, transparent);
+      }
+      li.lootcard.wish:hover {
+        background: color-mix(in srgb, var(--wish) 20%, transparent);
+      }
+      .area.wishlist {
+        border-color: color-mix(in srgb, var(--wish) 55%, var(--bd));
+      }
+      .ws {
+        color: var(--ok);
+      }
+      /* Task that offers a wishlisted item: a faint green band behind its row */
+      li.wish:not(.lootcard) > .row {
+        margin: -2px -6px;
+        padding: 2px 6px;
+        border-radius: 6px;
+        background: color-mix(in srgb, var(--wish) 11%, transparent);
+      }
+      #tip .lw {
+        color: #e0a93f;
       }
       code {
         background: var(--bd);
