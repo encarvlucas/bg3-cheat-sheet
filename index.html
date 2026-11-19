@@ -7,6 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Cinzel:wght@600&display=swap" rel="stylesheet" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#16131f" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
     <style>
       :root {
         color-scheme: dark light;
@@ -628,5 +631,8 @@
 
     <script src="data.js"></script>
     <script src="logic.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js')
+    </script>
   </body>
 </html>
