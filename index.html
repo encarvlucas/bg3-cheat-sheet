@@ -422,7 +422,9 @@
       #tip {
         position: fixed;
         z-index: 10;
-        max-width: min(320px, calc(100vw - 16px));
+        /* Size to the text, not to the space left of its current position (otherwise it shrinks when re-shown) */
+        width: max-content;
+        max-width: min(320px, calc(100% - 16px));
         padding: 6px 10px;
         background: var(--card);
         color: var(--tx);
@@ -452,7 +454,7 @@
       }
       #tip.loot {
         min-width: 220px;
-        max-width: min(360px, calc(100vw - 16px));
+        max-width: min(360px, calc(100% - 16px));
         padding: 0 0 6px;
         color: #e8e2d4;
         background: linear-gradient(180deg, #231c35, #14111d);

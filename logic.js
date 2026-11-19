@@ -184,22 +184,27 @@ const showTip = (b) => {
   tipEl.className = n ? 'loot' : ''
   if (n) tipEl.innerHTML = lootHtml(n)
   else tipEl.textContent = b.dataset.tip
+  // Measure from the top-left corner, so its size never depends on where it was last shown
+  tipEl.style.left = tipEl.style.top = '0px'
   tipEl.hidden = false
+  // Layout viewport (what position: fixed uses): innerWidth/innerHeight can differ on mobile and include the scrollbar
+  const vw = document.documentElement.clientWidth,
+    vh = document.documentElement.clientHeight
   const r = b.getBoundingClientRect(),
     w = tipEl.offsetWidth,
     h = tipEl.offsetHeight
-  if (n) {
-    // Loot: to the right of the icon, or to its left if there is no room; top-aligned, clamped to the viewport
-    const x = r.right + 8 + w <= innerWidth - 8 ? r.right + 8 : r.left - w - 8
-    if (x >= 8) {
-      tipEl.style.left = x + 'px'
-      tipEl.style.top = Math.max(8, Math.min(r.top - 6, innerHeight - h - 8)) + 'px'
-      return
-    }
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(v, hi))
+  // Beside the icon: to its right, or to its left if there is no room there
+  const x = r.right + 8 + w <= vw - 8 ? r.right + 8 : r.left - w - 8
+  if (x >= 8) {
+    tipEl.style.left = x + 'px'
+    // Loot popovers are top-aligned with the icon, plain tips are centred on it; both stay inside the viewport
+    tipEl.style.top = clamp(n ? r.top - 6 : r.top + r.height / 2 - h / 2, 8, vh - h - 8) + 'px'
+    return
   }
-  // Otherwise centre above the button, clamp to the viewport, flip below if there is no room above
-  tipEl.style.left = Math.max(8, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 8)) + 'px'
-  tipEl.style.top = (r.top - h - 6 >= 8 ? r.top - h - 6 : r.bottom + 6) + 'px'
+  // No room on either side (narrow screens): centred above the icon, or below it if there is no room above
+  tipEl.style.left = clamp(r.left + r.width / 2 - w / 2, 8, vw - w - 8) + 'px'
+  tipEl.style.top = clamp(r.top - h - 6 >= 8 ? r.top - h - 6 : r.bottom + 6, 8, vh - h - 8) + 'px'
 }
 const tipBtn = (e) => e.target.closest && e.target.closest('.tipbtn, .lootbtn')
 document.addEventListener('mouseover', (e) => (tipBtn(e) ? showTip(tipBtn(e)) : inTip(e) && clearTimeout(tipTimer)))
