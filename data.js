@@ -478,7 +478,7 @@ const DATA = [
                 loot: [
                   { url: 'https://bg3.wiki/wiki/Necklace_of_Elemental_Augmentation', r: 'u' },
                   { url: 'https://bg3.wiki/wiki/Strange_Conduit_Ring', r: 'u' },
-                  { url: 'https://bg3.wiki/wiki/Gloves_of_Belligerent_Skies', r: 'u' },
+                  { url: 'https://bg3.wiki/wiki/Gloves_of_Belligerent_Skies', r: 'u', alias: 'reverberation' },
                   { url: 'https://bg3.wiki/wiki/Hoarfrost_Boots', r: 'u', alias: 'icy slip' },
                 ],
               },
@@ -693,7 +693,15 @@ const DATA = [
               { url: 'https://bg3.wiki/wiki/Derivation_Cloak', r: 'r', alias: 'poison' },
               { url: 'https://bg3.wiki/wiki/Coldbrim_Hat', r: 'u', note: 'In the secret chamber' },
             ],
-            subtasks: [{ id: 'gale-buff', title: '(Gale Origin) Get necromantic circle buff (absorb or destroy)', tags: 'buff' }],
+            subtasks: [
+              { id: 'gale-buff', title: '(Gale Origin) Get necromantic circle buff (absorb or destroy)', tags: 'buff' },
+              {
+                id: 'moonrise-mimic',
+                title: "Fight the Mimic in Isobel's room in Moonrise Towers",
+                tags: 'fight loot',
+                loot: [{ url: 'https://bg3.wiki/wiki/Spineshudder_Amulet', r: 'u', alias: 'reverberation' }],
+              },
+            ],
           },
           { id: 'save-minthy', title: 'Save Minthara from execution', tags: 'companion', requires: 'knock-out-minty' },
           {
@@ -1010,6 +1018,20 @@ const DATA = [
               { url: 'https://bg3.wiki/wiki/Sarevok%27s_Horned_Helmet', r: 'v', alias: 'crit' },
               { url: 'https://bg3.wiki/wiki/Sword_of_Chaos', r: 'v' },
             ],
+            subtasks: [
+              {
+                id: 'abazigal',
+                title: "If you became an unholy assassin, shop at Abazigal's",
+                tag: 'shop',
+                loot: [
+                  { url: 'https://bg3.wiki/wiki/Bhaalist_Armour', r: 'v', alias: 'piercing armor' },
+                  { url: 'https://bg3.wiki/wiki/Dolor_Amarus', r: 'r', alias: 'crit' },
+                  { url: 'https://bg3.wiki/wiki/Vicious_Shortbow', r: 'r', alias: 'crit' },
+                  { url: 'https://bg3.wiki/wiki/Vicious_Battleaxe', r: 'r', alias: 'crit' },
+                  { url: 'https://bg3.wiki/wiki/Craterflesh_Gloves', r: 'r', alias: 'crit' },
+                ],
+              },
+            ],
           },
           {
             id: 'lora',
@@ -1188,6 +1210,10 @@ const DATA = [
                 title: 'Defeat Cazador Szarr',
                 tags: 'boss loot',
                 subtasks: [{ id: 'ascended', title: "Decide Astarion and the other vampire spawn's fate", tags: 'companion', requires: 'astarion' }],
+                loot: [
+                  { url: 'https://bg3.wiki/wiki/Woe', r: 'v', alias: 'staff' },
+                  { url: 'https://bg3.wiki/wiki/Rhapsody', r: 'v', alias: 'dagger' },
+                ],
               },
             ],
           },

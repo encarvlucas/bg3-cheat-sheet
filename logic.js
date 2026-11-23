@@ -20,7 +20,7 @@
                             on the row; the text appears on hover, focus or tap.
                 - loot     : optional array of notable loot, shown in a chest popover:
                             [{ url, r, note, alias }] 
-                            url: http(s) link, the name opens it in a new tab, used to show the name if no name is present.
+                            url: http(s) link to the BG3 wiki at (https://bg3.wiki/), the name opens it in a new tab, used to show the name if no name is present.
                             r: rarity c|u|r|v|l (common, uncommon, rare, very rare, legendary),
                             note: optional text,
                             alias: optional text for alternate names used in filtering
