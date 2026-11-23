@@ -215,6 +215,96 @@ document.addEventListener('click', (e) => (tipBtn(e) ? showTip(tipBtn(e)) : inTi
 document.addEventListener('keydown', (e) => e.key == 'Escape' && hideTip())
 window.addEventListener('scroll', hideTip, true)
 
+// ---------- Wiki hover descriptions ----------
+// Hovering any bg3.wiki link shows the first sentence of that page's intro in a small floating box.
+// Uses the MediaWiki API (origin=* enables anonymous cross-origin reads). Results are cached per page.
+const WIKI_API = 'https://bg3.wiki/w/api.php'
+const WIKI_SEL = 'a[href*="bg3.wiki/wiki/"]'
+const wikiCache = new Map()
+const wikiTitle = (href) => {
+  const m = String(href).match(/\/wiki\/([^?#]+)/)?.[1] || ''
+  try {
+    return decodeURIComponent(m).replace(/_/g, ' ')
+  } catch (e) {
+    return m.replace(/_/g, ' ')
+  }
+}
+// Fetch the page intro, take the first real paragraph and cut it to one sentence (max 160 chars)
+const wikiDesc = (title) => {
+  if (!wikiCache.has(title)) {
+    const qs = new URLSearchParams({
+      action: 'parse',
+      page: title,
+      prop: 'text',
+      section: '0',
+      redirects: '1',
+      disableeditsection: '1',
+      disablelimitreport: '1',
+      format: 'json',
+      formatversion: '2',
+      origin: '*',
+    })
+    wikiCache.set(
+      title,
+      fetch(WIKI_API + '?' + qs)
+        .then((r) => r.json())
+        .then((d) => {
+          const doc = new DOMParser().parseFromString(d.parse.text, 'text/html')
+          doc.querySelectorAll('table, sup, style, script').forEach((x) => x.remove())
+          for (const p of doc.querySelectorAll('p')) {
+            const t = p.textContent.replace(/\s+/g, ' ').trim()
+            if (t.length < 20) continue
+            // const s = t.match(/^.+?[.!?](?=\s|$)/)?.[0] || t
+            // console.log({ text: s, all: doc })
+            return t.length > 255 ? t.slice(0, 252).trimEnd() + '…' : t
+          }
+          return ''
+        })
+        .catch(() => {
+          wikiCache.delete(title) // allow a retry on the next hover
+          return ''
+        }),
+    )
+  }
+  return wikiCache.get(title)
+}
+const wikiEl = document.createElement('div')
+wikiEl.id = 'wikitip'
+wikiEl.setAttribute('role', 'tooltip')
+wikiEl.hidden = true
+document.body.appendChild(wikiEl)
+let wikiA = null,
+  wikiTimer
+const hideWiki = () => {
+  clearTimeout(wikiTimer)
+  wikiA = null
+  wikiEl.hidden = true
+}
+const showWiki = (a, text) => {
+  wikiEl.textContent = text
+  wikiEl.style.left = wikiEl.style.top = '0px'
+  wikiEl.hidden = false
+  const vw = document.documentElement.clientWidth,
+    vh = document.documentElement.clientHeight
+  const r = a.getBoundingClientRect(),
+    w = wikiEl.offsetWidth,
+    h = wikiEl.offsetHeight
+  // Below the link, or above it if there is no room; kept inside the viewport horizontally
+  wikiEl.style.left = Math.max(8, Math.min(r.left, vw - w - 8)) + 'px'
+  wikiEl.style.top = (r.bottom + 6 + h <= vh - 8 ? r.bottom + 6 : Math.max(8, r.top - h - 6)) + 'px'
+}
+document.addEventListener('mouseover', (e) => {
+  const a = e.target.closest?.(WIKI_SEL)
+  if (!a || a === wikiA) return
+  hideWiki()
+  wikiA = a
+  // Small delay so merely passing the pointer over a link doesn't fire a request
+  wikiTimer = setTimeout(() => wikiDesc(wikiTitle(a.href)).then((t) => wikiA === a && t && showWiki(a, t)), 250)
+})
+document.addEventListener('mouseout', (e) => wikiA && !e.relatedTarget?.closest?.(WIKI_SEL) && hideWiki())
+document.addEventListener('keydown', (e) => e.key == 'Escape' && hideWiki())
+window.addEventListener('scroll', hideWiki, true)
+
 // ---------- State ----------
 // S = { cur: current profile name, profiles: { name: profile } }, loaded from localStorage
 let S
@@ -315,7 +405,7 @@ function lootView(p, q) {
     const w = !!p.wish[x.url]
     return `<li class="lootcard ${dn ? 'done' : sk ? 'skip' : ''} ${r ? 'r-' + k : ''}${w ? ' wish' : ''}" data-goto="${esc(n.k)}"><div class="row"><div class="lootrow">
     <input type="checkbox" disabled tabindex="-1" aria-label="${dn ? 'Task done' : sk ? 'Task skipped' : 'Task not done'}" ${dn ? 'checked' : ''}>
-    ${link ? `<a class="ln" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer" title="Open wiki page">${name}</a>` : `<span class="ln">${name}</span>`}${r ? `<em class="tg">${r[0]}</em>` : ''}
+    ${link ? `<a class="ln" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${name}</a>` : `<span class="ln">${name}</span>`}${r ? `<em class="tg">${r[0]}</em>` : ''}
     <a href="#" class="lt" data-goto="${esc(n.k)}" title="Show task">${esc(plain(n.t))}</a></div>
     ${x.note ? `<button type="button" class="tipbtn" data-tip="${esc(x.note)}" aria-label="${esc(x.note)}">ⓘ</button>` : ''}
     <button type="button" class="star" data-wish="${esc(x.url)}" aria-pressed="${w}" title="${w ? 'Remove from wishlist' : 'Add to wishlist'}" aria-label="${w ? 'Remove from wishlist' : 'Add to wishlist'}">${STAR}</button></div></li>`
@@ -339,6 +429,7 @@ function lootView(p, q) {
 // Re-draw the whole page from the current state. Called after every change.
 function render() {
   hideTip()
+  hideWiki()
   const p = P(),
     q = $('q').value.trim().toLowerCase()
   if (p.tab > OPTS_TAB) p.tab = 0
