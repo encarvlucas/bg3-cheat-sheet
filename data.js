@@ -829,12 +829,16 @@ const DATA = [
           {
             id: 'circus',
             title: 'Visit the circus of the last days',
-            tags: 'npc',
+            tags: 'peace',
             subtasks: [
               {
                 id: 'genie',
                 title: 'Talk to Akabi, the genie, and play his rigged wheel of fortune game',
                 tags: 'fight loot',
+                loot: [
+                  { url: 'https://bg3.wiki/wiki/Nyrulna', r: 'l', note: 'In the jungle realm, near the exit', alias: 'throw trident spear' },
+                  { url: 'https://bg3.wiki/wiki/Band_of_the_Mystic_Scoundrel', r: 'r', note: 'In the jungle realm, at the top of the raptor cave', alias: 'ring' },
+                ],
               },
               { id: 'dryad', title: 'Talk to Zenthino, the dryad at the circus, and take the love test', tags: 'buff' },
               { id: 'statue', title: 'Talk to Boney and Stoney, the couple in the circus, and purchase a statue of yourself', tags: 'shop buff' },
@@ -889,7 +893,7 @@ const DATA = [
               { url: 'https://bg3.wiki/wiki/Horns_of_the_Berserker', r: 'v' },
               { url: 'https://bg3.wiki/wiki/Cloak_of_Displacement', r: 'r' },
             ],
-            subtasks: [{ id: 'danthelon-basement', title: 'Meet with the Harper resistance', tags: 'fight' }],
+            subtasks: [{ id: 'danthelon-basement', title: 'Meet with the Harper resistance', tags: 'fight', requires: 'last-light' }],
           },
           {
             id: 'sharess',
